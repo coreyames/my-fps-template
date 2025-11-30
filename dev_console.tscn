@@ -1,0 +1,33 @@
+[gd_scene load_steps=2 format=3 uid="uid://b25fq7d16axct"]
+
+[ext_resource type="Script" uid="uid://bhltihl8vmf0j" path="res://console.gd" id="1_b1s21"]
+
+[node name="DevConsole" type="Control" node_paths=PackedStringArray("console", "input")]
+top_level = true
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_b1s21")
+console = NodePath("Console")
+input = NodePath("LineEdit")
+
+[node name="Console" type="TextEdit" parent="."]
+layout_mode = 0
+offset_left = 41.0
+offset_top = 31.0
+offset_right = 833.0
+offset_bottom = 956.0
+emoji_menu_enabled = false
+drag_and_drop_selection_enabled = false
+
+[node name="LineEdit" type="LineEdit" parent="."]
+layout_mode = 0
+offset_left = 41.0
+offset_top = 956.0
+offset_right = 833.0
+offset_bottom = 987.0
+
+[connection signal="text_submitted" from="LineEdit" to="." method="_on_line_edit_text_submitted"]

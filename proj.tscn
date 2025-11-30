@@ -1,0 +1,19 @@
+[gd_scene load_steps=4 format=3 uid="uid://1815c5nxnxey"]
+
+[ext_resource type="Script" uid="uid://yp0xy2wqehwo" path="res://proj.gd" id="1_ga63n"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_l87pp"]
+height = 1.5
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_l87pp"]
+height = 1.5
+
+[node name="Proj" type="AnimatableBody3D"]
+script = ExtResource("1_ga63n")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0)
+shape = SubResource("CapsuleShape3D_l87pp")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="CollisionShape3D"]
+mesh = SubResource("CapsuleMesh_l87pp")
