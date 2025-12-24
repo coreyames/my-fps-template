@@ -1,0 +1,30 @@
+[gd_scene load_steps=3 format=3 uid="uid://bw3bx1oklla0k"]
+
+[ext_resource type="Script" uid="uid://cx55t3qdntngs" path="res://item_list.gd" id="1_lti8b"]
+
+[sub_resource type="Theme" id="Theme_lti8b"]
+ItemList/constants/h_separation = 20
+ItemList/constants/v_separation = 50
+
+[node name="Menu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ItemList" type="ItemList" parent="."]
+layout_mode = 0
+offset_left = 794.0
+offset_top = 206.0
+offset_right = 1196.0
+offset_bottom = 729.0
+theme = SubResource("Theme_lti8b")
+item_count = 2
+item_0/text = "mouse sensitivity"
+item_1/text = "item 2"
+script = ExtResource("1_lti8b")
+
+[connection signal="item_clicked" from="ItemList" to="ItemList" method="_on_item_clicked"]
+[connection signal="item_selected" from="ItemList" to="ItemList" method="_on_item_selected"]

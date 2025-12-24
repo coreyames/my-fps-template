@@ -30,6 +30,7 @@ fov = 90.6
 script = ExtResource("2_crfiw")
 body = NodePath("..")
 cam = NodePath(".")
+sens = null
 
 [node name="Gun" parent="Camera3D" instance=ExtResource("3_de6uy")]
 transform = Transform3D(-1, 0, -8.7422755e-08, 0, 0.99999976, 0, 8.742278e-08, 0, -0.99999976, 0.09608793, -0.17219186, -0.17606375)

@@ -8,10 +8,10 @@ extends Camera3D
 @export var cam: Camera3D
 
 @export_group("settings")
-@export_range(1, 100, 1) var sens: float = 50
+@export_range(1, 100, 1) var sens: float = Settings.mouse_sensitivity
 
 # probably not changing
-const ABS_PITCH_MAX: float = 89
+const ABS_PITCH_MAX: float = 89;
 
 func _ready() -> void:
 	Input.set_use_accumulated_input(false)
@@ -29,7 +29,7 @@ func yaw(amount)->void:
 	if is_zero_approx(amount):
 		return
 	body.rotate_object_local(Vector3.DOWN, deg_to_rad(amount))
-	body.orthonormalize()
+	body.orthonormalize();
 
 #Rotates the cam around the local x axis 
 func pitch_with_clamp(amount)->void:
@@ -45,3 +45,6 @@ func look(event: InputEventMouseMotion) -> void:
 	motion *= 0.0005*sens
 	yaw(motion.x)
 	pitch_with_clamp(motion.y)
+	
+func update_
+	 
