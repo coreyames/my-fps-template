@@ -46,5 +46,9 @@ func look(event: InputEventMouseMotion) -> void:
 	yaw(motion.x)
 	pitch_with_clamp(motion.y)
 	
-func update_
+func update_settings():
+	sens = Settings.mouse_sensitivity;
+	
+	
+
 	 

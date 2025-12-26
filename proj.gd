@@ -16,6 +16,7 @@ var status: Status = Status.LOADED;
 func _ready() -> void:
 	$CollisionShape3D.scale = Vector3(.1, .1, .1);
 
+@warning_ignore("unused_parameter")
 func _process(delta: float) -> void:
 	pass
 

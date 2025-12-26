@@ -4,9 +4,11 @@ const SPEED: float = 5.0
 const JUMP_VELOCITY: float = 4.5
 
 const console_scene: Resource = preload("res://dev_console.tscn");
-var is_console_open: bool = false;
 var console_node: Control = null;
+var is_console_open: bool = false;
 
+const menu_scene: Resource = preload("res://menu.tscn");
+var menu_node: Control = null;
 var in_menu: bool = true;
 var just_exited_menu: bool = false;
 
@@ -59,19 +61,18 @@ func _input(event: InputEvent) -> void:
 			is_console_open = false;
 			return;
 			
-	if Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:
-		if event is InputEventMouseButton:
-			if event.button_index == 1:
-				Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+	if Input.mouse_mode != Input.MOUSE_MODE_CAPTURED: 
+		if !in_menu:
+			if event is InputEventMouseButton && event.button_index == 1:
+				Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED);
 				just_exited_menu = true;
-		if event is InputEventKey:
-			if event.is_action_pressed('cancel'):
-				get_tree().quit();
+			
 	else:
 		if event is InputEventKey:
 			if event.is_action_pressed('cancel'):
-				Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+				Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE);
 				in_menu = true;
+				menu_node = menu_scene.instantiate();
 	return;
 
 	

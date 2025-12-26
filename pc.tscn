@@ -13,7 +13,7 @@ top_radius = 0.3
 bottom_radius = 0.3
 height = 1.75
 
-[node name="Player" type="CharacterBody3D" node_paths=PackedStringArray("gun")]
+[node name="Player" type="CharacterBody3D" node_paths=PackedStringArray("gun") groups=["settings_dependent"]]
 script = ExtResource("1_ukbfy")
 gun = NodePath("Camera3D/Gun")
 
@@ -24,13 +24,12 @@ shape = SubResource("CylinderShape3D_ct41q")
 [node name="MeshInstance3D" type="MeshInstance3D" parent="CollisionShape3D"]
 mesh = SubResource("CylinderMesh_ukbfy")
 
-[node name="Camera3D" type="Camera3D" parent="." node_paths=PackedStringArray("body", "cam")]
+[node name="Camera3D" type="Camera3D" parent="." node_paths=PackedStringArray("body", "cam") groups=["settings_dependent"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5268595, -0.2035653)
 fov = 90.6
 script = ExtResource("2_crfiw")
 body = NodePath("..")
 cam = NodePath(".")
-sens = null
 
 [node name="Gun" parent="Camera3D" instance=ExtResource("3_de6uy")]
 transform = Transform3D(-1, 0, -8.7422755e-08, 0, 0.99999976, 0, 8.742278e-08, 0, -0.99999976, 0.09608793, -0.17219186, -0.17606375)
