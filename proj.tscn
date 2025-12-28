@@ -9,6 +9,7 @@ height = 1.5
 height = 1.5
 
 [node name="Proj" type="AnimatableBody3D"]
+sync_to_physics = false
 script = ExtResource("1_ga63n")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]

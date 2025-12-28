@@ -87,5 +87,4 @@ text = "quit"
 
 [connection signal="drag_ended" from="ItemList/MouseSlider" to="ItemList" method="_on_mouse_slider_drag_ended"]
 [connection signal="value_changed" from="ItemList/MouseSlider" to="ItemList" method="_on_mouse_slider_value_changed"]
-[connection signal="pressed" from="ItemList/OkButton" to="ItemList" method="_on_ok_button_pressed"]
 [connection signal="pressed" from="ItemList/QuitButton" to="ItemList" method="_on_quit_button_pressed"]
