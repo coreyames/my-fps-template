@@ -41,7 +41,8 @@ func _physics_process(delta: float) -> void:
 	var direction := (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized();
 	
 	if Input.is_action_just_pressed("use"):
-		gun.use(get_viewport().get_camera_3d().project_local_ray_normal(Vector2(1920/2, 1080/2))); 
+		pass
+		#gun.use(Vector3(get_viewport().get_camera_3d().transform.basis.z; 
 
 	if direction:
 		velocity.x = direction.x * SPEED;
