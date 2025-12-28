@@ -1,12 +1,11 @@
 [gd_scene load_steps=4 format=3 uid="uid://dcjtq6fwkgs7g"]
 
+[ext_resource type="Material" uid="uid://cj5kwgsdoxheq" path="res://new_orm_material_3d.tres" id="1_u52ul"]
+
 [sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_5xgho"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5xgho"]
-albedo_color = Color(0.32135245, 0.3075895, 0.30165508, 1)
-
 [sub_resource type="BoxMesh" id="BoxMesh_u52ul"]
-material = SubResource("StandardMaterial3D_5xgho")
+material = ExtResource("1_u52ul")
 size = Vector3(40, 2, 40)
 
 [node name="Level" type="StaticBody3D"]
