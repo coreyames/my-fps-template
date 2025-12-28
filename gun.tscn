@@ -1,7 +1,8 @@
-[gd_scene load_steps=6 format=3 uid="uid://cf8owl4xccf4s"]
+[gd_scene load_steps=7 format=3 uid="uid://cf8owl4xccf4s"]
 
 [ext_resource type="PackedScene" uid="uid://d3t75k7frfmn8" path="res://War Low Poly Pack/LPWarPack_AssaultRifle.fbx" id="1_vk1bi"]
 [ext_resource type="Script" uid="uid://d00twk1x00bv3" path="res://gun.gd" id="2_kw0bs"]
+[ext_resource type="PackedScene" uid="uid://1815c5nxnxey" path="res://proj.tscn" id="3_kw0bs"]
 
 [sub_resource type="Animation" id="Animation_dk5gl"]
 length = 0.001
@@ -48,3 +49,6 @@ script = ExtResource("2_kw0bs")
 libraries = {
 &"": SubResource("AnimationLibrary_kw0bs")
 }
+
+[node name="Proj" parent="." index="2" instance=ExtResource("3_kw0bs")]
+transform = Transform3D(0.05, 0, -1.3322676e-15, 0, 0.05, 0, 0, 0, 0.05, -4.979823e-08, 0.0766757, 0.5696255)

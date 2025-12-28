@@ -41,8 +41,7 @@ func _physics_process(delta: float) -> void:
 	var direction := (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized();
 	
 	if Input.is_action_just_pressed("use"):
-		pass
-		#gun.use(Vector3(get_viewport().get_camera_3d().transform.basis.z; 
+		gun.use(get_viewport().get_camera_3d().project_ray_normal(Vector2(1920.0/2, 1080.0/2))); 
 
 	if direction:
 		velocity.x = direction.x * SPEED;
@@ -74,7 +73,6 @@ func _input(event: InputEvent) -> void:
 					in_menu = true;
 					menu_node = menu_scene.instantiate();
 					add_child(menu_node);
-					#print(menu_node.get_tree_string_pretty()); # check tree
 					menu_node.get_child(0).get_child(2).connect("pressed", _on_menu_ok_button_pressed);
 				else:
 					Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
@@ -89,4 +87,3 @@ func _on_menu_ok_button_pressed():
 		in_menu = false;
 		Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED);
 	return;
-		
