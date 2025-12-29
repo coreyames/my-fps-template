@@ -1,4 +1,6 @@
-[gd_scene load_steps=2 format=3 uid="uid://mmentk8pw3wq"]
+[gd_scene load_steps=3 format=3 uid="uid://mmentk8pw3wq"]
+
+[ext_resource type="Script" uid="uid://dpyhyy1oy660m" path="res://debug_hud.gd" id="1_jwuoe"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dnh6s"]
 bg_color = Color(1, 1, 1, 0)
@@ -14,10 +16,12 @@ grow_vertical = 2
 [node name="TextEdit" type="TextEdit" parent="."]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 0
-offset_left = 1625.0
+offset_left = 1476.0
 offset_top = 10.0
 offset_right = 1912.0
-offset_bottom = 375.0
+offset_bottom = 392.0
+focus_mode = 0
 theme_override_styles/normal = SubResource("StyleBoxFlat_dnh6s")
 editable = false
 emoji_menu_enabled = false
+script = ExtResource("1_jwuoe")

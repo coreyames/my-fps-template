@@ -44,8 +44,12 @@ func process_input(input_line: String) -> void:
 	if (line_split_array.size() < 1):
 		return;
 	var cmd = line_split_array.get(0);
-	match line_split_array[0]:
+	match cmd:
 		"echo":
 			if (line_split_array.size() == 2):
 				console.text += line_split_array.get(1);
+		"debug":
+			Debug.toggle();
+		_:
+			console.text += "unrecognized command";
 	return;	

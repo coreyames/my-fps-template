@@ -24,5 +24,6 @@ func _physics_process(delta: float) -> void:
 		move_and_collide(direction);	
 
 func fire(_direction: Vector3) -> void:
+	Debug.debug("fired");
 	direction = _direction;
 	status = Status.FIRE;

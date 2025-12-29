@@ -1,7 +1,7 @@
 extends Node
 
 enum Setting {
-	MOUSE
+	MOUSE,
 }
 
 var mouse_sensitivity: float = 50;
