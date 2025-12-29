@@ -1,0 +1,23 @@
+[gd_scene load_steps=2 format=3 uid="uid://mmentk8pw3wq"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dnh6s"]
+bg_color = Color(1, 1, 1, 0)
+
+[node name="DebugHud" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TextEdit" type="TextEdit" parent="."]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 0
+offset_left = 1625.0
+offset_top = 10.0
+offset_right = 1912.0
+offset_bottom = 375.0
+theme_override_styles/normal = SubResource("StyleBoxFlat_dnh6s")
+editable = false
+emoji_menu_enabled = false

@@ -35,7 +35,7 @@ shader_parameter/sun_zenith_gradient = SubResource("GradientTexture1D_036b0")
 shader_parameter/view_zenith_gradient = SubResource("GradientTexture1D_dwbse")
 shader_parameter/sun_view_gradient = SubResource("GradientTexture1D_pkg7o")
 shader_parameter/sun_radius = 0.05
-shader_parameter/sun_color = Color(1, 1, 1, 1)
+shader_parameter/sun_color = Color(0.5360269, 0.44863707, 0.30287194, 1)
 
 [sub_resource type="Sky" id="Sky_tlwt5"]
 sky_material = SubResource("ShaderMaterial_036b0")
@@ -59,8 +59,9 @@ script = ExtResource("1_036b0")
 
 [node name="Sun" type="DirectionalLight3D" parent="."]
 transform = Transform3D(0.5316124, -0.38471743, -0.7545733, 0.049793534, -0.8751539, 0.48127586, -0.845523, -0.29342505, -0.44608623, -5.4968576, 17.952604, 16.24462)
-light_energy = 0.65
-light_indirect_energy = 1.397
+light_color = Color(1.0445384, 0.97014046, 0.7717463, 1)
+light_energy = 0.4
+light_indirect_energy = 0.0
 light_angular_distance = 1.0
 light_specular = 0.5
 shadow_enabled = true
