@@ -13,42 +13,51 @@ extends Camera3D
 # probably not changing
 const ABS_PITCH_MAX: float = 89;
 
+var debug_node: Control = null;
+
 func _ready() -> void:
-	Input.set_use_accumulated_input(false)
+	Debug.connect("toggle_debug", _on_toggle_debug);
+	Input.set_use_accumulated_input(false);
 
 func _unhandled_input(event)-> void:
+	print("in camera")
 	if $"..".is_console_open:
 		return;
 	
 	if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
 		if event is InputEventMouseMotion:
-			look(event)
+			look(event);
 			
 #Rotates the character around the local Y axis
 func yaw(amount)->void:
 	if is_zero_approx(amount):
-		return
+		return;
 	body.rotate_object_local(Vector3.DOWN, deg_to_rad(amount))
 	body.orthonormalize();
 
 #Rotates the cam around the local x axis 
 func pitch_with_clamp(amount)->void:
 	if is_zero_approx(amount):
-		return
-	cam.rotate_object_local(Vector3.LEFT, deg_to_rad(amount))
+		return;
+	cam.rotate_object_local(Vector3.LEFT, deg_to_rad(amount));
 	if abs(cam.rotation.x) > deg_to_rad(ABS_PITCH_MAX):
-		cam.rotation.x = clamp(cam.rotation.x, deg_to_rad(-ABS_PITCH_MAX), deg_to_rad(ABS_PITCH_MAX))
-	cam.orthonormalize()
+		cam.rotation.x = clamp(cam.rotation.x, deg_to_rad(-ABS_PITCH_MAX), deg_to_rad(ABS_PITCH_MAX));
+	cam.orthonormalize();
 
 func look(event: InputEventMouseMotion) -> void:
-	var motion: Vector2 = event.relative
-	motion *= 0.0005*sens
-	yaw(motion.x)
-	pitch_with_clamp(motion.y)
+	var motion: Vector2 = event.relative;
+	motion *= 0.0005*sens;
+	yaw(motion.x);
+	pitch_with_clamp(motion.y);
+	return;
 	
 func refresh_settings():
 	sens = Settings.mouse_sensitivity;
 	
-	
-
-	 
+func _on_toggle_debug(on: bool):
+	if on:
+		debug_node = Debug.debug_scene.instantiate();
+		add_child(debug_node);
+	else:
+		remove_child(debug_node);
+	return;

@@ -50,6 +50,8 @@ func process_input(input_line: String) -> void:
 				console.text += line_split_array.get(1);
 		"debug":
 			Debug.toggle();
+		"quit":
+			get_tree().quit();
 		_:
 			console.text += "unrecognized command";
 	return;	

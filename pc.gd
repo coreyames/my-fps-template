@@ -1,7 +1,7 @@
 extends CharacterBody3D
 
-const SPEED: float = 5.0
-const JUMP_VELOCITY: float = 4.5
+const SPEED: float = 5.0;
+const JUMP_VELOCITY: float = 4.5;
 
 const console_scene: Resource = preload("res://dev_console.tscn");
 var console_node: Control = null;
@@ -14,7 +14,7 @@ var just_exited_menu: bool = true;
 
 @export var gun: Gun;
 
-func _ready() -> void:
+func _ready() -> void: 
 		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED;
 		return;
 
@@ -75,7 +75,7 @@ func _input(event: InputEvent) -> void:
 					add_child(menu_node);
 					menu_node.get_child(0).get_child(2).connect("pressed", _on_menu_ok_button_pressed);
 				else:
-					Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+					Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED);
 					in_menu = false;
 					just_exited_menu = true;
 					remove_child(menu_node);

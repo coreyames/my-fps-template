@@ -1,6 +1,5 @@
-[gd_scene load_steps=17 format=3 uid="uid://dx5ebi81u85xo"]
+[gd_scene load_steps=16 format=3 uid="uid://dx5ebi81u85xo"]
 
-[ext_resource type="Script" uid="uid://bid8pxi27pios" path="res://world.gd" id="1_036b0"]
 [ext_resource type="PackedScene" uid="uid://dcjtq6fwkgs7g" path="res://level.tscn" id="1_fj7yv"]
 [ext_resource type="PackedScene" uid="uid://b7a13xqqyw8ii" path="res://pc.tscn" id="2_tlwt5"]
 [ext_resource type="Shader" uid="uid://drltjs85u6aje" path="res://skybox.gdshader" id="3_aqk2v"]
@@ -51,7 +50,6 @@ reflected_light_source = 2
 [sub_resource type="BoxMesh" id="BoxMesh_tlwt5"]
 
 [node name="World" type="Node3D"]
-script = ExtResource("1_036b0")
 
 [node name="Level" parent="." instance=ExtResource("1_fj7yv")]
 
