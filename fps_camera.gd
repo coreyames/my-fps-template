@@ -13,14 +13,11 @@ extends Camera3D
 # probably not changing
 const ABS_PITCH_MAX: float = 89;
 
-var debug_node: Control = null;
 
 func _ready() -> void:
-	Debug.connect("toggle_debug", _on_toggle_debug);
 	Input.set_use_accumulated_input(false);
 
 func _unhandled_input(event)-> void:
-	print("in camera")
 	if $"..".is_console_open:
 		return;
 	
@@ -53,11 +50,3 @@ func look(event: InputEventMouseMotion) -> void:
 	
 func refresh_settings():
 	sens = Settings.mouse_sensitivity;
-	
-func _on_toggle_debug(on: bool):
-	if on:
-		debug_node = Debug.debug_scene.instantiate();
-		add_child(debug_node);
-	else:
-		remove_child(debug_node);
-	return;

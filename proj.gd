@@ -16,14 +16,17 @@ var status: Status = Status.LOADED;
 
 func _ready() -> void:
 	$CollisionShape3D.scale = Vector3(.05, .05, .05);
+	return;
 
 func _physics_process(delta: float) -> void:
 	if (status == Status.FIRE):
 		status = Status.TRAVELING;
 	elif (status == Status.TRAVELING):
 		move_and_collide(direction);	
+	return;
 
 func fire(_direction: Vector3) -> void:
-	Debug.debug("fired");
 	direction = _direction;
 	status = Status.FIRE;
+	Debug.log("fired proj");
+	return;

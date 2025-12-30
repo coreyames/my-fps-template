@@ -6,7 +6,7 @@ signal toggle_debug(on: bool)
 const debug_scene: Resource = preload("res://debug_hud.tscn");
 var is_on: bool = false;
 
-func debug(msg: String) -> void:
+func log(msg: String) -> void:
 	if is_on:
 		emit_signal("msg_ready", msg);
 	return;

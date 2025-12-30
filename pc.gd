@@ -12,9 +12,12 @@ var menu_node: Control = null;
 var in_menu: bool = true;
 var just_exited_menu: bool = true;
 
+var debug_node: Control = null;
+
 @export var gun: Gun;
 
 func _ready() -> void: 
+		Debug.connect("toggle_debug", _on_toggle_debug);
 		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED;
 		return;
 
@@ -86,4 +89,12 @@ func _on_menu_ok_button_pressed():
 		remove_child(menu_node);
 		in_menu = false;
 		Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED);
+	return;
+
+func _on_toggle_debug(on: bool):
+	if on:
+		debug_node = Debug.debug_scene.instantiate();
+		add_child(debug_node);
+	else:
+		remove_child(debug_node);
 	return;
