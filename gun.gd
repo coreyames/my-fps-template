@@ -13,3 +13,4 @@ func use(direction: Vector3) -> void:
 	get_node("/root").add_child(projectile);
 	$AnimationPlayer.play("use");
 	projectile.fire(direction); 
+	return;

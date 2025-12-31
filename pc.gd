@@ -38,11 +38,13 @@ func _physics_process(delta: float) -> void:
 		return;
 
 	if Input.is_action_just_pressed("jump") and is_on_floor():
+		jump_sound();
 		velocity.y = JUMP_VELOCITY;
 
 	var input_dir := Input.get_vector("left", "right", "fwd", "bwd");
 	var direction := (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized();
 	
+	#TODO need to replace hardcoded values when adding resolution adjustment option
 	if Input.is_action_just_pressed("use"):
 		gun.use(get_viewport().get_camera_3d().project_ray_normal(Vector2(1920.0/2, 1080.0/2))); 
 
@@ -97,4 +99,9 @@ func _on_toggle_debug(on: bool):
 		add_child(debug_node);
 	else:
 		remove_child(debug_node);
+	return;
+	
+#TODO set $Sound.stream before playing (when there are multiple available effects	
+func jump_sound() -> void:
+	$Sound.play()
 	return;
