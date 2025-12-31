@@ -6,5 +6,5 @@ func _ready() -> void:
 		pass
 
 func log_message(msg: String) -> void:
-	text += '\n' + msg;
+	text += msg + '\n';
 	return;

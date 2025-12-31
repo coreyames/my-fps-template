@@ -25,7 +25,7 @@ func _on_line_edit_text_submitted(submitted: String) -> void:
 	console.text += submitted + '\n';
 	process_input(submitted);
 	# newline and add prompt to move on for next cmd
-	console.text += '\n' + prompt;
+	console.text += prompt + '\n';
 	input.clear();
 	input.set_caret_column(0);
 	return;

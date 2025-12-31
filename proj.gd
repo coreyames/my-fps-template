@@ -2,9 +2,10 @@ class_name Proj
 extends AnimatableBody3D
 
 # 10 is really fast
-const INITIAL_SPEED = 5;
+const SPEED = 5;
 
 var direction: Vector3;
+var motion: Vector3;
 
 enum Status {
 	LOADED,
@@ -17,13 +18,17 @@ var status: Status = Status.LOADED;
 
 func _ready() -> void:
 	$CollisionShape3D.scale = Vector3(.05, .05, .05);
+	
 	return;
 
 func _process(delta: float) -> void:
 	if (status == Status.FIRE):
 		status = Status.TRAVELING;
+		motion = motion * delta;
 	elif (status == Status.TRAVELING):
-		handle_collision(move_and_collide(direction));	
+		motion += get_gravity() * delta;
+		print(motion);
+		handle_collision(move_and_collide(motion));
 	return
 
 func _physics_process(delta: float) -> void:
@@ -31,6 +36,7 @@ func _physics_process(delta: float) -> void:
 
 func fire(_direction: Vector3) -> void:
 	direction = _direction;
+	motion = direction;
 	status = Status.FIRE;
 	Debug.log("fired proj");
 	return;
