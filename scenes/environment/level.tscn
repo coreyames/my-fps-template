@@ -1,0 +1,18 @@
+[gd_scene load_steps=4 format=3 uid="uid://dcjtq6fwkgs7g"]
+
+[ext_resource type="Material" uid="uid://cj5kwgsdoxheq" path="res://materials/checker_white_debug.tres" id="1_u52ul"]
+
+[sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_5xgho"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_u52ul"]
+material = ExtResource("1_u52ul")
+size = Vector3(40, 2, 40)
+
+[node name="Level" type="StaticBody3D"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("WorldBoundaryShape3D_5xgho")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="CollisionShape3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+mesh = SubResource("BoxMesh_u52ul")

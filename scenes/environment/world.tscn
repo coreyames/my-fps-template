@@ -1,0 +1,92 @@
+[gd_scene load_steps=18 format=3 uid="uid://dx5ebi81u85xo"]
+
+[ext_resource type="PackedScene" uid="uid://dcjtq6fwkgs7g" path="res://scenes/environment/level.tscn" id="1_wcnsb"]
+[ext_resource type="PackedScene" uid="uid://b7a13xqqyw8ii" path="res://scenes/entity/actors/pc.tscn" id="2_tmq7g"]
+[ext_resource type="Shader" uid="uid://drltjs85u6aje" path="res://shaders/skybox.gdshader" id="3_43fak"]
+[ext_resource type="Script" uid="uid://cuwkybx07itvj" path="res://scenes/environment/world_environment.gd" id="4_scdbs"]
+[ext_resource type="PackedScene" uid="uid://da3kttdlmslo" path="res://scenes/entity/actors/enemy.tscn" id="5_xrntt"]
+
+[sub_resource type="Gradient" id="Gradient_dwbse"]
+offsets = PackedFloat32Array(0.11594203, 0.5652174, 0.8115942)
+colors = PackedColorArray(0, 0, 0, 1, 0.78926736, 0.6938302, 0.2857528, 1, 0.24975574, 0.48954242, 0.35882246, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_pkg7o"]
+gradient = SubResource("Gradient_dwbse")
+
+[sub_resource type="Gradient" id="Gradient_aqk2v"]
+offsets = PackedFloat32Array(0, 0.7173913)
+colors = PackedColorArray(0.1355308, 0.2952538, 0.53140974, 1, 0.6922344, 0.8001499, 0.96122354, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_036b0"]
+gradient = SubResource("Gradient_aqk2v")
+
+[sub_resource type="Gradient" id="Gradient_036b0"]
+offsets = PackedFloat32Array(0, 0.1741573, 0.3, 0.4, 0.5, 0.6, 0.8, 1)
+colors = PackedColorArray(0.11035278, 0.11355854, 0.37167674, 1, 0.6284519, 0.5231118, 0.57354474, 1, 0.7145701, 0.48850393, 0.4884637, 1, 0.8458565, 0.44603604, 0.3743652, 1, 0.8648561, 0.5891552, 0.500742, 1, 0.2605366, 0.5085177, 0.4035969, 1, 0.040412817, 0.18806538, 0.30946937, 1, 0.59538805, 0.709071, 0.9302457, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_dwbse"]
+gradient = SubResource("Gradient_036b0")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_036b0"]
+shader = ExtResource("3_43fak")
+shader_parameter/sun_dir = Vector3(-0.7545733, 0.4812757, -0.44608614)
+shader_parameter/moon_dir = Vector3(-0.43024892, -0.3106911, -0.8475593)
+shader_parameter/sun_zenith_gradient = SubResource("GradientTexture1D_036b0")
+shader_parameter/view_zenith_gradient = SubResource("GradientTexture1D_dwbse")
+shader_parameter/sun_view_gradient = SubResource("GradientTexture1D_pkg7o")
+shader_parameter/sun_radius = 0.05
+shader_parameter/sun_color = Color(0.5360269, 0.44863707, 0.30287194, 1)
+
+[sub_resource type="Sky" id="Sky_tlwt5"]
+sky_material = SubResource("ShaderMaterial_036b0")
+
+[sub_resource type="Environment" id="Environment_fj7yv"]
+background_mode = 2
+background_energy_multiplier = 0.71
+sky = SubResource("Sky_tlwt5")
+reflected_light_source = 2
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_fj7yv"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_aqk2v"]
+albedo_color = Color(1, 0.6509804, 0.45490196, 1)
+roughness = 0.37
+
+[sub_resource type="BoxMesh" id="BoxMesh_tlwt5"]
+material = SubResource("StandardMaterial3D_aqk2v")
+
+[node name="World" type="Node3D"]
+
+[node name="Level" parent="." instance=ExtResource("1_wcnsb")]
+
+[node name="Player" parent="." instance=ExtResource("2_tmq7g")]
+
+[node name="Sun" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.5316124, -0.38471743, -0.7545733, 0.049793534, -0.8751539, 0.48127586, -0.845523, -0.29342505, -0.44608623, -5.4968576, 17.952604, 16.24462)
+light_color = Color(1.0445384, 0.97014046, 0.7717463, 1)
+light_energy = 0.4
+light_indirect_energy = 0.0
+light_angular_distance = 1.0
+light_specular = 0.5
+shadow_enabled = true
+
+[node name="Moon" type="Node3D" parent="Sun"]
+transform = Transform3D(0.06421884, -0.87902284, 0.47243473, 0.5992087, 0.41253555, 0.68612176, -0.79801303, 0.23902506, 0.55321074, 1677.5306, 365.64456, 173.68272)
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." node_paths=PackedStringArray("sun", "moon")]
+environment = SubResource("Environment_fj7yv")
+script = ExtResource("4_scdbs")
+sun = NodePath("../Sun")
+moon = NodePath("../Sun/Moon")
+
+[node name="TestCube" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0.5, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="TestCube"]
+shape = SubResource("BoxShape3D_fj7yv")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="TestCube/CollisionShape3D"]
+mesh = SubResource("BoxMesh_tlwt5")
+
+[node name="Enemy" parent="." instance=ExtResource("5_xrntt")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.033636093, 0, -5.2646914)

@@ -17,8 +17,8 @@ config/icon="res://icon.svg"
 
 [autoload]
 
-Settings="*res://settings.gd"
-Debug="*res://debug_msg_bus.gd"
+Settings="*res://singletons/settings.gd"
+Debug="*res://singletons/debug_msg_bus.gd"
 
 [debug]
 

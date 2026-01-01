@@ -1,0 +1,90 @@
+[gd_scene load_steps=4 format=3 uid="uid://bw3bx1oklla0k"]
+
+[ext_resource type="Script" uid="uid://cx55t3qdntngs" path="res://scenes/ui/item_list.gd" id="1_lti8b"]
+
+[sub_resource type="Theme" id="Theme_lti8b"]
+ItemList/constants/h_separation = 20
+ItemList/constants/v_separation = 50
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lti8b"]
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
+bg_color = Color(0.1, 0.1, 0.1, 0.6)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 5
+
+[node name="Menu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ItemList" type="ItemList" parent="." node_paths=PackedStringArray("mouse_slider", "mouse_value")]
+layout_mode = 0
+offset_left = 794.0
+offset_top = 206.0
+offset_right = 1196.0
+offset_bottom = 729.0
+theme = SubResource("Theme_lti8b")
+item_count = 2
+item_0/text = "mouse sensitivity"
+script = ExtResource("1_lti8b")
+mouse_slider = NodePath("MouseSlider")
+mouse_value = NodePath("MousePanel/MouseValue")
+
+[node name="MouseSlider" type="HSlider" parent="ItemList"]
+layout_mode = 0
+offset_left = 171.0
+offset_top = 48.0
+offset_right = 363.0
+offset_bottom = 64.0
+min_value = 1.0
+value = 50.0
+tick_count = 5
+ticks_on_borders = true
+
+[node name="MousePanel" type="Panel" parent="ItemList"]
+layout_mode = 0
+offset_left = 245.0
+offset_top = 8.0
+offset_right = 288.0
+offset_bottom = 43.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_lti8b")
+
+[node name="MouseValue" type="Label" parent="ItemList/MousePanel"]
+layout_mode = 0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = 42.0
+offset_bottom = 35.0
+
+[node name="OkButton" type="Button" parent="ItemList"]
+layout_mode = 0
+offset_left = 140.0
+offset_top = 476.0
+offset_right = 171.0
+offset_bottom = 507.0
+text = "ok"
+
+[node name="QuitButton" type="Button" parent="ItemList"]
+layout_mode = 0
+offset_left = 225.0
+offset_top = 476.0
+offset_right = 264.0
+offset_bottom = 507.0
+text = "quit"
+
+[connection signal="drag_ended" from="ItemList/MouseSlider" to="ItemList" method="_on_mouse_slider_drag_ended"]
+[connection signal="value_changed" from="ItemList/MouseSlider" to="ItemList" method="_on_mouse_slider_value_changed"]
+[connection signal="pressed" from="ItemList/QuitButton" to="ItemList" method="_on_quit_button_pressed"]

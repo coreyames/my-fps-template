@@ -1,0 +1,29 @@
+[gd_scene load_steps=3 format=3 uid="uid://mmentk8pw3wq"]
+
+[ext_resource type="Script" uid="uid://dpyhyy1oy660m" path="res://scenes/ui/debug_hud.gd" id="1_jwuoe"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dnh6s"]
+bg_color = Color(1, 1, 1, 0)
+
+[node name="DebugHud" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="TextEdit" type="TextEdit" parent="."]
+layout_mode = 0
+offset_left = 1476.0
+offset_top = 10.0
+offset_right = 1912.0
+offset_bottom = 392.0
+focus_mode = 0
+theme_override_colors/font_color = Color(0.875, 0.875, 0.875, 1)
+theme_override_styles/normal = SubResource("StyleBoxFlat_dnh6s")
+editable = false
+emoji_menu_enabled = false
+shortcut_keys_enabled = false
+script = ExtResource("1_jwuoe")

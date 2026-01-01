@@ -1,0 +1,10 @@
+[gd_resource type="ORMMaterial3D" load_steps=2 format=3 uid="uid://cj5kwgsdoxheq"]
+
+[ext_resource type="Texture2D" uid="uid://bsashndrh5sgy" path="res://textures/checker_white_512x512.svg" id="1_flhys"]
+
+[resource]
+albedo_texture = ExtResource("1_flhys")
+orm_texture = ExtResource("1_flhys")
+clearcoat_roughness = 1.0
+uv1_scale = Vector3(2, 1.5, 2)
+point_size = 0.1
