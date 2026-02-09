@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://dx5ebi81u85xo"]
+[gd_scene format=3 uid="uid://dx5ebi81u85xo"]
 
 [ext_resource type="PackedScene" uid="uid://dcjtq6fwkgs7g" path="res://scenes/environment/level.tscn" id="1_wcnsb"]
 [ext_resource type="PackedScene" uid="uid://b7a13xqqyw8ii" path="res://scenes/entity/actors/pc.tscn" id="2_tmq7g"]
@@ -55,13 +55,13 @@ roughness = 0.37
 [sub_resource type="BoxMesh" id="BoxMesh_tlwt5"]
 material = SubResource("StandardMaterial3D_aqk2v")
 
-[node name="World" type="Node3D"]
+[node name="World" type="Node3D" unique_id=870428597]
 
-[node name="Level" parent="." instance=ExtResource("1_wcnsb")]
+[node name="Level" parent="." unique_id=1335998995 instance=ExtResource("1_wcnsb")]
 
-[node name="Player" parent="." instance=ExtResource("2_tmq7g")]
+[node name="Player" parent="." unique_id=2121428152 instance=ExtResource("2_tmq7g")]
 
-[node name="Sun" type="DirectionalLight3D" parent="."]
+[node name="Sun" type="DirectionalLight3D" parent="." unique_id=178360773]
 transform = Transform3D(0.5316124, -0.38471743, -0.7545733, 0.049793534, -0.8751539, 0.48127586, -0.845523, -0.29342505, -0.44608623, -5.4968576, 17.952604, 16.24462)
 light_color = Color(1.0445384, 0.97014046, 0.7717463, 1)
 light_energy = 0.4
@@ -70,23 +70,23 @@ light_angular_distance = 1.0
 light_specular = 0.5
 shadow_enabled = true
 
-[node name="Moon" type="Node3D" parent="Sun"]
+[node name="Moon" type="Node3D" parent="Sun" unique_id=833445817]
 transform = Transform3D(0.06421884, -0.87902284, 0.47243473, 0.5992087, 0.41253555, 0.68612176, -0.79801303, 0.23902506, 0.55321074, 1677.5306, 365.64456, 173.68272)
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="." node_paths=PackedStringArray("sun", "moon")]
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1512831641 node_paths=PackedStringArray("sun", "moon")]
 environment = SubResource("Environment_fj7yv")
 script = ExtResource("4_scdbs")
 sun = NodePath("../Sun")
 moon = NodePath("../Sun/Moon")
 
-[node name="TestCube" type="StaticBody3D" parent="."]
+[node name="TestCube" type="StaticBody3D" parent="." unique_id=943175591]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0.5, 0)
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="TestCube"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="TestCube" unique_id=841760638]
 shape = SubResource("BoxShape3D_fj7yv")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="TestCube/CollisionShape3D"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="TestCube/CollisionShape3D" unique_id=2139024415]
 mesh = SubResource("BoxMesh_tlwt5")
 
-[node name="Enemy" parent="." instance=ExtResource("5_xrntt")]
+[node name="Enemy" parent="." unique_id=173467109 instance=ExtResource("5_xrntt")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.033636093, 0, -5.2646914)

@@ -28,7 +28,7 @@ func _process(delta: float) -> void:
 		queue_free();
 		return;
 	handle_collision(move_and_collide(motion));
-	return
+	return;
 
 func fire(_direction: Vector3) -> void:
 	direction = _direction;

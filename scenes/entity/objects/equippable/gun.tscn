@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://cf8owl4xccf4s"]
+[gd_scene format=3 uid="uid://cf8owl4xccf4s"]
 
 [ext_resource type="PackedScene" uid="uid://d3t75k7frfmn8" path="res://assets/War Low Poly Pack/LPWarPack_AssaultRifle.fbx" id="1_vk1bi"]
 [ext_resource type="Script" uid="uid://d00twk1x00bv3" path="res://scenes/entity/objects/equippable/gun.gd" id="2_kw0bs"]
@@ -40,11 +40,9 @@ _data = {
 &"use": SubResource("Animation_vk1bi")
 }
 
-[node name="LPWarPack_AssaultRifle" instance=ExtResource("1_vk1bi")]
+[node name="LPWarPack_AssaultRifle" unique_id=1729779116 instance=ExtResource("1_vk1bi")]
 transform = Transform3D(-1, 0, -8.7422755e-08, 0, 0.99999976, 0, 8.742278e-08, 0, -0.99999976, 0, 0, 0)
 script = ExtResource("2_kw0bs")
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="." index="1"]
-libraries = {
-&"": SubResource("AnimationLibrary_kw0bs")
-}
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." index="1" unique_id=1434169362]
+libraries/ = SubResource("AnimationLibrary_kw0bs")

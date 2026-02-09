@@ -3,6 +3,9 @@ extends CharacterBody3D
 const SPEED: float = 5.0;
 const JUMP_VELOCITY: float = 4.5;
 
+const walking_clip: AudioStreamMP3 = preload("res://audio/walking.mp3");
+const jump_clip: AudioStreamMP3 = preload("res://audio/jump.mp3");
+
 const console_scene: Resource = preload("res://scenes/ui/dev_console.tscn");
 var console_node: Control = null;
 var is_console_open: bool = false;
@@ -14,6 +17,9 @@ var just_exited_menu: bool = true;
 
 var debug_node: Control = null;
 
+var is_directed: bool = false;
+var was_airborne: bool = false;
+
 @export var gun: Gun;
 
 func _ready() -> void: 
@@ -24,6 +30,11 @@ func _ready() -> void:
 func _physics_process(delta: float) -> void:
 	if not is_on_floor():
 		velocity += get_gravity() * delta;
+		if !was_airborne:
+			was_airborne = true;
+	elif was_airborne:
+		was_airborne = false;
+		jump_sound();
 
 	if just_exited_menu:
 		just_exited_menu = false;
@@ -49,11 +60,19 @@ func _physics_process(delta: float) -> void:
 		gun.use(get_viewport().get_camera_3d().project_ray_normal(Vector2(1920.0/2, 1080.0/2))); 
 
 	if direction:
+		if !is_directed:
+			is_directed = true;
 		velocity.x = direction.x * SPEED;
 		velocity.z = direction.z * SPEED;
+		if is_on_floor():
+			walking_sound(true);
 	else:
+		if is_directed:
+			is_directed = false;
+			walking_sound(false);
 		velocity.x = move_toward(velocity.x, 0, SPEED);
 		velocity.z = move_toward(velocity.z, 0, SPEED);
+		
 	move_and_slide();
 	return;
 
@@ -101,7 +120,15 @@ func _on_toggle_debug(on: bool):
 		remove_child(debug_node);
 	return;
 	
-#TODO set $Sound.stream before playing (when there are multiple available effects	
 func jump_sound() -> void:
-	$Sound.play()
+	$Sound.stream = jump_clip;
+	$Sound.play();
+	return;
+
+func walking_sound(start: bool) -> void:
+	if !$Sound.playing && start:
+		$Sound.stream = walking_clip;
+		$Sound.play();
+	elif !start:
+		$Sound.stop();	
 	return;
