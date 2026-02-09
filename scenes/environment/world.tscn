@@ -89,4 +89,4 @@ shape = SubResource("BoxShape3D_fj7yv")
 mesh = SubResource("BoxMesh_tlwt5")
 
 [node name="Enemy" parent="." unique_id=173467109 instance=ExtResource("5_xrntt")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.033636093, 0, -5.2646914)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.892113, 0, -5.2646914)

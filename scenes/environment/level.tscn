@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=3 uid="uid://dcjtq6fwkgs7g"]
+[gd_scene format=3 uid="uid://dcjtq6fwkgs7g"]
 
 [ext_resource type="Material" uid="uid://cj5kwgsdoxheq" path="res://materials/checker_white_debug.tres" id="1_u52ul"]
 
@@ -8,11 +8,20 @@
 material = ExtResource("1_u52ul")
 size = Vector3(40, 2, 40)
 
-[node name="Level" type="StaticBody3D"]
+[sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_bv8u8"]
+plane = Plane(0, 0, -1, 0)
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+[node name="Level" type="StaticBody3D" unique_id=1516551946]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=181692517]
 shape = SubResource("WorldBoundaryShape3D_5xgho")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="CollisionShape3D"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="CollisionShape3D" unique_id=1969407595]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
 mesh = SubResource("BoxMesh_u52ul")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="." unique_id=2041716966]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 20.722382)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D" unique_id=284124582]
+shape = SubResource("WorldBoundaryShape3D_bv8u8")
