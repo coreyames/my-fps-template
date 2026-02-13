@@ -4,4 +4,4 @@ enum Setting {
 	MOUSE,
 }
 
-var mouse_sensitivity: float = 50;
+var mouse_sensitivity: float = 50
