@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://cf8owl4xccf4s"]
 
 [ext_resource type="PackedScene" uid="uid://d3t75k7frfmn8" path="res://assets/War Low Poly Pack/LPWarPack_AssaultRifle.fbx" id="1_vk1bi"]
-[ext_resource type="Script" uid="uid://d00twk1x00bv3" path="res://scenes/entity/objects/equippable/gun.gd" id="2_kw0bs"]
+[ext_resource type="Script" uid="uid://d00twk1x00bv3" path="res://scenes/entity/objects/equippable/gun_ar.gd" id="2_kw0bs"]
 
 [sub_resource type="Animation" id="Animation_dk5gl"]
 length = 0.001

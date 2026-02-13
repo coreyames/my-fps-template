@@ -1,7 +1,6 @@
-class_name Gun
-extends Node3D
+class_name Gun extends Weapon
 
-var ammo_scene = preload("res://scenes/entity/objects/proj.tscn")
+var ammo_scene: Resource = preload("res://scenes/entity/objects/proj.tscn")
 const PROJ_SPAWN_Z_OFFSET = 0.57
 const PROJ_SPAWN_Y_OFFSET = 0.077
 	
