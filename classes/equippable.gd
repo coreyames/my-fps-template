@@ -1,8 +1,1 @@
 class_name Equippable extends Item
-
-func _ready() -> void:
-	name = "Equippable"
-
-func _init(_id: int) -> void:
-	id = _id
-	return

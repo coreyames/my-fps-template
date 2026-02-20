@@ -15,9 +15,8 @@ top_radius = 0.3
 bottom_radius = 0.3
 height = 1.75
 
-[node name="Player" type="CharacterBody3D" unique_id=644000164 node_paths=PackedStringArray("equipped") groups=["settings_dependent"]]
+[node name="Player" type="CharacterBody3D" unique_id=644000164 groups=["settings_dependent"]]
 script = ExtResource("1_ukbfy")
-equipped = NodePath("Camera3D/Equipped")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=366439410]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.875, 0)
@@ -33,7 +32,7 @@ script = ExtResource("2_crfiw")
 body = NodePath("..")
 cam = NodePath(".")
 
-[node name="Equipped" parent="Camera3D" unique_id=176738988 instance=ExtResource("3_de6uy")]
+[node name="Weapon" parent="Camera3D" unique_id=176738988 instance=ExtResource("3_de6uy")]
 transform = Transform3D(-1, 0, -8.7422755e-08, 0, 0.99999976, 0, 8.742278e-08, 0, -0.99999976, 0.09608793, -0.17219186, -0.17606375)
 
 [node name="HUD" parent="." unique_id=235908584 instance=ExtResource("4_s818i")]

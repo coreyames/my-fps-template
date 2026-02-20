@@ -1,11 +1,11 @@
 class_name Item 
 extends Node3D
 
-var id: int = -1
+const default_id: int = -1
+const default_item_name: String ='<unset>' 
+var id: int = default_id
+var item_name: String = default_item_name
 
-func _ready() -> void:
-	name = "Item"
-
-func _init(_id: int) -> void:
-	id = _id
+func use(params) -> void:
+	print('override me')
 	return

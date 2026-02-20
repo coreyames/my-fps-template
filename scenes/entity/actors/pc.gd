@@ -20,7 +20,7 @@ var debug_node: Control = null
 var is_directed: bool = false
 var was_airborne: bool = false
 
-@export var gun: Gun
+@export var equipped: Equippable
 
 func _ready() -> void: 
 		Debug.connect("toggle_debug", _on_toggle_debug)
@@ -57,7 +57,7 @@ func _physics_process(delta: float) -> void:
 	
 	#TODO need to replace hardcoded values when adding resolution adjustment option
 	if Input.is_action_just_pressed("use"):
-		gun.use(get_viewport().get_camera_3d().project_ray_normal(Vector2(1920.0/2, 1080.0/2)))
+		equipped.use(get_viewport().get_camera_3d().project_ray_normal(Vector2(1920.0/2, 1080.0/2)))
 
 	if direction:
 		if !is_directed:
@@ -103,6 +103,9 @@ func _input(event: InputEvent) -> void:
 					in_menu = false
 					just_exited_menu = true
 					remove_child(menu_node)
+			if event.is_action_pressed('switch_equipped'):
+					switch_equipped()
+				
 	return
 
 func _on_menu_ok_button_pressed():
@@ -131,4 +134,8 @@ func walking_sound(start: bool) -> void:
 		$Sound.play()
 	elif !start:
 		$Sound.stop()
+	return
+
+func switch_equipped() -> void:
+	$Camera3D.remove_child(equipped)
 	return

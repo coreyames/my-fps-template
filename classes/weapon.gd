@@ -1,9 +1,9 @@
 class_name Weapon extends Equippable
 
-# Called when the node enters the scene tree for the first time.
-func _ready() -> void:
-	pass # Replace with function body.
+func use(params) -> void:
+	attack(params)
+	return	
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-	pass
+func attack(params) -> void:
+	print('override me')
+	return
