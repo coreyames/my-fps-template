@@ -20,11 +20,18 @@ var debug_node: Control = null
 var is_directed: bool = false
 var was_airborne: bool = false
 
+const gun_ar_scene: Resource = preload('res://scenes/entity/objects/equippable/gun_ar.tscn')
+const gun_ar2_scene: Resource = preload('res://scenes/entity/objects/equippable/gun_ar2.tscn')
 @export var equipped: Equippable
+var stored: Equippable
+var viewmodel: Transform3D
 
 func _ready() -> void: 
 		Debug.connect("toggle_debug", _on_toggle_debug)
 		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+		stored = gun_ar2_scene.instantiate()
+		viewmodel = equipped.transform
+		stored.transform = viewmodel
 		return
 
 func _physics_process(delta: float) -> void:
@@ -56,7 +63,7 @@ func _physics_process(delta: float) -> void:
 	var direction := (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
 	
 	#TODO need to replace hardcoded values when adding resolution adjustment option
-	if Input.is_action_just_pressed("use"):
+	if Input.is_action_just_pressed("use") && equipped != null:
 		equipped.use(get_viewport().get_camera_3d().project_ray_normal(Vector2(1920.0/2, 1080.0/2)))
 
 	if direction:
@@ -137,5 +144,10 @@ func walking_sound(start: bool) -> void:
 	return
 
 func switch_equipped() -> void:
-	$Camera3D.remove_child(equipped)
+	if equipped != null && stored != null:
+		$Camera3D.remove_child(equipped)
+		var to_equip: Equippable = stored
+		stored = equipped
+		equipped = to_equip
+		$Camera3D.add_child(equipped)
 	return
