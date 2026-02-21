@@ -1,8 +1,11 @@
 extends CharacterBody3D
 
+signal was_hit
+
 const SPEED: float = 5.0
 const JUMP_VELOCITY: float = 4.5
 
+var is_ready_jump = true
 const walking_clip: AudioStreamMP3 = preload("res://audio/walking.mp3")
 const jump_clip: AudioStreamMP3 = preload("res://audio/jump.mp3")
 
@@ -56,6 +59,8 @@ func _physics_process(delta: float) -> void:
 		return
 
 	if Input.is_action_just_pressed("jump") and is_on_floor():
+		# TODO remove mock-hit-on-jump later
+		# was_hit.emit()
 		jump_sound()
 		velocity.y = JUMP_VELOCITY
 
@@ -131,6 +136,9 @@ func _on_toggle_debug(on: bool):
 	return
 	
 func jump_sound() -> void:
+	if is_ready_jump:
+		is_ready_jump = false
+		return
 	$Sound.stream = jump_clip
 	$Sound.play()
 	return

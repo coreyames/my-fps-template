@@ -1,6 +1,7 @@
-[gd_scene load_steps=4 format=3 uid="uid://dxf1rgja73ssk"]
+[gd_scene format=3 uid="uid://dxf1rgja73ssk"]
 
 [ext_resource type="Shader" uid="uid://b1axes36geqr1" path="res://shaders/crosshair.gdshader" id="1_37p78"]
+[ext_resource type="Script" uid="uid://njkq6e2s0dwi" path="res://scenes/ui/hud.gd" id="1_hqnrr"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_64ctp"]
 shader = ExtResource("1_37p78")
@@ -20,7 +21,7 @@ shader_parameter/dot_outline_thickness = 0.5
 [sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_n2snw"]
 size = Vector2(128, 128)
 
-[node name="HUD" type="Control"]
+[node name="HUD" type="Control" unique_id=1343562807]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -28,8 +29,9 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
+script = ExtResource("1_hqnrr")
 
-[node name="Crosshair" type="TextureRect" parent="."]
+[node name="Crosshair" type="TextureRect" parent="." unique_id=502863544]
 material = SubResource("ShaderMaterial_64ctp")
 layout_mode = 1
 anchors_preset = 8
@@ -41,3 +43,32 @@ grow_horizontal = 2
 grow_vertical = 2
 texture = SubResource("PlaceholderTexture2D_n2snw")
 stretch_mode = 2
+
+[node name="Status" type="TextureRect" parent="." unique_id=878401698]
+layout_mode = 0
+offset_left = 64.0
+offset_top = 896.0
+offset_right = 577.0
+offset_bottom = 1023.0
+
+[node name="HP" type="Label" parent="Status" unique_id=257652705]
+layout_mode = 0
+offset_left = 32.0
+offset_top = 40.0
+offset_right = 224.0
+offset_bottom = 80.0
+text = "3 HITS REMAINING"
+
+[node name="EquippedInfo" type="TextureRect" parent="." unique_id=1748340587]
+layout_mode = 0
+offset_left = 1344.0
+offset_top = 896.0
+offset_right = 1857.0
+offset_bottom = 1024.0
+
+[node name="Ammo" type="Label" parent="EquippedInfo" unique_id=11251956]
+layout_mode = 0
+offset_left = 16.0
+offset_top = 40.0
+offset_right = 216.0
+offset_bottom = 80.0

@@ -3,6 +3,14 @@ class_name GUN_AssaultRifle extends Gun
 const PROJ_SPAWN_Z_OFFSET = 0.57
 const PROJ_SPAWN_Y_OFFSET = 0.077
 
+const DEFAULT_MAX_LOADED: int = 30
+const DEFAULT_MAX_RESERVE: int = 90
+
+func _ready() -> void:
+	max_loaded = DEFAULT_MAX_LOADED
+	max_reserve = DEFAULT_MAX_RESERVE
+	return
+
 func fire(direction: Vector3) -> void:
 	var projectile: Proj = ammo_scene.instantiate()
 	projectile.position = global_position
