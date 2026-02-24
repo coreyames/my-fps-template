@@ -35,6 +35,7 @@ func _ready() -> void:
 		stored = gun_ar2_scene.instantiate()
 		viewmodel = equipped.transform
 		stored.transform = viewmodel
+		$Sound.volume_db = -15
 		return
 
 func _physics_process(delta: float) -> void:

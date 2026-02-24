@@ -2,6 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://d3t75k7frfmn8" path="res://assets/War Low Poly Pack/LPWarPack_AssaultRifle.fbx" id="1_obfn8"]
 [ext_resource type="Script" uid="uid://d00twk1x00bv3" path="res://scenes/entity/objects/equippable/gun_ar.gd" id="2_6rqjx"]
+[ext_resource type="Script" uid="uid://xu7srjpqgcxk" path="res://classes/GameAudioStream.gd" id="3_6rqjx"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_obfn8"]
 resource_name = "Metal1"
@@ -88,6 +89,8 @@ mesh = SubResource("ArrayMesh_6rqjx")
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." index="1" unique_id=1434169362]
 libraries/ = SubResource("AnimationLibrary_kw0bs")
 
-[node name="Sound" type="AudioStreamPlayer3D" parent="." index="2" unique_id=97587154]
+[node name="Sound" type="AudioStreamPlayer3D" parent="." index="2" unique_id=1268624040]
 volume_db = -45.0
 max_db = -20.0
+script = ExtResource("3_6rqjx")
+metadata/_custom_type_script = "uid://xu7srjpqgcxk"

@@ -1,18 +1,35 @@
 extends Control
 
-var remaining: int = 3
-
+# TODO placeholder for hit connection testing, will get from character later
+const START_HP: int = 3
+var remaining: int = START_HP
+var loaded: int
+var reserve: int
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	$Status/HP.text = str(remaining) + ' HITS REMAINING' 
-	var equipped: Equippable = get_parent().equipped
-	if equipped.max_loaded != null && equipped.max_reserve != null:
-		$EquippedInfo/Ammo.text = str(equipped.max_loaded) + ' / ' + str(equipped.max_reserve)
 	get_parent().connect('was_hit', _on_was_hit)
+	
+	var equipped: Equippable = get_parent().equipped
+	if equipped != null:
+		equipped.connect('used', _on_equipped_used)
+		if equipped.max_loaded != null && equipped.max_reserve != null:
+			loaded = equipped.max_loaded
+			reserve = equipped.max_reserve
+			update_ammo_count(loaded, reserve)
 	return
 
 func _on_was_hit() -> void:
 	remaining -= 1
 	$Status/HP.text = '' + str(remaining) + ' HITS REMAINING' 
 	return
-												
+							
+func _on_equipped_used():
+	update_ammo_count(loaded-1,reserve)
+	return					
+
+func update_ammo_count(_loaded: int, _reserve: int):
+	loaded = _loaded
+	reserve = _reserve
+	$EquippedInfo/Ammo.text = str(loaded) + ' / ' + str(reserve)
+	return

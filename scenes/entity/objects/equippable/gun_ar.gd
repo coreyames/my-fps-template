@@ -21,5 +21,6 @@ func shoot(direction: Vector3) -> void:
 	get_node("/root").add_child(projectile)
 	$AnimationPlayer.play("use")
 	$Sound.play()
+	used.emit()
 	projectile.fire(direction)
 	return
