@@ -5,6 +5,7 @@
 [ext_resource type="Shader" uid="uid://drltjs85u6aje" path="res://shaders/skybox.gdshader" id="3_43fak"]
 [ext_resource type="Script" uid="uid://cuwkybx07itvj" path="res://scenes/environment/world_environment.gd" id="4_scdbs"]
 [ext_resource type="PackedScene" uid="uid://da3kttdlmslo" path="res://scenes/entity/actors/enemy.tscn" id="5_xrntt"]
+[ext_resource type="PackedScene" uid="uid://bkg6ndqo0xw51" path="res://scenes/entity/actors/npc.tscn" id="6_tmq7g"]
 
 [sub_resource type="Gradient" id="Gradient_dwbse"]
 offsets = PackedFloat32Array(0.11594203, 0.5652174, 0.8115942)
@@ -90,3 +91,6 @@ mesh = SubResource("BoxMesh_tlwt5")
 
 [node name="Enemy" parent="." unique_id=173467109 instance=ExtResource("5_xrntt")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.892113, 0, -5.2646914)
+
+[node name="NPC" parent="." unique_id=644000164 instance=ExtResource("6_tmq7g")]
+transform = Transform3D(0.7146192, 0, -0.6995137, 0, 1, 0, 0.6995137, 0, 0.7146192, 0, 0, 8.242425)

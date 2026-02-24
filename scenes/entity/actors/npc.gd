@@ -11,10 +11,15 @@ var jump_entropy: float = 0
 var current_action: StringName = "ui_up"
 var input_dir: Vector2 = Vector2(0.0, 0.0)
 var to_jump: bool = false
-var stand_still: bool = false
+var stand_still: bool = true
+
+var player_location: Vector3
+var player_node: CharacterBody3D
 
 func _ready() -> void:
 	current_action = dir_actions.pick_random()
+	player_node = get_parent().get_node('Player')
+	player_location = player_node.global_position
 	return
 
 func generate_input() -> void:
@@ -46,7 +51,9 @@ func generate_input() -> void:
 	return
 
 func _physics_process(delta: float) -> void:
-	# TODO shoot or rotate here
+	player_location = player_node.global_position
+	look_at(player_location)
+	# TODO shoot or rotate here if standing still
 	if stand_still:
 		return
 	
@@ -71,5 +78,5 @@ func _physics_process(delta: float) -> void:
 	else:
 		velocity.x = move_toward(velocity.x, 0, SPEED)
 		velocity.z = move_toward(velocity.z, 0, SPEED)
-
+		
 	move_and_slide()

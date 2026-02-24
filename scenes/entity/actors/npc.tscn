@@ -1,0 +1,37 @@
+[gd_scene format=3 uid="uid://bkg6ndqo0xw51"]
+
+[ext_resource type="Script" uid="uid://o6mcb1xks1hy" path="res://scenes/entity/actors/npc.gd" id="1_mdoju"]
+[ext_resource type="PackedScene" uid="uid://cf8owl4xccf4s" path="res://scenes/entity/objects/equippable/gun_ar.tscn" id="3_ecus7"]
+[ext_resource type="AudioStream" uid="uid://b2gwe17ttt7ra" path="res://audio/jump.mp3" id="5_mr23n"]
+[ext_resource type="Script" uid="uid://xu7srjpqgcxk" path="res://classes/GameAudioStream.gd" id="6_qihvj"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_ct41q"]
+height = 1.75
+radius = 0.3
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_ukbfy"]
+top_radius = 0.3
+bottom_radius = 0.3
+height = 1.75
+
+[node name="NPC" type="CharacterBody3D" unique_id=644000164 groups=["settings_dependent"]]
+script = ExtResource("1_mdoju")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=366439410]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.875, 0)
+shape = SubResource("CylinderShape3D_ct41q")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="CollisionShape3D" unique_id=1272764567]
+mesh = SubResource("CylinderMesh_ukbfy")
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=1704852603 groups=["settings_dependent"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5268595, -0.2035653)
+fov = 90.6
+
+[node name="Equipped" parent="Camera3D" unique_id=176738988 instance=ExtResource("3_ecus7")]
+transform = Transform3D(-1, 0, -8.7422755e-08, 0, 0.99999976, 0, 8.742278e-08, 0, -0.99999976, 0.09608793, -0.17219186, -0.17606375)
+
+[node name="Sound" type="AudioStreamPlayer3D" parent="." unique_id=493974314]
+stream = ExtResource("5_mr23n")
+script = ExtResource("6_qihvj")
+metadata/_custom_type_script = "uid://xu7srjpqgcxk"
