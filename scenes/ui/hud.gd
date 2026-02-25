@@ -5,7 +5,7 @@ const START_HP: int = 3
 var remaining: int = START_HP
 var loaded: int
 var reserve: int
-# Called when the node enters the scene tree for the first time.
+
 func _ready() -> void:
 	$Status/HP.text = str(remaining) + ' HITS REMAINING' 
 	get_parent().connect('was_hit', _on_was_hit)

@@ -1,5 +1,6 @@
 [gd_scene format=3 uid="uid://dx5ebi81u85xo"]
 
+[ext_resource type="Script" uid="uid://6mv1h5kgb35g" path="res://scenes/environment/world.gd" id="1_43fak"]
 [ext_resource type="PackedScene" uid="uid://dcjtq6fwkgs7g" path="res://scenes/environment/level.tscn" id="1_wcnsb"]
 [ext_resource type="PackedScene" uid="uid://b7a13xqqyw8ii" path="res://scenes/entity/actors/pc.tscn" id="2_tmq7g"]
 [ext_resource type="Shader" uid="uid://drltjs85u6aje" path="res://shaders/skybox.gdshader" id="3_43fak"]
@@ -57,6 +58,7 @@ roughness = 0.37
 material = SubResource("StandardMaterial3D_aqk2v")
 
 [node name="World" type="Node3D" unique_id=870428597]
+script = ExtResource("1_43fak")
 
 [node name="Level" parent="." unique_id=1335998995 instance=ExtResource("1_wcnsb")]
 

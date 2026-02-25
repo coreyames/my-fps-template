@@ -22,6 +22,7 @@ config/features=PackedStringArray("4.6", "Forward Plus")
 
 Settings="*res://singletons/settings.gd"
 Debug="*res://singletons/debug_msg_bus.gd"
+SignalBus="*uid://crcbqotf31nhj"
 
 [debug]
 

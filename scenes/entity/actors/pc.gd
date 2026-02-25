@@ -118,7 +118,6 @@ func _input(event: InputEvent) -> void:
 					remove_child(menu_node)
 			if event.is_action_pressed('switch_equipped'):
 					switch_equipped()
-				
 	return
 
 func _on_menu_ok_button_pressed():
