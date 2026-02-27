@@ -1,11 +1,15 @@
 extends CharacterBody3D
 
+var world: Node3D
+
 signal was_hit
 
 const SPEED: float = 5.0
 const JUMP_VELOCITY: float = 4.5
+var is_ready_jump: bool = true
+var is_directed: bool = false
+var was_airborne: bool = false
 
-var is_ready_jump = true
 const walking_clip: AudioStreamMP3 = preload("res://audio/walking.mp3")
 const jump_clip: AudioStreamMP3 = preload("res://audio/jump.mp3")
 
@@ -20,9 +24,6 @@ var just_exited_menu: bool = true
 
 var debug_node: Control = null
 
-var is_directed: bool = false
-var was_airborne: bool = false
-
 const gun_ar_scene: Resource = preload('res://scenes/entity/objects/equippable/gun_ar.tscn')
 const gun_ar2_scene: Resource = preload('res://scenes/entity/objects/equippable/gun_ar2.tscn')
 @export var equipped: Equippable
@@ -30,13 +31,14 @@ var stored: Equippable
 var viewmodel: Transform3D
 
 func _ready() -> void: 
-		Debug.connect("toggle_debug", _on_toggle_debug)
-		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
-		stored = gun_ar2_scene.instantiate()
-		viewmodel = equipped.transform
-		stored.transform = viewmodel
-		$Sound.volume_db = -15
-		return
+	world = get_parent()
+	Debug.connect("toggle_debug", _on_toggle_debug)
+	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	stored = gun_ar2_scene.instantiate()
+	viewmodel = equipped.transform
+	stored.transform = viewmodel
+	$Sound.volume_db = -15
+	return
 
 func _physics_process(delta: float) -> void:
 	if not is_on_floor():
@@ -60,13 +62,11 @@ func _physics_process(delta: float) -> void:
 		return
 
 	if Input.is_action_just_pressed("jump") and is_on_floor():
-		# TODO remove mock-hit-on-jump later
-		# was_hit.emit()
 		jump_sound()
 		velocity.y = JUMP_VELOCITY
 
-	var input_dir := Input.get_vector("left", "right", "fwd", "bwd")
-	var direction := (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
+	var input_dir = Input.get_vector("left", "right", "fwd", "bwd")
+	var direction = (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
 	
 	#TODO need to replace hardcoded values when adding resolution adjustment option
 	if Input.is_action_just_pressed("use") && equipped != null:
@@ -86,7 +86,8 @@ func _physics_process(delta: float) -> void:
 		velocity.x = move_toward(velocity.x, 0, SPEED)
 		velocity.z = move_toward(velocity.z, 0, SPEED)
 		
-	move_and_slide()
+	if (move_and_slide()):
+		handle_collisions()
 	return
 
 func _input(event: InputEvent) -> void:
@@ -158,4 +159,20 @@ func switch_equipped() -> void:
 		stored = equipped
 		equipped = to_equip
 		$Camera3D.add_child(equipped)
+	return
+	
+func handle_proj_collision(collision: KinematicCollision3D) -> void:
+	var collider: Node3D = collision.get_collider()
+	Debug.log(str(collider))
+	was_hit.emit()
+	SignalBus.projectile_hit.emit(collider.get_instance_id())
+	return
+
+func handle_collisions() -> void:
+	for i in range(get_slide_collision_count()):
+		var collision: KinematicCollision3D = get_slide_collision(i)
+		var collider: Node3D = collision.get_collider()
+		if collider.get_instance_id() != world.level_collision_id:
+			if collider is Projectile:
+				handle_proj_collision(collision)
 	return

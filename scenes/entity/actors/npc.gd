@@ -1,24 +1,28 @@
 extends CharacterBody3D
 
-signal was_hit
+var world: Node3D
+var player_location: Vector3
+var player_node: CharacterBody3D
 
 const SPEED: float = 5.0
 const JUMP_VELOCITY: float = 4.5
 const dir_actions: Array[StringName] =  ["ui_left", "ui_right", "ui_up", "ui_down"]
 		
-var chance_to_change: float = .5
-var chance_to_jump: float = .3
-var dir_entropy: float = 0
-var jump_entropy: float = 0	
 var current_action: StringName = "ui_up"
 var input_dir: Vector2 = Vector2(0.0, 0.0)
-var to_jump: bool = false
 var stand_still: bool = true
+var chance_to_change_dir: float = .5
+var dir_entropy: float = 0
 
+var to_jump: bool = false
+var chance_to_jump: float = .3
+var jump_entropy: float = 0
+
+var to_shoot: bool = false
+var pacifist: bool = false
 var maintain_pc_los: bool = true
-var player_location: Vector3
-var player_node: CharacterBody3D
-var world: Node3D
+var chance_to_shoot: float = .2
+var shoot_entropy: float = 0
 
 func _ready() -> void:
 	world = get_parent()
@@ -28,7 +32,7 @@ func _ready() -> void:
 	return
 
 func generate_input() -> void:
-	var dir_chance = chance_to_change * dir_entropy
+	var dir_chance = chance_to_change_dir * dir_entropy
 	var dir_roll = randf()
 	if dir_roll > 1 - dir_chance:
 		current_action = dir_actions.pick_random()
@@ -43,6 +47,14 @@ func generate_input() -> void:
 		jump_entropy = 0
 	else:
 		jump_entropy += .001
+		
+	var shoot_chance = chance_to_shoot * shoot_entropy
+	var shoot_roll = randf()
+	if shoot_roll > 1 - shoot_chance:
+		to_shoot = true
+		shoot_entropy = 0
+	else:
+		shoot_entropy += .001
 		
 	match current_action:
 		"ui_left":
@@ -74,6 +86,9 @@ func _physics_process(delta: float) -> void:
 	if to_jump and is_on_floor():
 		velocity.y = JUMP_VELOCITY
 		to_jump = false
+		
+	if to_shoot && !pacifist:
+		shoot_at_player()
 
 	# Get the input direction and handle the movement/deceleration.
 	var direction := (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
@@ -85,13 +100,24 @@ func _physics_process(delta: float) -> void:
 		velocity.z = move_toward(velocity.z, 0, SPEED)
 		
 	if (move_and_slide()):
-		handle_collision()
+		handle_collisions()
+	return
+	
+func handle_proj_collision(collision: KinematicCollision3D) -> void:
+	var collider: Node3D = collision.get_collider()
+	Debug.log(str(collider))
+	SignalBus.projectile_hit.emit(collider.get_instance_id())
 	return
 
-func handle_collision() -> void:
-	var cid: int = get_last_slide_collision().get_collider_id()
-	if cid != world.level_collision_id:
-		Debug.log(str(cid))
-		#was_hit.emit(cid)
-		SignalBus.projectile_hit.emit(cid)
-	return	
+func handle_collisions() -> void:
+	for i in range(get_slide_collision_count()):
+		var collision: KinematicCollision3D = get_slide_collision(i)
+		var collider: Node3D = collision.get_collider()
+		if collider.get_instance_id() != world.level_collision_id:
+			if collider is Projectile:
+				handle_proj_collision(collision)
+	return
+	
+func shoot_at_player() -> void:
+	$Camera3D/Equipped.use($Camera3D.project_ray_normal(Vector2(1920.0/2, 1080.0/2)))
+	to_shoot = false

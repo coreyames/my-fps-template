@@ -63,6 +63,7 @@ script = ExtResource("1_43fak")
 [node name="Level" parent="." unique_id=1335998995 instance=ExtResource("1_wcnsb")]
 
 [node name="Player" parent="." unique_id=2121428152 instance=ExtResource("2_tmq7g")]
+transform = Transform3D(-0.6481864, 0, -0.7614817, 0, 1, 0, 0.7614817, 0, -0.6481864, 0, 0, 0)
 
 [node name="Sun" type="DirectionalLight3D" parent="." unique_id=178360773]
 transform = Transform3D(0.5316124, -0.38471743, -0.7545733, 0.049793534, -0.8751539, 0.48127586, -0.845523, -0.29342505, -0.44608623, -5.4968576, 17.952604, 16.24462)
@@ -92,7 +93,7 @@ shape = SubResource("BoxShape3D_fj7yv")
 mesh = SubResource("BoxMesh_tlwt5")
 
 [node name="Enemy" parent="." unique_id=173467109 instance=ExtResource("5_xrntt")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.892113, 0, -5.2646914)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.892113, 0, 9.54057)
 
 [node name="NPC" parent="." unique_id=644000164 instance=ExtResource("6_tmq7g")]
 transform = Transform3D(0.7146192, 0, -0.6995137, 0, 1, 0, 0.6995137, 0, 0.7146192, 0, 0, 8.242425)

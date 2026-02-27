@@ -1,4 +1,4 @@
-class_name Proj
+class_name Projectile
 extends AnimatableBody3D
 
 const SPEED = 60

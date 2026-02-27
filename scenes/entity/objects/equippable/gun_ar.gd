@@ -14,7 +14,7 @@ func _ready() -> void:
 	return
 
 func shoot(direction: Vector3) -> void:
-	var projectile: Proj = ammo_scene.instantiate()
+	var projectile: Projectile = ammo_scene.instantiate()
 	projectile.position = global_position
 	projectile.rotation = global_rotation
 	projectile.translate_object_local(Vector3(0, PROJ_SPAWN_Y_OFFSET, PROJ_SPAWN_Z_OFFSET))
