@@ -30,7 +30,7 @@ func _on_equipped_used():
 	return					
 
 func update_ammo_count(_loaded: int, _reserve: int):
-	# 'infinite ammo' effective for now
+	# 'infinite ammo + auto reaload' effective for now
 	loaded = _loaded
 	if loaded == 0:
 		loaded = equipped.max_loaded

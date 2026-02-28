@@ -15,7 +15,7 @@ compatibility/default_parent_skeleton_in_mesh_instance_3d=true
 [application]
 
 config/name="fps-bare-bones"
-run/main_scene="uid://dx5ebi81u85xo"
+run/main_scene="uid://djqwn6k0ocdt"
 config/features=PackedStringArray("4.6", "Forward Plus")
 
 [autoload]
