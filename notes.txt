@@ -3,3 +3,22 @@ jump sound: JumpLanding Sound Effect by u_qqkrn9bn55
 freesound_community-meaty-gunshot-101257
 freesound_community-simple-gunshot-reverb-test-101093
 dev_guy-bullet-gunshot-impact-390253.mp3
+
+# no control in air
+#
+if direction && is_on_floor():
+		if !is_directed:
+			is_directed = true
+		velocity.x = direction.x * SPEED
+		velocity.z = direction.z * SPEED
+		walking_sound(true)
+	else:
+		if is_directed:
+			is_directed = false
+			walking_sound(false)
+		if is_on_floor():
+			decel = SPEED
+		else:
+			decel = AIR_DECEL_START
+		velocity.x = move_toward(velocity.x, 0, decel)
+		velocity.z = move_toward(velocity.z, 0, decel)

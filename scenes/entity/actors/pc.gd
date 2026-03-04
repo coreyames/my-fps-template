@@ -6,10 +6,10 @@ signal was_hit
 
 const SPEED: float = 5.0
 const JUMP_VELOCITY: float = 4.5
-const AIR_DECEL_START: float = 1.0/(SPEED*SPEED*10*10)
-var decel: float = SPEED
+const AIR_DECEL_START: float = 1.0/(SPEED*SPEED*10*10) # idfk lol
+const AIR_STRAFE_VELOCITY: float = 0.5
 var is_ready_jump: bool = true
-var is_directed: bool = false
+var is_directed_on_floor: bool = false
 var was_airborne: bool = false
 
 const walking_clip: AudioStreamMP3 = preload("res://audio/walking.mp3")
@@ -43,13 +43,14 @@ func _ready() -> void:
 	return
 
 func _physics_process(delta: float) -> void:
+	var camera_motion: Vector2 = $Camera3D.motion
 	if not is_on_floor():
 		velocity += get_gravity() * delta
 		if !was_airborne:
 			was_airborne = true
 	elif was_airborne:
 		was_airborne = false
-		jump_sound()
+		jump_sound() #TODO make more obvious this call is for landing
 
 	if just_exited_menu:
 		just_exited_menu = false
@@ -67,29 +68,39 @@ func _physics_process(delta: float) -> void:
 		jump_sound()
 		velocity.y = JUMP_VELOCITY
 
-	var input_dir = Input.get_vector("left", "right", "fwd", "bwd")
-	var direction = (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
+	var input_dir: Vector2 = Input.get_vector("left", "right", "fwd", "bwd")
+	var direction: Vector3 = (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
 	
 	#TODO need to replace hardcoded values when adding resolution adjustment option
 	if Input.is_action_just_pressed("use") && equipped != null:
 		equipped.use(get_viewport().get_camera_3d().project_ray_normal(Vector2(1920.0/2, 1080.0/2)))
 
 	if direction && is_on_floor():
-		if !is_directed:
-			is_directed = true
+		if !is_directed_on_floor:
+			is_directed_on_floor = true
 		velocity.x = direction.x * SPEED
 		velocity.z = direction.z * SPEED
 		walking_sound(true)
 	else:
-		if is_directed:
-			is_directed = false
+		if is_directed_on_floor:
+			is_directed_on_floor = false
 			walking_sound(false)
-		if is_on_floor():
-			decel = SPEED
-		else:
-			decel = AIR_DECEL_START
-		velocity.x = move_toward(velocity.x, 0, decel)
-		velocity.z = move_toward(velocity.z, 0, decel)
+
+		if !direction && !is_on_floor():
+			velocity.x = move_toward(velocity.x, 0, AIR_DECEL_START)
+			velocity.z = move_toward(velocity.z, 0, AIR_DECEL_START)
+		elif direction && !is_on_floor():
+			velocity.x = AIR_STRAFE_VELOCITY * direction.x
+			velocity.z = AIR_STRAFE_VELOCITY * direction.z
+			if (!is_zero_approx(camera_motion.x)):
+				if (camera_motion.x > 0 && input_dir.x > 0) || (camera_motion.x < 0 && input_dir.x < 0):
+					var x_abs: float = abs(camera_motion.x)
+					velocity.x = (AIR_STRAFE_VELOCITY/x_abs) * direction.x
+					velocity.z = (AIR_STRAFE_VELOCITY/x_abs) * direction.z
+		elif is_on_floor():
+			velocity.x = move_toward(velocity.x, 0, SPEED)
+			velocity.z = move_toward(velocity.z, 0, SPEED)
+		
 		
 	if (move_and_slide()):
 		handle_collisions()
