@@ -1,14 +1,15 @@
 extends CharacterBody3D
 
-var world: Node3D
-
 signal was_hit
+
+var world: Node3D
 
 const SPEED: float = 5.0
 const JUMP_VELOCITY: float = 4.5
-const AIR_DECEL_START: float = 1.0/(SPEED*SPEED*10*10) # idfk lol
+const AIR_DECEL_START: float = 1.0/(SPEED*SPEED*10*10) # TODO idfk lol
 const AIR_STRAFE_ACCEL: float = 0.5
-var is_ready_jump: bool = true
+
+var is_scene_ready_jump: bool = true
 var is_directed_on_floor: bool = false
 var was_airborne: bool = false
 
@@ -23,23 +24,58 @@ const menu_scene: Resource = preload("res://scenes/ui/menu.tscn")
 var menu_node: Control = null
 var in_menu: bool = true
 var just_exited_menu: bool = true
-
 var debug_node: Control = null
 
+# gun_scenes here serve as tmp defaults; when accessing char, equip scenes are actual property
 const gun_ar_scene: Resource = preload('res://scenes/entity/objects/equippable/gun_ar.tscn')
 const gun_ar2_scene: Resource = preload('res://scenes/entity/objects/equippable/gun_ar2.tscn')
+var equip1_scene: Resource = gun_ar_scene
+var equip2_scene: Resource = gun_ar2_scene
+
 @export var equipped: Equippable
 var stored: Equippable
 var viewmodel: Transform3D
+
+var base_stats: Dictionary[String, int] = {
+	"HP": 100, # max health
+	"SP": 20,  # max skill pts, tmp 'resource'
+	"PR": 50,  # phys reduction
+	"MR": 50,  # and magic reduction for tmp defense stats
+	"SC": 2    # skill cap, determines skill slot count
+}
+
+var max_health: int = base_stats.get("HP")
+var max_resource: int = base_stats.get("SP")
+var cur_health: int = max_health
+var cur_resource: int = max_resource
+var phys_reduction: int = base_stats.get("PR")
+var magic_reduction: int = base_stats.get("MR")
+var skill_cap: int = base_stats.get("SC")
+
+var equipment: Dictionary[String, Equippable] = {
+	"w1": null,
+	"w2": null,
+	"helm": null,
+	"chest": null,
+	"pack": null
+}
+
+var skills: Dictionary[int, Skill] = {}
 
 func _ready() -> void: 
 	world = get_parent()
 	Debug.connect("toggle_debug", _on_toggle_debug)
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
-	stored = gun_ar2_scene.instantiate()
+	if (equip2_scene != null):
+		stored = equip2_scene.instantiate()
 	viewmodel = equipped.transform
 	stored.transform = viewmodel
 	$Sound.volume_db = -15
+	equipment.set("w1", equipped)
+	equipment.set("w2", stored)
+	add_stats_from_equipment()
+	for i in range(0, skill_cap):
+		skills.set(i, null)
 	return
 
 func _physics_process(delta: float) -> void:
@@ -50,7 +86,7 @@ func _physics_process(delta: float) -> void:
 			was_airborne = true
 	elif was_airborne:
 		was_airborne = false
-		jump_sound() #TODO make more obvious this call is for landing
+		jump_and_land_sound() 
 
 	if just_exited_menu:
 		just_exited_menu = false
@@ -65,7 +101,7 @@ func _physics_process(delta: float) -> void:
 		return
 
 	if Input.is_action_just_pressed("jump") and is_on_floor():
-		jump_sound()
+		jump_and_land_sound()
 		velocity.y = JUMP_VELOCITY
 
 	var input_dir: Vector2 = Input.get_vector("left", "right", "fwd", "bwd")
@@ -149,9 +185,9 @@ func _on_toggle_debug(on: bool):
 		remove_child(debug_node)
 	return
 	
-func jump_sound() -> void:
-	if is_ready_jump:
-		is_ready_jump = false
+func jump_and_land_sound() -> void:
+	if is_scene_ready_jump:
+		is_scene_ready_jump = false
 		return
 	$Sound.stream = jump_clip
 	$Sound.play()
@@ -188,4 +224,19 @@ func handle_collisions() -> void:
 		if collider.get_instance_id() != world.level_collision_id:
 			if collider is Projectile:
 				handle_proj_collision(collision)
+	return
+
+func add_stats_from_equipment() -> void:
+	var helm: Helm = equipment.get("helm")
+	var chest: Chest = equipment.get("chest")
+	var pack: Pack = equipment.get("pack")
+	if helm:
+		max_health += helm.HP
+		magic_reduction += helm.MR
+	if chest:
+		max_health += chest.HP
+		phys_reduction += chest.PR
+	if pack:
+		max_health += pack.HP
+		skill_cap += pack.SC
 	return
