@@ -7,7 +7,7 @@ signal was_hit
 const SPEED: float = 5.0
 const JUMP_VELOCITY: float = 4.5
 const AIR_DECEL_START: float = 1.0/(SPEED*SPEED*10*10) # idfk lol
-const AIR_STRAFE_VELOCITY: float = 0.5
+const AIR_STRAFE_ACCEL: float = 0.5
 var is_ready_jump: bool = true
 var is_directed_on_floor: bool = false
 var was_airborne: bool = false
@@ -90,17 +90,15 @@ func _physics_process(delta: float) -> void:
 			velocity.x = move_toward(velocity.x, 0, AIR_DECEL_START)
 			velocity.z = move_toward(velocity.z, 0, AIR_DECEL_START)
 		elif direction && !is_on_floor():
-			velocity.x = AIR_STRAFE_VELOCITY * direction.x
-			velocity.z = AIR_STRAFE_VELOCITY * direction.z
+			velocity.x = move_toward(velocity.x, 0, AIR_DECEL_START)
+			velocity.z = move_toward(velocity.z, 0, AIR_DECEL_START)
 			if (!is_zero_approx(camera_motion.x)):
 				if (camera_motion.x > 0 && input_dir.x > 0) || (camera_motion.x < 0 && input_dir.x < 0):
-					var x_abs: float = abs(camera_motion.x)
-					velocity.x = (AIR_STRAFE_VELOCITY/x_abs) * direction.x
-					velocity.z = (AIR_STRAFE_VELOCITY/x_abs) * direction.z
+					velocity.x += AIR_STRAFE_ACCEL * direction.x
+					velocity.z += AIR_STRAFE_ACCEL * direction.z
 		elif is_on_floor():
 			velocity.x = move_toward(velocity.x, 0, SPEED)
 			velocity.z = move_toward(velocity.z, 0, SPEED)
-		
 		
 	if (move_and_slide()):
 		handle_collisions()
