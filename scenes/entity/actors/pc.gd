@@ -125,7 +125,7 @@ func _physics_process(delta: float) -> void:
 		if !direction && !is_on_floor():
 			velocity.x = move_toward(velocity.x, 0, AIR_DECEL_START)
 			velocity.z = move_toward(velocity.z, 0, AIR_DECEL_START)
-		elif direction && !is_on_floor():
+		elif direction && !is_on_floor(): #TODO logic here
 			velocity.x = move_toward(velocity.x, 0, AIR_DECEL_START)
 			velocity.z = move_toward(velocity.z, 0, AIR_DECEL_START)
 			if (!is_zero_approx(camera_motion.x)):
@@ -135,6 +135,10 @@ func _physics_process(delta: float) -> void:
 		elif is_on_floor():
 			velocity.x = move_toward(velocity.x, 0, SPEED)
 			velocity.z = move_toward(velocity.z, 0, SPEED)
+		
+	if debug_node:
+		var movement_info: TextEdit = debug_node.get_node("MovementInfo")
+		movement_info.text = str(velocity)
 		
 	if (move_and_slide()):
 		handle_collisions()
