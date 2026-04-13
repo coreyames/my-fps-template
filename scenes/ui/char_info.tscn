@@ -1,0 +1,112 @@
+[gd_scene format=3 uid="uid://c1ieg2hxpoihd"]
+
+[ext_resource type="Texture2D" uid="uid://lnj1gpf23mq" path="res://assets/placeholders/bodyarmor.png" id="1_s75br"]
+[ext_resource type="Texture2D" uid="uid://dnofxf1j5u55j" path="res://assets/placeholders/gloves.png" id="2_75xyg"]
+[ext_resource type="Texture2D" uid="uid://bx4gj4c1tkarf" path="res://assets/placeholders/greaves.png" id="3_idu4l"]
+[ext_resource type="Texture2D" uid="uid://dvbwmk6vhoowc" path="res://assets/placeholders/equipped.png" id="4_tocum"]
+[ext_resource type="Texture2D" uid="uid://b31fe11ysjl3i" path="res://assets/placeholders/stowed.png" id="5_re8eq"]
+
+[node name="CharInfo" type="AspectRatioContainer" unique_id=1421415866]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 64.0
+offset_top = 64.0
+offset_right = -960.0
+offset_bottom = -120.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=705401084]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="TopRow" type="HBoxContainer" parent="VBoxContainer" unique_id=1876576641]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="BodyArmorPanel" type="PanelContainer" parent="VBoxContainer/TopRow" unique_id=122830907]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="CenterContainer" type="CenterContainer" parent="VBoxContainer/TopRow/BodyArmorPanel" unique_id=308382709]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="VBoxContainer/TopRow/BodyArmorPanel/CenterContainer" unique_id=946420366]
+layout_mode = 2
+texture = ExtResource("1_s75br")
+
+[node name="GlovesPanel" type="PanelContainer" parent="VBoxContainer/TopRow" unique_id=1799389052]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="CenterContainer" type="CenterContainer" parent="VBoxContainer/TopRow/GlovesPanel" unique_id=2142742387]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="VBoxContainer/TopRow/GlovesPanel/CenterContainer" unique_id=218272543]
+layout_mode = 2
+texture = ExtResource("2_75xyg")
+
+[node name="BasicInfoPanel" type="PanelContainer" parent="VBoxContainer/TopRow" unique_id=219531937]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="VBoxContainer/TopRow/BasicInfoPanel" unique_id=675743416]
+layout_mode = 2
+text = "   <Name>
+
+      HP:
+      SP:
+      PR:
+      MR:"
+
+[node name="MiddleRow" type="HBoxContainer" parent="VBoxContainer" unique_id=455481487]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="GreavesPanel" type="PanelContainer" parent="VBoxContainer/MiddleRow" unique_id=1742052135]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="CenterContainer" type="CenterContainer" parent="VBoxContainer/MiddleRow/GreavesPanel" unique_id=1654503935]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="VBoxContainer/MiddleRow/GreavesPanel/CenterContainer" unique_id=1411939952]
+layout_mode = 2
+texture = ExtResource("3_idu4l")
+
+[node name="EquippedPanel" type="PanelContainer" parent="VBoxContainer/MiddleRow" unique_id=1208145110]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 2.0
+
+[node name="CenterContainer" type="CenterContainer" parent="VBoxContainer/MiddleRow/EquippedPanel" unique_id=392237433]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="VBoxContainer/MiddleRow/EquippedPanel/CenterContainer" unique_id=9301717]
+layout_mode = 2
+texture = ExtResource("4_tocum")
+
+[node name="BottomRow" type="HBoxContainer" parent="VBoxContainer" unique_id=1212236595]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="StowedPanel" type="PanelContainer" parent="VBoxContainer/BottomRow" unique_id=1121122466]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="CenterContainer" type="CenterContainer" parent="VBoxContainer/BottomRow/StowedPanel" unique_id=1207661602]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="VBoxContainer/BottomRow/StowedPanel/CenterContainer" unique_id=1553508389]
+layout_mode = 2
+texture = ExtResource("5_re8eq")
+
+[node name="DetailInfoPanel" type="PanelContainer" parent="VBoxContainer/BottomRow" unique_id=1052028346]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 2.0
+
+[node name="Label" type="Label" parent="VBoxContainer/BottomRow/DetailInfoPanel" unique_id=355305268]
+layout_mode = 2
+text = "       There would be info about damage or some shit in here, idk"

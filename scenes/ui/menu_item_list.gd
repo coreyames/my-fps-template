@@ -3,13 +3,15 @@ extends ItemList
 @export var mouse_slider: HSlider
 @export var mouse_value: Label
 
-# Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	mouse_value.text = str(Settings.mouse_sensitivity);
 	mouse_slider.value = Settings.mouse_sensitivity;
+	
+	$MouseSlider.connect("value_changed", _on_mouse_slider_value_changed)
+	$MouseSlider.connect("drag_ended", _on_mouse_slider_drag_ended)
+	$QuitButton.connect("pressed", _on_quit_button_pressed)
 	return;
 
-#TODO replace with in code signal connections
 func _on_mouse_slider_value_changed(value: float) -> void:
 	mouse_value.text = str(value);
 	return;

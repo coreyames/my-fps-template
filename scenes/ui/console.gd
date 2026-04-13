@@ -6,7 +6,6 @@ extends Control
 @export_group("devconsole_settings")
 @export var prompt: String = '> '
 
-# Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	console.editable = false
 	input.caret_blink = true
@@ -16,7 +15,6 @@ func _ready() -> void:
 	input.edit()
 	return
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	pass
 	

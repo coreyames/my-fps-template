@@ -26,6 +26,10 @@ var in_menu: bool = true
 var just_exited_menu: bool = true
 var debug_node: Control = null
 
+const char_info_scene: Resource = preload('res://scenes/ui/char_info.tscn')
+var char_info_node: Control = null
+var is_char_info_open: bool = false
+
 # gun_scenes here serve as tmp defaults; when accessing char, equip scenes are actual property
 const gun_ar_scene: Resource = preload('res://scenes/entity/objects/equippable/gun_ar.tscn')
 const gun_ar2_scene: Resource = preload('res://scenes/entity/objects/equippable/gun_ar2.tscn')
@@ -172,6 +176,14 @@ func _input(event: InputEvent) -> void:
 					remove_child(menu_node)
 			if event.is_action_pressed('switch_equipped'):
 					switch_equipped()
+			if event.is_action_pressed('char_info'):
+					if !is_char_info_open:
+						char_info_node = char_info_scene.instantiate()
+						add_child(char_info_node)
+						is_char_info_open = true
+					else:
+						remove_child(char_info_node)
+						is_char_info_open = false
 	return
 
 func _on_menu_ok_button_pressed():

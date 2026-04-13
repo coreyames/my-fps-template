@@ -1,6 +1,6 @@
-[gd_scene load_steps=4 format=3 uid="uid://bw3bx1oklla0k"]
+[gd_scene format=3 uid="uid://bw3bx1oklla0k"]
 
-[ext_resource type="Script" uid="uid://cx55t3qdntngs" path="res://scenes/ui/item_list.gd" id="1_lti8b"]
+[ext_resource type="Script" uid="uid://cx55t3qdntngs" path="res://scenes/ui/menu_item_list.gd" id="1_lti8b"]
 
 [sub_resource type="Theme" id="Theme_lti8b"]
 ItemList/constants/h_separation = 20
@@ -22,7 +22,7 @@ corner_radius_bottom_right = 3
 corner_radius_bottom_left = 3
 corner_detail = 5
 
-[node name="Menu" type="Control"]
+[node name="Menu" type="Control" unique_id=1462687640]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -30,7 +30,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="ItemList" type="ItemList" parent="." node_paths=PackedStringArray("mouse_slider", "mouse_value")]
+[node name="ItemList" type="ItemList" parent="." unique_id=1649472520 node_paths=PackedStringArray("mouse_slider", "mouse_value")]
 layout_mode = 0
 offset_left = 794.0
 offset_top = 206.0
@@ -43,7 +43,7 @@ script = ExtResource("1_lti8b")
 mouse_slider = NodePath("MouseSlider")
 mouse_value = NodePath("MousePanel/MouseValue")
 
-[node name="MouseSlider" type="HSlider" parent="ItemList"]
+[node name="MouseSlider" type="HSlider" parent="ItemList" unique_id=543079658]
 layout_mode = 0
 offset_left = 171.0
 offset_top = 48.0
@@ -54,7 +54,7 @@ value = 50.0
 tick_count = 5
 ticks_on_borders = true
 
-[node name="MousePanel" type="Panel" parent="ItemList"]
+[node name="MousePanel" type="Panel" parent="ItemList" unique_id=1254312558]
 layout_mode = 0
 offset_left = 245.0
 offset_top = 8.0
@@ -62,14 +62,14 @@ offset_right = 288.0
 offset_bottom = 43.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_lti8b")
 
-[node name="MouseValue" type="Label" parent="ItemList/MousePanel"]
+[node name="MouseValue" type="Label" parent="ItemList/MousePanel" unique_id=1122158836]
 layout_mode = 0
 offset_left = 5.0
 offset_top = 5.0
 offset_right = 42.0
 offset_bottom = 35.0
 
-[node name="OkButton" type="Button" parent="ItemList"]
+[node name="OkButton" type="Button" parent="ItemList" unique_id=1609868262]
 layout_mode = 0
 offset_left = 140.0
 offset_top = 476.0
@@ -77,14 +77,10 @@ offset_right = 171.0
 offset_bottom = 507.0
 text = "ok"
 
-[node name="QuitButton" type="Button" parent="ItemList"]
+[node name="QuitButton" type="Button" parent="ItemList" unique_id=85845020]
 layout_mode = 0
 offset_left = 225.0
 offset_top = 476.0
 offset_right = 264.0
 offset_bottom = 507.0
 text = "quit"
-
-[connection signal="drag_ended" from="ItemList/MouseSlider" to="ItemList" method="_on_mouse_slider_drag_ended"]
-[connection signal="value_changed" from="ItemList/MouseSlider" to="ItemList" method="_on_mouse_slider_value_changed"]
-[connection signal="pressed" from="ItemList/QuitButton" to="ItemList" method="_on_quit_button_pressed"]
