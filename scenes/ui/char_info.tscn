@@ -1,5 +1,6 @@
 [gd_scene format=3 uid="uid://c1ieg2hxpoihd"]
 
+[ext_resource type="Script" uid="uid://l47pcv8jaas3" path="res://scenes/ui/char_info.gd" id="1_75xyg"]
 [ext_resource type="Texture2D" uid="uid://lnj1gpf23mq" path="res://assets/placeholders/bodyarmor.png" id="1_s75br"]
 [ext_resource type="Texture2D" uid="uid://dnofxf1j5u55j" path="res://assets/placeholders/gloves.png" id="2_75xyg"]
 [ext_resource type="Texture2D" uid="uid://bx4gj4c1tkarf" path="res://assets/placeholders/greaves.png" id="3_idu4l"]
@@ -16,6 +17,7 @@ offset_right = -960.0
 offset_bottom = -120.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_75xyg")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=705401084]
 layout_mode = 2

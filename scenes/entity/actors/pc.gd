@@ -4,6 +4,8 @@ signal was_hit
 
 var world: Node3D
 
+const NAME = "PLAYER"
+
 const SPEED: float = 5.0
 const JUMP_VELOCITY: float = 4.5
 const AIR_DECEL_START: float = 1.0/(SPEED*SPEED*10*10) # TODO idfk lol
