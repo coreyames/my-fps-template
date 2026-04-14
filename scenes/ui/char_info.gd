@@ -6,14 +6,12 @@ var sp: int
 var pr: int
 var mr: int
 
-
-
 const LABEL_TEXT_FORMAT: String = "
-\t%s
-\t\tHP: %d 
-\t\tSP: %d
-\t\tPR: %d
-\t\tMR:	%d
+	%s
+		HP: %d 
+		SP: %d
+		PR: %d
+		MR:	%d
 "
 	
 var label_text: String

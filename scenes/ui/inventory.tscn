@@ -1,0 +1,73 @@
+[gd_scene format=3 uid="uid://c5g5o1bea0uir"]
+
+[ext_resource type="Texture2D" uid="uid://lnj1gpf23mq" path="res://assets/placeholders/bodyarmor.png" id="1_avmd0"]
+[ext_resource type="Texture2D" uid="uid://dnofxf1j5u55j" path="res://assets/placeholders/gloves.png" id="2_xeaml"]
+
+[node name="Control" type="TabContainer" unique_id=885922791]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 400.0
+offset_top = 96.0
+offset_right = -344.0
+offset_bottom = -72.0
+grow_horizontal = 2
+grow_vertical = 2
+current_tab = 0
+
+[node name="Panel1" type="Panel" parent="." unique_id=2047382402]
+layout_mode = 2
+metadata/_tab_index = 0
+
+[node name="Label" type="Label" parent="Panel1" unique_id=1009503855]
+layout_mode = 0
+offset_left = 24.0
+offset_top = 25.0
+offset_right = 448.0
+offset_bottom = 89.0
+text = "           ITEMS"
+
+[node name="GridContainer" type="GridContainer" parent="Panel1" unique_id=343502719]
+layout_mode = 0
+offset_left = 48.0
+offset_top = 97.0
+offset_right = 1136.0
+offset_bottom = 833.0
+theme_override_constants/h_separation = 40
+theme_override_constants/v_separation = 40
+columns = 5
+
+[node name="TextureRect" type="TextureRect" parent="Panel1/GridContainer" unique_id=330464246]
+layout_mode = 2
+texture = ExtResource("1_avmd0")
+
+[node name="TextureRect2" type="TextureRect" parent="Panel1/GridContainer" unique_id=1759751446]
+layout_mode = 2
+texture = ExtResource("2_xeaml")
+
+[node name="Panel2" type="Panel" parent="." unique_id=260809278]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 1
+
+[node name="Label" type="Label" parent="Panel2" unique_id=1836772142]
+layout_mode = 0
+offset_left = 24.0
+offset_top = 25.0
+offset_right = 448.0
+offset_bottom = 89.0
+text = "           ITEMS"
+
+[node name="GridContainer" type="GridContainer" parent="Panel2" unique_id=2102670650]
+layout_mode = 0
+offset_left = 48.0
+offset_top = 97.0
+offset_right = 1136.0
+offset_bottom = 833.0
+theme_override_constants/h_separation = 40
+theme_override_constants/v_separation = 40
+columns = 5
+
+[node name="TextureRect" type="TextureRect" parent="Panel2/GridContainer" unique_id=1637994468]
+layout_mode = 2
+texture = ExtResource("1_avmd0")
