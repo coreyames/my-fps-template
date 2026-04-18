@@ -1,0 +1,28 @@
+[remap]
+
+importer="cubemap_texture"
+type="CompressedCubemap"
+uid="uid://cnyfhsrl28jwx"
+path.bptc="res://.godot/imported/HDR_Sky_Tex.hdr-24ba4d4730bbbc80f793c3192b05c410.bptc.ccube"
+metadata={
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
+}
+
+[deps]
+
+source_file="res://Assets/Stylarts/Stylized_Windmill_Valley/Art/Textures/Sky/HDR_Sky_Tex.hdr"
+dest_files=["res://.godot/imported/HDR_Sky_Tex.hdr-24ba4d4730bbbc80f793c3192b05c410.bptc.ccube"]
+
+[params]
+
+compress/mode=2
+compress/high_quality=false
+compress/lossy_quality=0.5
+compress/uastc_level=0
+compress/rdo_quality_loss=0.0
+compress/hdr_compression=1
+compress/channel_pack=0
+mipmaps/generate=true
+mipmaps/limit=-1
+slices/arrangement=1

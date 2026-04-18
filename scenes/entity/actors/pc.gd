@@ -32,6 +32,10 @@ const char_info_scene: Resource = preload('res://scenes/ui/char_info.tscn')
 var char_info_node: Control = null
 var is_char_info_open: bool = false
 
+const inventory_scene: Resource = preload('res://scenes/ui/inventory.tscn')
+var inventory_node: Control = null
+var is_inventory_open: bool = false
+
 # gun_scenes here serve as tmp defaults; when accessing char, equip scenes are actual property
 const gun_ar_scene: Resource = preload('res://scenes/entity/objects/equippable/gun_ar.tscn')
 const gun_ar2_scene: Resource = preload('res://scenes/entity/objects/equippable/gun_ar2.tscn')
@@ -67,6 +71,9 @@ var equipment: Dictionary[String, Equippable] = {
 }
 
 var skills: Dictionary[int, Skill] = {}
+
+var current_speed: float = 0
+var recent_top_speed: float = 0
 
 func _ready() -> void: 
 	world = get_parent()
@@ -131,7 +138,7 @@ func _physics_process(delta: float) -> void:
 		if !direction && !is_on_floor():
 			velocity.x = move_toward(velocity.x, 0, AIR_DECEL_START)
 			velocity.z = move_toward(velocity.z, 0, AIR_DECEL_START)
-		elif direction && !is_on_floor(): #TODO logic here
+		elif direction && !is_on_floor(): 
 			velocity.x = move_toward(velocity.x, 0, AIR_DECEL_START)
 			velocity.z = move_toward(velocity.z, 0, AIR_DECEL_START)
 			if (!is_zero_approx(camera_motion.x)):
@@ -144,7 +151,16 @@ func _physics_process(delta: float) -> void:
 		
 	if debug_node:
 		var movement_info: TextEdit = debug_node.get_node("MovementInfo")
-		movement_info.text = str(velocity)
+		var movement_info_text = "
+			Position: %.2v
+			Speed:    %.2f
+			Top:      %.2f
+		" 
+		
+		current_speed = abs(velocity.x/direction.x)
+		if current_speed > recent_top_speed:
+			recent_top_speed = current_speed
+		movement_info.text = movement_info_text % [position, current_speed, recent_top_speed]
 		
 	if (move_and_slide()):
 		handle_collisions()
@@ -186,6 +202,14 @@ func _input(event: InputEvent) -> void:
 					else:
 						remove_child(char_info_node)
 						is_char_info_open = false
+			if event.is_action_pressed('inventory'):
+					if !is_inventory_open:
+						inventory_node = inventory_scene.instantiate()
+						add_child(inventory_node)
+						is_inventory_open = true
+					else:
+						remove_child(inventory_node)
+						is_inventory_open = false
 	return
 
 func _on_menu_ok_button_pressed():

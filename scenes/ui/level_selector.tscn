@@ -1,0 +1,29 @@
+[gd_scene format=3 uid="uid://bijj7txyfsnyl"]
+
+[ext_resource type="Script" uid="uid://k3ljpi4p2p6c" path="res://scenes/ui/level_selector_item_list.gd" id="1_31im7"]
+
+[node name="Control" type="Control" unique_id=221433534]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=1321045567]
+layout_mode = 0
+offset_right = 1920.0
+offset_bottom = 1080.0
+color = Color(0.4862795, 0.37387902, 0.47515064, 1)
+
+[node name="ItemList" type="ItemList" parent="." unique_id=522139308]
+layout_mode = 0
+offset_left = 704.0
+offset_top = 128.0
+offset_right = 1216.0
+offset_bottom = 896.0
+allow_search = false
+item_count = 2
+item_0/text = "Level 1"
+item_1/text = "Level 2"
+script = ExtResource("1_31im7")
