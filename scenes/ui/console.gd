@@ -23,7 +23,7 @@ func _on_line_edit_text_submitted(submitted: String) -> void:
 	console.text += submitted + '\n'
 	process_input(submitted)
 	# newline and add prompt to move on for next cmd
-	console.text += prompt + '\n'
+	console.text += '\n' + prompt
 	input.clear()
 	input.set_caret_column(0)
 	return;
@@ -48,6 +48,10 @@ func process_input(input_line: String) -> void:
 				console.text += line_split_array.get(1)
 		"debug":
 			Debug.toggle()
+		"debug_log":
+			Debug.toggle_log()
+		"debug_movement":
+			Debug.toggle_movement()
 		"quit":
 			get_tree().quit()
 		_:

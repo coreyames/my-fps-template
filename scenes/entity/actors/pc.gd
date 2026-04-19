@@ -179,7 +179,7 @@ func _input(event: InputEvent) -> void:
 			is_console_open = false
 			return
 	else:
-		if event is InputEventKey:
+		if event is InputEventKey && !is_console_open:
 			if event.is_action_pressed('cancel'):
 				if !in_menu:
 					Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
@@ -225,6 +225,7 @@ func _on_toggle_debug(on: bool):
 		add_child(debug_node)
 	else:
 		remove_child(debug_node)
+		recent_top_speed = 0
 	return
 	
 func jump_and_land_sound() -> void:
