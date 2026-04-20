@@ -1,8 +1,6 @@
 extends CharacterBody3D
 
-signal was_hit
-
-var world: Node3D
+var world_ref: Node3D
 
 #
 # PLAYER INFORMATION
@@ -57,7 +55,7 @@ const gun_ar2_scene: Resource = preload('res://scenes/entity/objects/equippable/
 var equip1_scene: Resource = gun_ar_scene
 var equip2_scene: Resource = gun_ar2_scene
 
-@export var equipped: Equippable
+@onready var equipped: Equippable = $Camera3D/Equipped
 var stored: Equippable
 var viewmodel: Transform3D
 
@@ -94,13 +92,15 @@ var skill_cap: int = base_stats.get("SC")
 var skills: Dictionary[int, Skill] = {}
 
 #
-# STATUS
+# STATUS, METRICS
 #
+signal was_hit
+
 var current_speed: float = 0
 var recent_top_speed: float = 0
 
 func _ready() -> void: 
-	world = get_parent()
+	world_ref = get_parent()
 	Debug.connect("toggle_debug", _on_toggle_debug)
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	if (equip2_scene != null):
@@ -150,8 +150,8 @@ func _physics_process(delta: float) -> void:
 	var input_dir: Vector2 = Input.get_vector("left", "right", "fwd", "bwd")
 	var direction: Vector3 = (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
 	
-	#TODO need to replace hardcoded values when adding resolution adjustment option
-	# get point of click on screen
+	# TODO replace hardcoded values when resolution adjustment added
+	# get coords of click on screen
 	if Input.is_action_just_pressed("use") && equipped != null:
 		equipped.use(get_viewport().get_camera_3d().project_ray_normal(Vector2(1920.0/2, 1080.0/2)))
 
@@ -181,7 +181,7 @@ func _physics_process(delta: float) -> void:
 			velocity.x = move_toward(velocity.x, 0, speed_value)
 			velocity.z = move_toward(velocity.z, 0, speed_value)
 	
-	# debug info
+	# set debug info
 	if debug_node:
 		var movement_info: TextEdit = debug_node.get_node("MovementInfo")
 		var movement_info_text = "
@@ -189,7 +189,6 @@ func _physics_process(delta: float) -> void:
 			Speed:    %.2f
 			Top:      %.2f
 		" 
-		
 		current_speed = abs(velocity.x/direction.x)
 		if current_speed > recent_top_speed:
 			recent_top_speed = current_speed
@@ -297,7 +296,7 @@ func handle_collisions() -> void:
 	for i in range(get_slide_collision_count()):
 		var collision: KinematicCollision3D = get_slide_collision(i)
 		var collider: Node3D = collision.get_collider()
-		if collider.get_instance_id() != world.level_collision_id:
+		if collider.get_instance_id() != world_ref.level_collision_id:
 			if collider is Projectile:
 				handle_proj_collision(collision)
 	return
@@ -322,3 +321,4 @@ func refresh_settings() -> void:
 	jump_velocity_value = Settings.jump_velocity_value
 	air_decel_value = Settings.air_decel_value
 	air_strafe_accel_value = Settings.air_strafe_accel_value
+	return

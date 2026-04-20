@@ -22,7 +22,7 @@ run/max_fps=144
 [autoload]
 
 Settings="*res://singletons/settings.gd"
-Debug="*res://singletons/debug_msg_bus.gd"
+Debug="*res://singletons/debug.gd"
 SignalBus="*uid://crcbqotf31nhj"
 
 [debug]

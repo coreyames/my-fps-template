@@ -27,13 +27,13 @@ func toggle() -> bool:
 	emit_signal("toggle_debug", is_on)
 	return is_on
 	
-func toggle_log() -> void:
+func toggle_log() -> bool:
 	show_log = !show_log
 	emit_signal("toggle_debug_log", show_log)
-	return
+	return show_log
 
-func toggle_movement():
+func toggle_movement() -> bool:
 	show_movement = !show_movement
 	emit_signal("toggle_debug_movement", show_movement)
-	return 
+	return show_movement
 	

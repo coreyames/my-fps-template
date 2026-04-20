@@ -3,43 +3,44 @@
 
 extends Camera3D
 
-@export_group("nodes")
-@export var body: CharacterBody3D
-@export var cam: Camera3D
+var body: CharacterBody3D
 var motion: Vector2
 
-@export_group("settings")
-@export_range(1, 100, 1) var sens: float = Settings.mouse_sensitivity_value
+var sens: float = Settings.mouse_sensitivity_value
 
-# probably not changing
+# probably not changing?
 const ABS_PITCH_MAX: float = 89
 
 func _ready() -> void:
+	body = get_parent()
 	Input.set_use_accumulated_input(false)
 
-func _unhandled_input(event)-> void:
+func _unhandled_input(event) -> void:
 	if $"..".is_console_open:
 		return
 	
 	if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
 		if event is InputEventMouseMotion:
 			look(event)
-			
-#Rotates the character around the local Y axis
-func yaw(amount)->void:
+	return
+	
+# Rotates the character around the local Y axis
+func yaw(amount) -> void:
 	if is_zero_approx(amount):
 		return
 	body.rotate_object_local(Vector3.DOWN, deg_to_rad(amount))
 	body.orthonormalize()
+	return
 
-#Rotates the cam around the local x axis 
-func pitch_with_clamp(amount)->void:
+# Rotates the cam around the local x axis 
+func pitch_with_clamp(amount) -> void:
 	if is_zero_approx(amount):
 		return
-	cam.rotate_object_local(Vector3.LEFT, deg_to_rad(amount))
-	if abs(cam.rotation.x) > deg_to_rad(ABS_PITCH_MAX):
-		cam.rotation.x = clamp(cam.rotation.x, deg_to_rad(-ABS_PITCH_MAX), deg_to_rad(ABS_PITCH_MAX))
-	cam.orthonormalize()
+	rotate_object_local(Vector3.LEFT, deg_to_rad(amount))
+	if abs(rotation.x) > deg_to_rad(ABS_PITCH_MAX):
+		rotation.x = clamp(rotation.x, deg_to_rad(-ABS_PITCH_MAX), deg_to_rad(ABS_PITCH_MAX))
+	orthonormalize()
+	return
 
 func look(event: InputEventMouseMotion) -> void:
 	motion = event.relative
@@ -48,5 +49,6 @@ func look(event: InputEventMouseMotion) -> void:
 	pitch_with_clamp(motion.y)
 	return
 	
-func refresh_settings():
+func refresh_settings() -> void:
 	sens = Settings.mouse_sensitivity_value
+	return

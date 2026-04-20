@@ -2,13 +2,6 @@ extends Node
 
 # global access as Settings
 
-enum Setting {
-	MOUSE,
-	PLAYER_SPEED,
-	AIR_STRAFE_ACCEL,
-	AIR_DECEL
-}
-
 const PLAYER_SPEED_DEFAULT: float = 5.0
 var player_speed_value: float = PLAYER_SPEED_DEFAULT
 

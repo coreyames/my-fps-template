@@ -1,27 +1,27 @@
 extends ItemList
 
-@export var mouse_slider: HSlider
-@export var mouse_value: Label
+@onready var mouse_slider: HSlider = $MouseSlider
+@onready var mouse_value: Label = $MousePanel/MouseValue
 
 func _ready() -> void:
-	mouse_value.text = str(Settings.mouse_sensitivity_value);
-	mouse_slider.value = Settings.mouse_sensitivity_value;
+	mouse_value.text = str(Settings.mouse_sensitivity_value)
+	mouse_slider.value = Settings.mouse_sensitivity_value
 	
-	$MouseSlider.connect("value_changed", _on_mouse_slider_value_changed)
-	$MouseSlider.connect("drag_ended", _on_mouse_slider_drag_ended)
+	mouse_slider.connect("value_changed", _on_mouse_slider_value_changed)
+	mouse_slider.connect("drag_ended", _on_mouse_slider_drag_ended)
 	$QuitButton.connect("pressed", _on_quit_button_pressed)
-	return;
+	return
 
 func _on_mouse_slider_value_changed(value: float) -> void:
-	mouse_value.text = str(value);
-	return;
+	mouse_value.text = str(value)
+	return
 
 func _on_mouse_slider_drag_ended(value_changed: bool) -> void:
 	if value_changed:
 		Settings.mouse_sensitivity_value = mouse_slider.value;
-		get_tree().call_group("settings_dependent", "refresh_settings");
-	return;
+		get_tree().call_group("settings_dependent", "refresh_settings")
+	return
 
 func _on_quit_button_pressed() -> void:
-	get_tree().quit();
-	return;
+	get_tree().quit()
+	return

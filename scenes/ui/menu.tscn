@@ -30,7 +30,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="ItemList" type="ItemList" parent="." unique_id=1649472520 node_paths=PackedStringArray("mouse_slider", "mouse_value")]
+[node name="ItemList" type="ItemList" parent="." unique_id=1649472520]
 layout_mode = 0
 offset_left = 794.0
 offset_top = 206.0
@@ -40,8 +40,6 @@ theme = SubResource("Theme_lti8b")
 item_count = 2
 item_0/text = "mouse sensitivity"
 script = ExtResource("1_lti8b")
-mouse_slider = NodePath("MouseSlider")
-mouse_value = NodePath("MousePanel/MouseValue")
 
 [node name="MouseSlider" type="HSlider" parent="ItemList" unique_id=543079658]
 layout_mode = 0
