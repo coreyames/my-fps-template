@@ -4,20 +4,33 @@ signal was_hit
 
 var world: Node3D
 
-const NAME = "PLAYER"
+#
+# PLAYER INFORMATION
+#
+const NAME_DEFAULT = "PLAYER"
+var player_name: String = NAME_DEFAULT
 
-const SPEED: float = 5.0
-const JUMP_VELOCITY: float = 4.5
-const AIR_DECEL_START: float = 1.0/(SPEED*SPEED*10*10) # TODO idfk lol
-const AIR_STRAFE_ACCEL: float = 0.5
+#
+# SETTINGS
+#
+var speed_value: float = Settings.player_speed_value
+var jump_velocity_value: float = Settings.jump_velocity_value
+var air_decel_value: float = Settings.air_decel_value
+var air_strafe_accel_value: float = Settings.air_strafe_accel_value
 
-var is_scene_ready_jump: bool = true
+#
+# AUDIO
+#
+var is_scene_start_jump_sound: bool = true
 var is_directed_on_floor: bool = false
 var was_airborne: bool = false
 
 const walking_clip: AudioStreamMP3 = preload("res://audio/walking.mp3")
 const jump_clip: AudioStreamMP3 = preload("res://audio/jump.mp3")
 
+#
+# UI
+#
 const console_scene: Resource = preload("res://scenes/ui/dev_console.tscn")
 var console_node: Control = null
 var is_console_open: bool = false
@@ -36,7 +49,9 @@ const inventory_scene: Resource = preload('res://scenes/ui/inventory.tscn')
 var inventory_node: Control = null
 var is_inventory_open: bool = false
 
-# gun_scenes here serve as tmp defaults; when accessing char, equip scenes are actual property
+#
+# EQUIPMENT AND ITEMS
+#
 const gun_ar_scene: Resource = preload('res://scenes/entity/objects/equippable/gun_ar.tscn')
 const gun_ar2_scene: Resource = preload('res://scenes/entity/objects/equippable/gun_ar2.tscn')
 var equip1_scene: Resource = gun_ar_scene
@@ -46,6 +61,17 @@ var equip2_scene: Resource = gun_ar2_scene
 var stored: Equippable
 var viewmodel: Transform3D
 
+var equipment: Dictionary[String, Equippable] = {
+	"w1": null,
+	"w2": null,
+	"helm": null,
+	"chest": null,
+	"pack": null
+}
+
+#
+# STATS
+#
 var base_stats: Dictionary[String, int] = {
 	"HP": 100, # max health
 	"SP": 20,  # max skill pts, tmp 'resource'
@@ -62,16 +88,14 @@ var phys_reduction: int = base_stats.get("PR")
 var magic_reduction: int = base_stats.get("MR")
 var skill_cap: int = base_stats.get("SC")
 
-var equipment: Dictionary[String, Equippable] = {
-	"w1": null,
-	"w2": null,
-	"helm": null,
-	"chest": null,
-	"pack": null
-}
-
+#
+# ABILITIES
+#
 var skills: Dictionary[int, Skill] = {}
 
+#
+# STATUS
+#
 var current_speed: float = 0
 var recent_top_speed: float = 0
 
@@ -92,7 +116,10 @@ func _ready() -> void:
 	return
 
 func _physics_process(delta: float) -> void:
+	# for checking for strafe accel
 	var camera_motion: Vector2 = $Camera3D.motion
+	
+	# gravity, landing sound flags
 	if not is_on_floor():
 		velocity += get_gravity() * delta
 		if !was_airborne:
@@ -101,6 +128,7 @@ func _physics_process(delta: float) -> void:
 		was_airborne = false
 		jump_and_land_sound() 
 
+	# checking UI state
 	if just_exited_menu:
 		just_exited_menu = false
 		in_menu = false
@@ -108,27 +136,31 @@ func _physics_process(delta: float) -> void:
 		return
 
 	if in_menu or is_console_open:
-		velocity.x = move_toward(velocity.x, 0, SPEED)
-		velocity.z = move_toward(velocity.z, 0, SPEED)
+		velocity.x = move_toward(velocity.x, 0, speed_value)
+		velocity.z = move_toward(velocity.z, 0, speed_value)
 		move_and_slide()
 		return
 
+	# jumping
 	if Input.is_action_just_pressed("jump") and is_on_floor():
 		jump_and_land_sound()
-		velocity.y = JUMP_VELOCITY
+		velocity.y = jump_velocity_value
 
+	# getting x, z movement (keyboard)
 	var input_dir: Vector2 = Input.get_vector("left", "right", "fwd", "bwd")
 	var direction: Vector3 = (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
 	
 	#TODO need to replace hardcoded values when adding resolution adjustment option
+	# get point of click on screen
 	if Input.is_action_just_pressed("use") && equipped != null:
 		equipped.use(get_viewport().get_camera_3d().project_ray_normal(Vector2(1920.0/2, 1080.0/2)))
 
+	# handle movement
 	if direction && is_on_floor():
 		if !is_directed_on_floor:
 			is_directed_on_floor = true
-		velocity.x = direction.x * SPEED
-		velocity.z = direction.z * SPEED
+		velocity.x = direction.x * speed_value
+		velocity.z = direction.z * speed_value
 		walking_sound(true)
 	else:
 		if is_directed_on_floor:
@@ -136,19 +168,20 @@ func _physics_process(delta: float) -> void:
 			walking_sound(false)
 
 		if !direction && !is_on_floor():
-			velocity.x = move_toward(velocity.x, 0, AIR_DECEL_START)
-			velocity.z = move_toward(velocity.z, 0, AIR_DECEL_START)
+			velocity.x = move_toward(velocity.x, 0, air_decel_value)
+			velocity.z = move_toward(velocity.z, 0, air_decel_value)
 		elif direction && !is_on_floor(): 
-			velocity.x = move_toward(velocity.x, 0, AIR_DECEL_START)
-			velocity.z = move_toward(velocity.z, 0, AIR_DECEL_START)
+			velocity.x = move_toward(velocity.x, 0, air_decel_value)
+			velocity.z = move_toward(velocity.z, 0, air_decel_value)
 			if (!is_zero_approx(camera_motion.x)):
 				if (camera_motion.x > 0 && input_dir.x > 0) || (camera_motion.x < 0 && input_dir.x < 0):
-					velocity.x += AIR_STRAFE_ACCEL * direction.x
-					velocity.z += AIR_STRAFE_ACCEL * direction.z
+					velocity.x += air_strafe_accel_value * direction.x
+					velocity.z += air_strafe_accel_value * direction.z
 		elif is_on_floor():
-			velocity.x = move_toward(velocity.x, 0, SPEED)
-			velocity.z = move_toward(velocity.z, 0, SPEED)
-		
+			velocity.x = move_toward(velocity.x, 0, speed_value)
+			velocity.z = move_toward(velocity.z, 0, speed_value)
+	
+	# debug info
 	if debug_node:
 		var movement_info: TextEdit = debug_node.get_node("MovementInfo")
 		var movement_info_text = "
@@ -229,8 +262,8 @@ func _on_toggle_debug(on: bool):
 	return
 	
 func jump_and_land_sound() -> void:
-	if is_scene_ready_jump:
-		is_scene_ready_jump = false
+	if is_scene_start_jump_sound:
+		is_scene_start_jump_sound = false
 		return
 	$Sound.stream = jump_clip
 	$Sound.play()
@@ -283,3 +316,9 @@ func add_stats_from_equipment() -> void:
 		max_health += pack.HP
 		skill_cap += pack.SC
 	return
+	
+func refresh_settings() -> void:
+	speed_value = Settings.player_speed_value
+	jump_velocity_value = Settings.jump_velocity_value
+	air_decel_value = Settings.air_decel_value
+	air_strafe_accel_value = Settings.air_strafe_accel_value

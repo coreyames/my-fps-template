@@ -4,8 +4,8 @@ extends ItemList
 @export var mouse_value: Label
 
 func _ready() -> void:
-	mouse_value.text = str(Settings.mouse_sensitivity);
-	mouse_slider.value = Settings.mouse_sensitivity;
+	mouse_value.text = str(Settings.mouse_sensitivity_value);
+	mouse_slider.value = Settings.mouse_sensitivity_value;
 	
 	$MouseSlider.connect("value_changed", _on_mouse_slider_value_changed)
 	$MouseSlider.connect("drag_ended", _on_mouse_slider_drag_ended)
@@ -18,7 +18,7 @@ func _on_mouse_slider_value_changed(value: float) -> void:
 
 func _on_mouse_slider_drag_ended(value_changed: bool) -> void:
 	if value_changed:
-		Settings.mouse_sensitivity = mouse_slider.value;
+		Settings.mouse_sensitivity_value = mouse_slider.value;
 		get_tree().call_group("settings_dependent", "refresh_settings");
 	return;
 

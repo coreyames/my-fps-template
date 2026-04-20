@@ -9,7 +9,7 @@ extends Camera3D
 var motion: Vector2
 
 @export_group("settings")
-@export_range(1, 100, 1) var sens: float = Settings.mouse_sensitivity
+@export_range(1, 100, 1) var sens: float = Settings.mouse_sensitivity_value
 
 # probably not changing
 const ABS_PITCH_MAX: float = 89
@@ -49,4 +49,4 @@ func look(event: InputEventMouseMotion) -> void:
 	return
 	
 func refresh_settings():
-	sens = Settings.mouse_sensitivity
+	sens = Settings.mouse_sensitivity_value
