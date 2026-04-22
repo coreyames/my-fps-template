@@ -1,9 +1,15 @@
 extends CharacterBody3D
 
+#
+# REQUIRED NODE REFS
+#
 var world: Node3D
 var player_location: Vector3
 var player_node: CharacterBody3D
 
+#
+# MOVEMENT, DECISION VARS
+#
 const SPEED: float = 5.0
 const JUMP_VELOCITY: float = 4.5
 const dir_actions: Array[StringName] =  ["ui_left", "ui_right", "ui_up", "ui_down"]
@@ -24,13 +30,23 @@ var maintain_pc_los: bool = true
 var chance_to_shoot: float = .2
 var shoot_entropy: float = 0
 
+#
+# STATS AND STATUS
+#
+
+const max_health: int = 100
+var health: int = 100
+
 func _ready() -> void:
 	world = get_parent()
 	player_node = world.get_node('Player')
 	player_location = player_node.global_position
 	current_action = dir_actions.pick_random()
+	SignalBus.apply_effects.connect(_on_apply_effects)
 	return
 
+# generate semirandom char input 
+# added entropy guarantees eventual shoot, jump, dir change
 func generate_input() -> void:
 	var dir_chance = chance_to_change_dir * dir_entropy
 	var dir_roll = randf()
@@ -72,6 +88,7 @@ func _physics_process(delta: float) -> void:
 	
 	if maintain_pc_los:
 		look_at(player_location)
+	$HealthBar.look_at(player_location)
 	
 	generate_input()
 	
@@ -104,9 +121,9 @@ func _physics_process(delta: float) -> void:
 	return
 	
 func handle_proj_collision(collision: KinematicCollision3D) -> void:
-	var collider: Node3D = collision.get_collider()
-	Debug.log(str(collider))
-	SignalBus.projectile_hit.emit(collider.get_instance_id())
+	var collided_proj: Node3D = collision.get_collider()
+	#Debug.log(str(collider))
+	SignalBus.projectile_hit.emit(collided_proj.get_instance_id(), get_instance_id())
 	return
 
 func handle_collisions() -> void:
@@ -121,3 +138,13 @@ func handle_collisions() -> void:
 func shoot_at_player() -> void:
 	$Camera3D/Equipped.use($Camera3D.project_ray_normal(Vector2(1920.0/2, 1080.0/2)))
 	to_shoot = false
+	
+func _on_apply_effects(target_id: int, effects: Array[Effect]) -> void:
+	if target_id == get_instance_id():
+		for effect: Effect in effects:
+			if effect.type == Effect.Type.DAMAGE:
+				var dmg: int = randi_range(effect.min_dmg, effect.max_dmg)
+				health -= dmg
+				if health < 0: health = 0
+				$HealthBar.texture.gradient.set_offset(1, (100.004-health)/100.0)
+	return
