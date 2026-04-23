@@ -33,7 +33,6 @@ var shoot_entropy: float = 0
 #
 # STATS AND STATUS
 #
-
 const max_health: int = 100
 var health: int = 100
 

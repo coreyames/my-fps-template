@@ -13,4 +13,4 @@ var min_dmg: int
 var max_dmg: int
 
 # stun
-var stun_duration: int
+var duration: int

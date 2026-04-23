@@ -5,11 +5,21 @@
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dnh6s"]
 bg_color = Color(1, 1, 1, 0)
 
-[node name="DebugHud" type="Control" unique_id=1997613250]
+[sub_resource type="SystemFont" id="SystemFont_b7bo0"]
+font_names = PackedStringArray("Monospace")
+
+[sub_resource type="SystemFont" id="SystemFont_j6o1s"]
+font_names = PackedStringArray("Monospace")
+
+[node name="DebugHud" type="Control" unique_id=1997613250 groups=["settings_dependent"]]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_left = 15.0
+offset_top = 1.0
+offset_right = 15.0
+offset_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
@@ -17,10 +27,10 @@ script = ExtResource("1_jwuoe")
 
 [node name="Log" type="TextEdit" parent="." unique_id=268061725]
 layout_mode = 0
-offset_left = 1476.0
-offset_top = 10.0
-offset_right = 1912.0
-offset_bottom = 392.0
+offset_left = 1457.0
+offset_top = 15.0
+offset_right = 1893.0
+offset_bottom = 397.0
 focus_mode = 0
 theme_override_colors/font_color = Color(0.875, 0.875, 0.875, 1)
 theme_override_styles/normal = SubResource("StyleBoxFlat_dnh6s")
@@ -30,10 +40,35 @@ shortcut_keys_enabled = false
 
 [node name="MovementInfo" type="TextEdit" parent="." unique_id=1105352974]
 layout_mode = 0
-offset_left = 327.0
-offset_top = 887.0
-offset_right = 712.0
-offset_bottom = 1047.0
+offset_left = 369.0
+offset_top = 943.0
+offset_right = 545.0
+offset_bottom = 1039.0
+theme_override_fonts/font = SubResource("SystemFont_b7bo0")
+placeholder_text = "Speed: 
+Top: "
+editable = false
+emoji_menu_enabled = false
+shortcut_keys_enabled = false
+selecting_enabled = false
+
+[node name="MovementSettings" type="TextEdit" parent="." unique_id=1048407347]
+layout_mode = 0
+offset_left = 1633.0
+offset_top = 415.0
+offset_right = 1889.0
+offset_bottom = 639.0
+theme_override_constants/line_spacing = 4
+theme_override_fonts/font = SubResource("SystemFont_j6o1s")
+placeholder_text = "
+    player_speed:
+
+   jump_velocity:
+
+       air_decel:
+
+air_strafe_accel:
+"
 editable = false
 emoji_menu_enabled = false
 shortcut_keys_enabled = false

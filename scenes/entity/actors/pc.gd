@@ -183,16 +183,17 @@ func _physics_process(delta: float) -> void:
 	
 	# set debug info
 	if debug_node:
-		var movement_info: TextEdit = debug_node.get_node("MovementInfo")
-		var movement_info_text = "
-			Position: %.2v
-			Speed:    %.2f
-			Top:      %.2f
-		" 
-		current_speed = abs(velocity.x/direction.x)
+		var movement_info_node: TextEdit = debug_node.get_node("MovementInfo")
+		
+		if direction.x:
+			current_speed = abs(velocity.x/direction.x)
+		else:
+			current_speed = 0
+			
 		if current_speed > recent_top_speed:
 			recent_top_speed = current_speed
-		movement_info.text = movement_info_text % [position, current_speed, recent_top_speed]
+			
+		movement_info_node.text = debug_node.movement_info_template % [current_speed, recent_top_speed]
 		
 	if (move_and_slide()):
 		handle_collisions()
