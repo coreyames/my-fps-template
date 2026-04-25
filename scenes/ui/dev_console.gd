@@ -1,10 +1,11 @@
 extends Control
 
-@export var console: TextEdit
-@export var input: LineEdit
+@onready var console: TextEdit = $Console
+@onready var input: LineEdit = $LineEdit
 
-@export_group("devconsole_settings")
-@export var prompt: String = '> '
+var history_offset: int = 0
+
+var prompt: String = '> '
 
 func _ready() -> void:
 	console.editable = false
@@ -15,8 +16,14 @@ func _ready() -> void:
 	input.edit()
 	return
 
-func _process(delta: float) -> void:
-	pass
+func _input(event: InputEvent) -> void:
+	if event.is_action_pressed("up_arrow"):
+		input.clear()
+		input.text = Debug.console_history.get(history_offset)
+		history_offset += 1
+	else:
+		history_offset = 0
+	return
 	
 func _on_line_edit_text_submitted(submitted: String) -> void:
 	# log cmd up top, new line, process and add output to console.text
@@ -38,6 +45,7 @@ func clear() -> void:
 
 # console.text will be on a newline
 func process_input(input_line: String) -> void:
+	Debug.console_history.append(input_line)
 	var line_split_array = input_line.split(" ", true, 1)
 	if line_split_array.size() < 1:
 		return
@@ -74,6 +82,12 @@ func process_input(input_line: String) -> void:
 			var value: String = check_for_param(line_split_array)
 			if value.length() > 0:
 				Settings.player_speed_value = float(value)
+				get_tree().call_group("settings_dependent", "refresh_settings")
+				console.text += "updated"
+		"player_gravity_multiplier":
+			var value: String = check_for_param(line_split_array)
+			if value.length() > 0:
+				Settings.player_gravity_multipler_value = float(value)
 				get_tree().call_group("settings_dependent", "refresh_settings")
 				console.text += "updated"
 		"quit":

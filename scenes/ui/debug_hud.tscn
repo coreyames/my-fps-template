@@ -7,9 +7,11 @@ bg_color = Color(1, 1, 1, 0)
 
 [sub_resource type="SystemFont" id="SystemFont_b7bo0"]
 font_names = PackedStringArray("Monospace")
+subpixel_positioning = 0
 
 [sub_resource type="SystemFont" id="SystemFont_j6o1s"]
 font_names = PackedStringArray("Monospace")
+subpixel_positioning = 0
 
 [node name="DebugHud" type="Control" unique_id=1997613250 groups=["settings_dependent"]]
 layout_mode = 3
@@ -34,6 +36,7 @@ offset_bottom = 397.0
 focus_mode = 0
 theme_override_colors/font_color = Color(0.875, 0.875, 0.875, 1)
 theme_override_styles/normal = SubResource("StyleBoxFlat_dnh6s")
+placeholder_text = "DEBUG LOG"
 editable = false
 emoji_menu_enabled = false
 shortcut_keys_enabled = false
@@ -57,18 +60,10 @@ layout_mode = 0
 offset_left = 1633.0
 offset_top = 415.0
 offset_right = 1889.0
-offset_bottom = 639.0
+offset_bottom = 703.0
 theme_override_constants/line_spacing = 4
 theme_override_fonts/font = SubResource("SystemFont_j6o1s")
-placeholder_text = "
-    player_speed:
-
-   jump_velocity:
-
-       air_decel:
-
-air_strafe_accel:
-"
+placeholder_text = "SETTINGS"
 editable = false
 emoji_menu_enabled = false
 shortcut_keys_enabled = false

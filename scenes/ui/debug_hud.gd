@@ -1,21 +1,25 @@
 extends Control
 
 const movement_info_template: String = "
-Speed: %.2f
-  Top: %.2f
+ Speed: %.2f
+   Top: %.2f
 "
 
 const movement_settings_template: String = "
-    player_speed: %.2f
+SETTINGS
+        player_speed: %.2f
 
-   jump_velocity: %.2f
+       jump_velocity: %.2f
 
-       air_decel: %.2f
+           air_decel: %.2f
 
-air_strafe_accel: %.2f
+    air_strafe_accel: %.2f
+
+ player_gravity_mult: %.2f
 "
 
 func _ready() -> void:
+	add_to_group("settings_dependent")
 	Debug.msg_ready.connect(_on_log_message)
 	Debug.toggle_debug_log.connect(_on_toggle_log)
 	Debug.toggle_debug_movement.connect(_on_toggle_movement)
@@ -26,7 +30,8 @@ func _ready() -> void:
 		Settings.player_speed_value,
 		Settings.jump_velocity_value,
 		Settings.air_decel_value,
-		Settings.air_strafe_accel_value
+		Settings.air_strafe_accel_value,
+		Settings.player_gravity_multipler_value
 	]
 	return
 		
@@ -48,6 +53,7 @@ func refresh_settings() -> void:
 		Settings.player_speed_value,
 		Settings.jump_velocity_value,
 		Settings.air_decel_value,
-		Settings.air_strafe_accel_value
+		Settings.air_strafe_accel_value,
+		Settings.player_gravity_multipler_value
 	]
 	return

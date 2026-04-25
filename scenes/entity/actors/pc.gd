@@ -15,6 +15,7 @@ var speed_value: float = Settings.player_speed_value
 var jump_velocity_value: float = Settings.jump_velocity_value
 var air_decel_value: float = Settings.air_decel_value
 var air_strafe_accel_value: float = Settings.air_strafe_accel_value
+var player_gravity_multipler_value: float = Settings.player_gravity_multipler_value
 
 #
 # AUDIO
@@ -101,6 +102,7 @@ var recent_top_speed: float = 0
 
 func _ready() -> void: 
 	world_ref = get_parent()
+	add_to_group("settings_dependent")
 	Debug.connect("toggle_debug", _on_toggle_debug)
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	if (equip2_scene != null):
@@ -121,7 +123,7 @@ func _physics_process(delta: float) -> void:
 	
 	# gravity, landing sound flags
 	if not is_on_floor():
-		velocity += get_gravity() * delta
+		velocity += (get_gravity() * player_gravity_multipler_value) * delta
 		if !was_airborne:
 			was_airborne = true
 	elif was_airborne:
@@ -211,20 +213,24 @@ func _input(event: InputEvent) -> void:
 			remove_child(console_node)
 			is_console_open = false
 			return
+	elif event.is_action_pressed('cancel'):
+		if !in_menu && !is_console_open:
+			Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+			in_menu = true
+			menu_node = menu_scene.instantiate()
+			add_child(menu_node)
+			menu_node.get_child(0).get_child(2).connect("pressed", _on_menu_ok_button_pressed)
+		else:
+			Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+			in_menu = false
+			is_console_open = false
+			just_exited_menu = true
+			if menu_node:
+				remove_child(menu_node)
+			if console_node:
+				remove_child(console_node)
 	else:
 		if event is InputEventKey && !is_console_open:
-			if event.is_action_pressed('cancel'):
-				if !in_menu:
-					Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
-					in_menu = true
-					menu_node = menu_scene.instantiate()
-					add_child(menu_node)
-					menu_node.get_child(0).get_child(2).connect("pressed", _on_menu_ok_button_pressed)
-				else:
-					Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
-					in_menu = false
-					just_exited_menu = true
-					remove_child(menu_node)
 			if event.is_action_pressed('switch_equipped'):
 					switch_equipped()
 			if event.is_action_pressed('char_info'):

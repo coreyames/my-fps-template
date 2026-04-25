@@ -13,6 +13,8 @@ var show_log: bool = false
 var show_movement: bool = false
 var print_to_stdout: bool = true
 
+var console_history: Array[String] = []
+
 func log(msg: String) -> void:
 	if is_on:
 		emit_signal("msg_ready", msg)
