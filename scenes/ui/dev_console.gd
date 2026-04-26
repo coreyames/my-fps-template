@@ -3,7 +3,7 @@ extends Control
 @onready var console: TextEdit = $Console
 @onready var input: LineEdit = $LineEdit
 
-var history_offset: int = 0
+var history_offset: int = 1
 
 var prompt: String = '> '
 
@@ -19,11 +19,13 @@ func _ready() -> void:
 func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("up_arrow"):
 		input.clear()
-		if (Debug.console_history.size() > 0):
-			input.text = Debug.console_history.get(history_offset)
+		print(history_offset)
+		var history_length: int = Debug.console_history.size()
+		if (history_length > 0):
+			input.text = Debug.console_history.get(history_length - history_offset)
 			history_offset += 1
-	else:
-		history_offset = 0
+			if history_offset > history_length:
+				history_offset = 1
 	return
 	
 func _on_line_edit_text_submitted(submitted: String) -> void:
@@ -91,6 +93,9 @@ func process_input(input_line: String) -> void:
 				Settings.player_gravity_multipler_value = float(value)
 				get_tree().call_group("settings_dependent", "refresh_settings")
 				console.text += "updated"
+		"history":
+			for _cmd: String in Debug.console_history:
+				console.text += _cmd + '\n'
 		"quit":
 			get_tree().quit()
 		_:

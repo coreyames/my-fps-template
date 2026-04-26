@@ -15,7 +15,6 @@ func _ready() -> void:
 	
 	if equipped != null:
 		equipped.connect('used', _on_equipped_used)
-		
 		if equipped.max_loaded != null && equipped.max_reserve != null:
 			loaded = equipped.max_loaded
 			reserve = equipped.max_reserve
