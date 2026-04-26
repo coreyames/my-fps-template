@@ -31,7 +31,7 @@ script = ExtResource("1_jwuoe")
 layout_mode = 0
 offset_left = 1457.0
 offset_top = 15.0
-offset_right = 1893.0
+offset_right = 1897.0
 offset_bottom = 397.0
 focus_mode = 0
 theme_override_colors/font_color = Color(0.875, 0.875, 0.875, 1)
@@ -43,10 +43,10 @@ shortcut_keys_enabled = false
 
 [node name="MovementInfo" type="TextEdit" parent="." unique_id=1105352974]
 layout_mode = 0
-offset_left = 369.0
-offset_top = 943.0
-offset_right = 545.0
-offset_bottom = 1039.0
+offset_left = 1457.0
+offset_top = 415.0
+offset_right = 1625.0
+offset_bottom = 527.0
 theme_override_fonts/font = SubResource("SystemFont_b7bo0")
 placeholder_text = "Speed: 
 Top: "
@@ -59,8 +59,8 @@ selecting_enabled = false
 layout_mode = 0
 offset_left = 1633.0
 offset_top = 415.0
-offset_right = 1889.0
-offset_bottom = 703.0
+offset_right = 1897.0
+offset_bottom = 743.0
 theme_override_constants/line_spacing = 4
 theme_override_fonts/font = SubResource("SystemFont_j6o1s")
 placeholder_text = "SETTINGS"

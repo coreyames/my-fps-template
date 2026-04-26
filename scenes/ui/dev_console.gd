@@ -19,8 +19,9 @@ func _ready() -> void:
 func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("up_arrow"):
 		input.clear()
-		input.text = Debug.console_history.get(history_offset)
-		history_offset += 1
+		if (Debug.console_history.size() > 0):
+			input.text = Debug.console_history.get(history_offset)
+			history_offset += 1
 	else:
 		history_offset = 0
 	return

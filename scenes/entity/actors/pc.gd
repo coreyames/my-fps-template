@@ -30,6 +30,8 @@ const jump_clip: AudioStreamMP3 = preload("res://audio/jump.mp3")
 #
 # UI
 #
+const hud_scene: Resource = preload("res://scenes/ui/hud.tscn")
+
 const console_scene: Resource = preload("res://scenes/ui/dev_console.tscn")
 var console_node: Control = null
 var is_console_open: bool = false
@@ -56,7 +58,7 @@ const gun_ar2_scene: Resource = preload('res://scenes/entity/objects/equippable/
 var equip1_scene: Resource = gun_ar_scene
 var equip2_scene: Resource = gun_ar2_scene
 
-@onready var equipped: Equippable = $Camera3D/Equipped
+var equipped: Equippable 
 var stored: Equippable
 var viewmodel: Transform3D
 
@@ -107,6 +109,7 @@ func _ready() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	if (equip2_scene != null):
 		stored = equip2_scene.instantiate()
+	equipped = $Camera3D/Equipped
 	viewmodel = equipped.transform
 	stored.transform = viewmodel
 	$Sound.volume_db = -15
@@ -115,6 +118,7 @@ func _ready() -> void:
 	add_stats_from_equipment()
 	for i in range(0, skill_cap):
 		skills.set(i, null)
+	add_child(hud_scene.instantiate())
 	return
 
 func _physics_process(delta: float) -> void:
@@ -328,4 +332,5 @@ func refresh_settings() -> void:
 	jump_velocity_value = Settings.jump_velocity_value
 	air_decel_value = Settings.air_decel_value
 	air_strafe_accel_value = Settings.air_strafe_accel_value
+	player_gravity_multipler_value = Settings.player_gravity_multipler_value
 	return

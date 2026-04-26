@@ -3,7 +3,6 @@
 [ext_resource type="Script" uid="uid://dxtaxt7bl8cs8" path="res://scenes/entity/actors/pc.gd" id="1_ukbfy"]
 [ext_resource type="Script" uid="uid://68vttwet2mi4" path="res://scenes/entity/actors/fps_camera.gd" id="2_crfiw"]
 [ext_resource type="PackedScene" uid="uid://cf8owl4xccf4s" path="res://scenes/entity/objects/equippable/gun_ar.tscn" id="3_de6uy"]
-[ext_resource type="PackedScene" uid="uid://dxf1rgja73ssk" path="res://scenes/ui/hud.tscn" id="4_s818i"]
 [ext_resource type="AudioStream" uid="uid://b2gwe17ttt7ra" path="res://audio/jump.mp3" id="5_3d7xj"]
 [ext_resource type="Script" uid="uid://xu7srjpqgcxk" path="res://classes/GameAudioStream.gd" id="6_ohwa1"]
 
@@ -33,8 +32,6 @@ script = ExtResource("2_crfiw")
 
 [node name="Equipped" parent="Camera3D" unique_id=176738988 instance=ExtResource("3_de6uy")]
 transform = Transform3D(-1, 0, -8.7422755e-08, 0, 0.99999976, 0, 8.742278e-08, 0, -0.99999976, 0.09608793, -0.17219186, -0.17606375)
-
-[node name="HUD" parent="." unique_id=235908584 instance=ExtResource("4_s818i")]
 
 [node name="Sound" type="AudioStreamPlayer3D" parent="." unique_id=493974314]
 stream = ExtResource("5_3d7xj")

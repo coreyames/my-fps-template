@@ -5,15 +5,17 @@ const START_HP: int = 3
 var remaining: int = START_HP
 var loaded: int
 var reserve: int
-var equipped: Equippable
+@onready var equipped: Equippable
 
 func _ready() -> void:
 	$Status/HP.text = str(remaining) + ' HITS REMAINING' 
 	get_parent().connect('was_hit', _on_was_hit)
 	
 	equipped = get_parent().equipped
+	
 	if equipped != null:
 		equipped.connect('used', _on_equipped_used)
+		
 		if equipped.max_loaded != null && equipped.max_reserve != null:
 			loaded = equipped.max_loaded
 			reserve = equipped.max_reserve
