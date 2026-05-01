@@ -11,11 +11,12 @@ var player_name: String = NAME_DEFAULT
 #
 # SETTINGS
 #
-var speed_value: float = Settings.player_speed_value
+var player_speed_value: float = Settings.player_speed_value
 var jump_velocity_value: float = Settings.jump_velocity_value
 var air_decel_value: float = Settings.air_decel_value
 var air_strafe_accel_value: float = Settings.air_strafe_accel_value
-var player_gravity_multipler_value: float = Settings.player_gravity_multipler_value
+var player_gravity_mult_value: float = Settings.player_gravity_mult_value
+var player_max_speed_value: float = Settings.player_max_speed_value
 
 #
 # AUDIO
@@ -101,6 +102,10 @@ signal was_hit
 
 var current_speed: float = 0
 var recent_top_speed: float = 0
+var velocity_before_clamp: Vector3
+var velocity_when_top: Vector3
+var just_landed: bool = false
+
 
 func _ready() -> void: 
 	world_ref = get_parent()
@@ -119,6 +124,7 @@ func _ready() -> void:
 	for i in range(0, skill_cap):
 		skills.set(i, null)
 	add_child(hud_scene.instantiate())
+	floor_stop_on_slope = false
 	return
 
 func _physics_process(delta: float) -> void:
@@ -127,11 +133,12 @@ func _physics_process(delta: float) -> void:
 	
 	# gravity, landing sound flags
 	if not is_on_floor():
-		velocity += (get_gravity() * player_gravity_multipler_value) * delta
+		velocity += (get_gravity() * player_gravity_mult_value) * delta
 		if !was_airborne:
 			was_airborne = true
 	elif was_airborne:
 		was_airborne = false
+		just_landed = true
 		jump_and_land_sound() 
 
 	# checking UI state
@@ -142,8 +149,8 @@ func _physics_process(delta: float) -> void:
 		return
 
 	if in_menu or is_console_open:
-		velocity.x = move_toward(velocity.x, 0, speed_value)
-		velocity.z = move_toward(velocity.z, 0, speed_value)
+		velocity.x = move_toward(velocity.x, 0, player_speed_value)
+		velocity.z = move_toward(velocity.z, 0, player_speed_value)
 		move_and_slide()
 		return
 
@@ -165,8 +172,8 @@ func _physics_process(delta: float) -> void:
 	if direction && is_on_floor():
 		if !is_directed_on_floor:
 			is_directed_on_floor = true
-		velocity.x = direction.x * speed_value
-		velocity.z = direction.z * speed_value
+		velocity.x = direction.x * player_speed_value
+		velocity.z = direction.z * player_speed_value
 		walking_sound(true)
 	else:
 		if is_directed_on_floor:
@@ -184,22 +191,24 @@ func _physics_process(delta: float) -> void:
 					velocity.x += air_strafe_accel_value * direction.x
 					velocity.z += air_strafe_accel_value * direction.z
 		elif is_on_floor():
-			velocity.x = move_toward(velocity.x, 0, speed_value)
-			velocity.z = move_toward(velocity.z, 0, speed_value)
+			velocity.x = move_toward(velocity.x, 0, player_speed_value)
+			velocity.z = move_toward(velocity.z, 0, player_speed_value)
 	
+		
+	velocity.x = clamp(velocity.x, -player_max_speed_value, player_max_speed_value)
+	velocity.z = clamp(velocity.z, -player_max_speed_value, player_max_speed_value)
+
+	current_speed = velocity.length()
+
 	# set debug info
 	if debug_node:
 		var movement_info_node: TextEdit = debug_node.get_node("MovementInfo")
 		
-		if direction.x:
-			current_speed = abs(velocity.x/direction.x)
-		else:
-			current_speed = 0
-			
 		if current_speed > recent_top_speed:
 			recent_top_speed = current_speed
+			velocity_when_top = velocity
 			
-		movement_info_node.text = debug_node.movement_info_template % [current_speed, recent_top_speed]
+		movement_info_node.text = debug_node.movement_info_template % [current_speed, recent_top_speed, velocity_when_top]
 		
 	if (move_and_slide()):
 		handle_collisions()
@@ -266,6 +275,7 @@ func _on_toggle_debug(on: bool):
 	if on:
 		debug_node = Debug.debug_scene.instantiate()
 		add_child(debug_node)
+		Debug.toggle_log()
 	else:
 		remove_child(debug_node)
 		recent_top_speed = 0
@@ -328,9 +338,9 @@ func add_stats_from_equipment() -> void:
 	return
 	
 func refresh_settings() -> void:
-	speed_value = Settings.player_speed_value
+	player_speed_value = Settings.player_speed_value
 	jump_velocity_value = Settings.jump_velocity_value
 	air_decel_value = Settings.air_decel_value
 	air_strafe_accel_value = Settings.air_strafe_accel_value
-	player_gravity_multipler_value = Settings.player_gravity_multipler_value
+	player_gravity_mult_value = Settings.player_gravity_mult_value
 	return

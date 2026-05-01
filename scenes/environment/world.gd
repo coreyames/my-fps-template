@@ -7,4 +7,5 @@ func _ready() -> void:
 	$NPC.pacifist = true
 	$NPC.maintain_pc_los = false
 	level_collision_id = $Level.get_instance_id()
+	Debug.toggle()
 	return

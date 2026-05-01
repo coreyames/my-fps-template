@@ -1,8 +1,9 @@
 extends Control
 
 const movement_info_template: String = "
- Speed: %.2f
-   Top: %.2f
+  Speed: %.2f
+    Top: %.2f
+ VelTop: %.2v 
 "
 
 const movement_settings_template: String = "
@@ -16,6 +17,10 @@ SETTINGS
     air_strafe_accel: %.2f
 
  player_gravity_mult: %.2f
+
+    player_max_speed: %.2f
+	 
+      min_cam_motion: %.2f
 "
 
 func _ready() -> void:
@@ -31,7 +36,9 @@ func _ready() -> void:
 		Settings.jump_velocity_value,
 		Settings.air_decel_value,
 		Settings.air_strafe_accel_value,
-		Settings.player_gravity_multipler_value
+		Settings.player_gravity_mult_value,
+		Settings.player_max_speed_value,
+		Settings.min_cam_motion_value
 	]
 	return
 		
@@ -54,6 +61,8 @@ func refresh_settings() -> void:
 		Settings.jump_velocity_value,
 		Settings.air_decel_value,
 		Settings.air_strafe_accel_value,
-		Settings.player_gravity_multipler_value
+		Settings.player_gravity_mult_value,
+		Settings.player_max_speed_value,
+		Settings.min_cam_motion_value
 	]
 	return

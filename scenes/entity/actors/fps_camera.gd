@@ -12,7 +12,7 @@ var sens: float = Settings.mouse_sensitivity_value
 const ABS_PITCH_MAX: float = 89
 
 func _ready() -> void:
-	add_to_group("settins_dependent")
+	add_to_group("settings_dependent")
 	body = get_parent()
 	Input.set_use_accumulated_input(false)
 
