@@ -1,26 +1,26 @@
 extends Control
 
 const movement_info_template: String = "
-  Speed: %.2f
-    Top: %.2f
- VelTop: %.2v 
+   Speed: %.2f
+     Top: %.2f
+ Vel@Top: %.2v 
 "
 
 const movement_settings_template: String = "
 SETTINGS
-        player_speed: %.2f
+          player_speed: %.2f
 
-       jump_velocity: %.2f
+         jump_velocity: %.2f
 
-           air_decel: %.2f
+             air_decel: %.2f
 
-    air_strafe_accel: %.2f
+      air_strafe_accel: %.2f
 
- player_gravity_mult: %.2f
+   player_gravity_mult: %.2f
 
-    player_max_speed: %.2f
+      player_max_speed: %.2f
 	 
-      min_cam_motion: %.2f
+player_ground_friction: %.2f
 "
 
 func _ready() -> void:
@@ -38,7 +38,7 @@ func _ready() -> void:
 		Settings.air_strafe_accel_value,
 		Settings.player_gravity_mult_value,
 		Settings.player_max_speed_value,
-		Settings.min_cam_motion_value
+		Settings.player_ground_friction_value
 	]
 	return
 		
@@ -63,6 +63,6 @@ func refresh_settings() -> void:
 		Settings.air_strafe_accel_value,
 		Settings.player_gravity_mult_value,
 		Settings.player_max_speed_value,
-		Settings.min_cam_motion_value
+		Settings.player_ground_friction_value
 	]
 	return

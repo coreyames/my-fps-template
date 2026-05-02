@@ -17,6 +17,7 @@ var air_decel_value: float = Settings.air_decel_value
 var air_strafe_accel_value: float = Settings.air_strafe_accel_value
 var player_gravity_mult_value: float = Settings.player_gravity_mult_value
 var player_max_speed_value: float = Settings.player_max_speed_value
+var player_ground_friction_value: float = Settings.player_ground_friction_value
 
 #
 # AUDIO
@@ -102,10 +103,8 @@ signal was_hit
 
 var current_speed: float = 0
 var recent_top_speed: float = 0
-var velocity_before_clamp: Vector3
 var velocity_when_top: Vector3
 var just_landed: bool = false
-
 
 func _ready() -> void: 
 	world_ref = get_parent()
@@ -180,19 +179,16 @@ func _physics_process(delta: float) -> void:
 			is_directed_on_floor = false
 			walking_sound(false)
 
-		if !direction && !is_on_floor():
+		if !is_on_floor():
 			velocity.x = move_toward(velocity.x, 0, air_decel_value)
 			velocity.z = move_toward(velocity.z, 0, air_decel_value)
-		elif direction && !is_on_floor(): 
-			velocity.x = move_toward(velocity.x, 0, air_decel_value)
-			velocity.z = move_toward(velocity.z, 0, air_decel_value)
-			if (!is_zero_approx(camera_motion.x)):
-				if (camera_motion.x > 0 && input_dir.x > 0) || (camera_motion.x < 0 && input_dir.x < 0):
+			if direction && !is_zero_approx(camera_motion.x): 
+				if (camera_motion.x * input_dir.x > 0):
 					velocity.x += air_strafe_accel_value * direction.x
 					velocity.z += air_strafe_accel_value * direction.z
-		elif is_on_floor():
-			velocity.x = move_toward(velocity.x, 0, player_speed_value)
-			velocity.z = move_toward(velocity.z, 0, player_speed_value)
+		else:
+			velocity.x = move_toward(velocity.x, 0, player_ground_friction_value)
+			velocity.z = move_toward(velocity.z, 0, player_ground_friction_value)
 	
 		
 	velocity.x = clamp(velocity.x, -player_max_speed_value, player_max_speed_value)
@@ -343,4 +339,5 @@ func refresh_settings() -> void:
 	air_decel_value = Settings.air_decel_value
 	air_strafe_accel_value = Settings.air_strafe_accel_value
 	player_gravity_mult_value = Settings.player_gravity_mult_value
+	player_ground_friction_value = Settings.player_ground_friction_value
 	return
