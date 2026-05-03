@@ -6,6 +6,7 @@
 [ext_resource type="Shader" uid="uid://drltjs85u6aje" path="res://shaders/skybox.gdshader" id="3_ras1c"]
 [ext_resource type="Script" uid="uid://cuwkybx07itvj" path="res://scenes/environment/world_environment.gd" id="4_w505c"]
 [ext_resource type="PackedScene" uid="uid://cjc6uh560gbue" path="res://assets/Stylarts/Stylized_Windmill_Valley/Art/Prefabs/SM_LittleHouse.prefab.scn" id="6_gr0d1"]
+[ext_resource type="Script" uid="uid://baampu10krlfp" path="res://scenes/environment/waypoint.gd" id="7_r2x4y"]
 
 [sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_66kid"]
 
@@ -42,8 +43,8 @@ gradient = SubResource("Gradient_036b0")
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_gr0d1"]
 shader = ExtResource("3_ras1c")
-shader_parameter/sun_dir = Vector3(0, 0.54804516, -0.8364488)
-shader_parameter/moon_dir = Vector3(0, 0.54804516, -0.8364488)
+shader_parameter/sun_dir = Vector3(0, 0.7620019, -0.6475748)
+shader_parameter/moon_dir = Vector3(0, 0.7620019, -0.6475748)
 shader_parameter/sun_zenith_gradient = SubResource("GradientTexture1D_w505c")
 shader_parameter/view_zenith_gradient = SubResource("GradientTexture1D_gr0d1")
 shader_parameter/sun_view_gradient = SubResource("GradientTexture1D_ras1c")
@@ -70,6 +71,10 @@ shape = SubResource("WorldBoundaryShape3D_66kid")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.18037033, -0.04171753, 0.14457321)
 mesh = SubResource("PlaneMesh_ras1c")
 
+[node name="CSGBox3D" type="CSGBox3D" parent="Level/CollisionShape3D/MeshInstance3D" unique_id=1913588094]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.6821804, 0.04277277, 1.9921522)
+use_collision = true
+
 [node name="Player" parent="." unique_id=644000164 instance=ExtResource("1_ya45n")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 17.885735)
 
@@ -80,12 +85,14 @@ sun = NodePath("../Sun")
 moon = NodePath("../Sun/Moon")
 
 [node name="Sun" type="DirectionalLight3D" parent="." unique_id=1823644198]
-transform = Transform3D(1, 0, 0, 0, -0.8364488, 0.54804516, 0, -0.54804516, -0.8364488, 0, 118.94938, 0)
-light_energy = 0.4
+transform = Transform3D(1, 0, 0, 0, -0.64757484, 0.762002, 0, -0.762002, -0.64757484, 0, 118.94938, 0)
+light_color = Color(0.9005678, 0.8435143, 0.8637141, 1)
+light_energy = 0.35
 light_indirect_energy = 0.0
 light_angular_distance = 1.0
-light_specular = 0.5
+light_specular = 7.3
 shadow_enabled = true
+shadow_opacity = 0.94
 
 [node name="Moon" type="Node3D" parent="Sun" unique_id=1677101483]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 177.5424, 90.564285, 0)
@@ -97,3 +104,18 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 35.986404, 0, 13.408783)
 use_collision = true
 polygon = PackedVector2Array(-1, 0, -1.048486, 2.1205955, 1, 0)
 depth = 5.0
+
+[node name="CSGPolygon3D2" type="CSGPolygon3D" parent="." unique_id=1947634745]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.2929122, 0, 0)
+use_collision = true
+polygon = PackedVector2Array(0, 0, 0, 3, 2, 0)
+depth = 20.0
+
+[node name="CSGBox3D" type="CSGBox3D" parent="." unique_id=1998312701]
+transform = Transform3D(5.7381096, 0, 0, 0, 2.7417521, 0, 0, 0, 1, 3.488, 1.0008584, 0.9758599)
+use_collision = true
+size = Vector3(1, 1.3653564, 1)
+
+[node name="Waypoint" type="Marker3D" parent="." unique_id=1583498842]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.4434893, 3.72816, 1.0300498)
+script = ExtResource("7_r2x4y")

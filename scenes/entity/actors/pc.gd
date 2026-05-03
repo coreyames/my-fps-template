@@ -193,6 +193,8 @@ func _physics_process(delta: float) -> void:
 		else:
 			velocity.x = move_toward(velocity.x, 0, player_ground_friction_value)
 			velocity.z = move_toward(velocity.z, 0, player_ground_friction_value)
+			velocity.y = move_toward(velocity.y, 0, player_ground_friction_value)
+			
 	
 	# clamp in valid range, then 0 if stop pressed	
 	velocity.x = clamp(velocity.x, -player_max_speed_value, player_max_speed_value)
@@ -211,8 +213,9 @@ func _physics_process(delta: float) -> void:
 		if current_speed > recent_top_speed:
 			recent_top_speed = current_speed
 			velocity_when_top = velocity
-			
-		movement_info_node.text = debug_node.movement_info_template % [current_speed, recent_top_speed, velocity_when_top]
+
+		var params = [current_speed, recent_top_speed, velocity_when_top]
+		movement_info_node.text = debug_node.movement_info_template % params
 		
 	if (move_and_slide()):
 		handle_collisions()
