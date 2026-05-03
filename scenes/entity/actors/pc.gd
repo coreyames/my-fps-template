@@ -1,6 +1,9 @@
 extends CharacterBody3D
 
 var world_ref: Node3D
+var viewport_size_x: float
+var viewport_size_y: float
+var screen_center: Vector2
 
 #
 # PLAYER INFORMATION
@@ -108,6 +111,9 @@ var just_landed: bool = false
 
 func _ready() -> void: 
 	world_ref = get_parent()
+	viewport_size_x = get_viewport().get_visible_rect().size.x
+	viewport_size_y = get_viewport().get_visible_rect().size.y
+	screen_center = Vector2(viewport_size_x/2, viewport_size_y/2)
 	add_to_group("settings_dependent")
 	Debug.connect("toggle_debug", _on_toggle_debug)
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
@@ -162,10 +168,8 @@ func _physics_process(delta: float) -> void:
 	var input_dir: Vector2 = Input.get_vector("left", "right", "fwd", "bwd")
 	var direction: Vector3 = (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
 	
-	# TODO replace hardcoded values when resolution adjustment added
-	# get coords of click on screen
 	if Input.is_action_just_pressed("use") && equipped != null:
-		equipped.use(get_viewport().get_camera_3d().project_ray_normal(Vector2(1920.0/2, 1080.0/2)))
+		equipped.use(get_viewport().get_camera_3d().project_ray_normal(screen_center))
 
 	# handle movement
 	if direction && is_on_floor():
@@ -190,9 +194,13 @@ func _physics_process(delta: float) -> void:
 			velocity.x = move_toward(velocity.x, 0, player_ground_friction_value)
 			velocity.z = move_toward(velocity.z, 0, player_ground_friction_value)
 	
-		
+	# clamp in valid range, then 0 if stop pressed	
 	velocity.x = clamp(velocity.x, -player_max_speed_value, player_max_speed_value)
 	velocity.z = clamp(velocity.z, -player_max_speed_value, player_max_speed_value)
+
+	if Input.is_action_just_pressed('stop'):
+		velocity.x = 0
+		velocity.z = 0
 
 	current_speed = velocity.length()
 
@@ -211,7 +219,7 @@ func _physics_process(delta: float) -> void:
 	return
 
 func _input(event: InputEvent) -> void:
-	if event.is_action_pressed("devconsole"):
+	if event.is_action_pressed('devconsole'):
 		get_viewport().set_input_as_handled()
 		if !is_console_open:
 			console_node = console_scene.instantiate()
@@ -228,7 +236,7 @@ func _input(event: InputEvent) -> void:
 			in_menu = true
 			menu_node = menu_scene.instantiate()
 			add_child(menu_node)
-			menu_node.get_child(0).get_child(2).connect("pressed", _on_menu_ok_button_pressed)
+			menu_node.get_child(0).get_child(2).connect('pressed', _on_menu_ok_button_pressed)
 		else:
 			Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 			in_menu = false
@@ -238,26 +246,28 @@ func _input(event: InputEvent) -> void:
 				remove_child(menu_node)
 			if console_node:
 				remove_child(console_node)
-	else:
-		if event is InputEventKey && !is_console_open:
-			if event.is_action_pressed('switch_equipped'):
-					switch_equipped()
-			if event.is_action_pressed('char_info'):
-					if !is_char_info_open:
-						char_info_node = char_info_scene.instantiate()
-						add_child(char_info_node)
-						is_char_info_open = true
-					else:
-						remove_child(char_info_node)
-						is_char_info_open = false
-			if event.is_action_pressed('inventory'):
-					if !is_inventory_open:
-						inventory_node = inventory_scene.instantiate()
-						add_child(inventory_node)
-						is_inventory_open = true
-					else:
-						remove_child(inventory_node)
-						is_inventory_open = false
+	elif event.is_action_pressed('reset_recorded_metrics'):
+		recent_top_speed = 0
+		velocity_when_top = Vector3()
+	elif event is InputEventKey && !is_console_open:
+		if event.is_action_pressed('switch_equipped'):
+				switch_equipped()
+		if event.is_action_pressed('char_info'):
+			if !is_char_info_open:
+				char_info_node = char_info_scene.instantiate()
+				add_child(char_info_node)
+				is_char_info_open = true
+			else:
+				remove_child(char_info_node)
+				is_char_info_open = false
+		if event.is_action_pressed('inventory'):
+			if !is_inventory_open:
+				inventory_node = inventory_scene.instantiate()
+				add_child(inventory_node)
+				is_inventory_open = true
+			else:
+				remove_child(inventory_node)
+				is_inventory_open = false
 	return
 
 func _on_menu_ok_button_pressed():
@@ -319,9 +329,9 @@ func handle_collisions() -> void:
 	return
 
 func add_stats_from_equipment() -> void:
-	var helm: Helm = equipment.get("helm")
-	var chest: Chest = equipment.get("chest")
-	var pack: Pack = equipment.get("pack")
+	var helm: Helm = equipment.get('helm')
+	var chest: Chest = equipment.get('chest')
+	var pack: Pack = equipment.get('pack')
 	if helm:
 		max_health += helm.HP
 		magic_reduction += helm.MR

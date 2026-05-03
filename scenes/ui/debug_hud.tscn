@@ -2,8 +2,8 @@
 
 [ext_resource type="Script" uid="uid://dpyhyy1oy660m" path="res://scenes/ui/debug_hud.gd" id="1_jwuoe"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dnh6s"]
-bg_color = Color(1, 1, 1, 0)
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_b7bo0"]
+content_margin_top = 447.0
 
 [sub_resource type="SystemFont" id="SystemFont_b7bo0"]
 font_names = PackedStringArray("Monospace")
@@ -29,13 +29,13 @@ script = ExtResource("1_jwuoe")
 
 [node name="Log" type="TextEdit" parent="." unique_id=268061725]
 layout_mode = 0
-offset_left = 1457.0
+offset_left = 1265.0
 offset_top = 15.0
 offset_right = 1897.0
-offset_bottom = 397.0
+offset_bottom = 255.0
 focus_mode = 0
 theme_override_colors/font_color = Color(0.875, 0.875, 0.875, 1)
-theme_override_styles/normal = SubResource("StyleBoxFlat_dnh6s")
+theme_override_styles/normal = SubResource("StyleBoxFlat_b7bo0")
 placeholder_text = "DEBUG LOG"
 editable = false
 emoji_menu_enabled = false
@@ -43,9 +43,9 @@ shortcut_keys_enabled = false
 
 [node name="MovementInfo" type="TextEdit" parent="." unique_id=1105352974]
 layout_mode = 0
-offset_left = 409.0
-offset_top = 863.0
-offset_right = 753.0
+offset_left = 369.0
+offset_top = 895.0
+offset_right = 721.0
 offset_bottom = 1023.0
 theme_override_fonts/font = SubResource("SystemFont_b7bo0")
 placeholder_text = "Speed: 
@@ -57,11 +57,11 @@ selecting_enabled = false
 
 [node name="MovementSettings" type="TextEdit" parent="." unique_id=1048407347]
 layout_mode = 0
-offset_left = 1585.0
-offset_top = 423.0
+offset_left = 1521.0
+offset_top = 319.0
 offset_right = 1897.0
 offset_bottom = 863.0
-theme_override_constants/line_spacing = 4
+theme_override_constants/line_spacing = 0
 theme_override_fonts/font = SubResource("SystemFont_j6o1s")
 placeholder_text = "SETTINGS"
 editable = false

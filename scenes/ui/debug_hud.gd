@@ -7,20 +7,20 @@ const movement_info_template: String = "
 "
 
 const movement_settings_template: String = "
-SETTINGS
-          player_speed: %.2f
+  SETTINGS
+            player_speed: %.2f
 
-         jump_velocity: %.2f
+           jump_velocity: %.2f
 
-             air_decel: %.2f
+               air_decel: %.2f
 
-      air_strafe_accel: %.2f
+        air_strafe_accel: %.2f
 
-   player_gravity_mult: %.2f
+     player_gravity_mult: %.2f
 
-      player_max_speed: %.2f
+        player_max_speed: %.2f
 	 
-player_ground_friction: %.2f
+  player_ground_friction: %.2f
 "
 
 func _ready() -> void:
