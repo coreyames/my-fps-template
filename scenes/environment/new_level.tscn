@@ -17,7 +17,7 @@ albedo_color = Color(3.2439172, 2.9910471, 2.8262084, 0.20392157)
 albedo_texture = SubResource("CompressedTexture2D_gr0d1")
 metallic_specular = 0.58
 roughness = 0.95
-uv1_scale = Vector3(5, 5, 5)
+uv1_scale = Vector3(7, 7, 7)
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_ras1c"]
 material = SubResource("StandardMaterial3D_f34he")

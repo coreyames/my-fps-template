@@ -166,8 +166,8 @@ func _physics_process(delta: float) -> void:
 	if Input.is_action_just_pressed("jump") and is_on_floor():
 		# bhop velocity add here
 		if just_landed:
-			velocity.x += 5
-			velocity.z += 5
+			velocity.x += 10
+			velocity.z += 10
 		jump_and_land_sound()
 		velocity.y = jump_velocity_value
 
@@ -182,9 +182,15 @@ func _physics_process(delta: float) -> void:
 	if direction && is_on_floor():
 		if !is_directed_on_floor:
 			is_directed_on_floor = true
-		if current_speed < player_speed_value:
+		if current_speed <= player_speed_value:
 			velocity.x = direction.x * player_speed_value
 			velocity.z = direction.z * player_speed_value
+		else:
+			if velocity.x * direction.x < 0:
+				velocity.x = move_toward(velocity.x, 0, player_ground_friction_value*2)
+			if velocity.z * direction.z < 0:
+				velocity.z = move_toward(velocity.z, 0, player_ground_friction_value*2) 
+
 		walking_sound(true)
 	else:
 		if is_directed_on_floor:
