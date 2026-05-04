@@ -144,6 +144,7 @@ func _physics_process(delta: float) -> void:
 	elif was_airborne:
 		was_airborne = false
 		just_landed = true
+		# ^ enable bhop later in movement handling?
 		jump_and_land_sound() 
 
 	# checking UI state
@@ -161,6 +162,7 @@ func _physics_process(delta: float) -> void:
 
 	# jumping
 	if Input.is_action_just_pressed("jump") and is_on_floor():
+		# bhop velocity add here
 		jump_and_land_sound()
 		velocity.y = jump_velocity_value
 
@@ -175,8 +177,9 @@ func _physics_process(delta: float) -> void:
 	if direction && is_on_floor():
 		if !is_directed_on_floor:
 			is_directed_on_floor = true
-		velocity.x = direction.x * player_speed_value
-		velocity.z = direction.z * player_speed_value
+		if current_speed < player_speed_value:
+			velocity.x = direction.x * player_speed_value
+			velocity.z = direction.z * player_speed_value
 		walking_sound(true)
 	else:
 		if is_directed_on_floor:
@@ -187,20 +190,19 @@ func _physics_process(delta: float) -> void:
 			velocity.x = move_toward(velocity.x, 0, air_decel_value)
 			velocity.z = move_toward(velocity.z, 0, air_decel_value)
 			if direction && !is_zero_approx(camera_motion.x): 
-				if (camera_motion.x * input_dir.x > 0):
+				if (camera_motion.x * input_dir.x > 0):	
 					velocity.x += air_strafe_accel_value * direction.x
 					velocity.z += air_strafe_accel_value * direction.z
-		else:
-			velocity.x = move_toward(velocity.x, 0, player_ground_friction_value)
-			velocity.z = move_toward(velocity.z, 0, player_ground_friction_value)
-			velocity.y = move_toward(velocity.y, 0, player_ground_friction_value)
-			
+
+	if is_on_floor():
+		velocity.x = move_toward(velocity.x, 0, player_ground_friction_value)
+		velocity.z = move_toward(velocity.z, 0, player_ground_friction_value)
 	
 	# clamp in valid range, then 0 if stop pressed	
 	velocity.x = clamp(velocity.x, -player_max_speed_value, player_max_speed_value)
 	velocity.z = clamp(velocity.z, -player_max_speed_value, player_max_speed_value)
 
-	if Input.is_action_just_pressed('stop'):
+	if is_on_floor() && Input.is_action_just_pressed('stop'):
 		velocity.x = 0
 		velocity.z = 0
 

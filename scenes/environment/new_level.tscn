@@ -43,8 +43,8 @@ gradient = SubResource("Gradient_036b0")
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_gr0d1"]
 shader = ExtResource("3_ras1c")
-shader_parameter/sun_dir = Vector3(0, 0.7620019, -0.6475748)
-shader_parameter/moon_dir = Vector3(0, 0.7620019, -0.6475748)
+shader_parameter/sun_dir = Vector3(0, 0.79271543, 0.60959196)
+shader_parameter/moon_dir = Vector3(0, 0.79271543, 0.60959196)
 shader_parameter/sun_zenith_gradient = SubResource("GradientTexture1D_w505c")
 shader_parameter/view_zenith_gradient = SubResource("GradientTexture1D_gr0d1")
 shader_parameter/sun_view_gradient = SubResource("GradientTexture1D_ras1c")
@@ -85,14 +85,14 @@ sun = NodePath("../Sun")
 moon = NodePath("../Sun/Moon")
 
 [node name="Sun" type="DirectionalLight3D" parent="." unique_id=1823644198]
-transform = Transform3D(1, 0, 0, 0, -0.64757484, 0.762002, 0, -0.762002, -0.64757484, 0, 118.94938, 0)
+transform = Transform3D(1, 0, 0, 0, 0.60959196, 0.79271543, 0, -0.79271543, 0.60959196, 0, 118.94938, 0)
 light_color = Color(0.9005678, 0.8435143, 0.8637141, 1)
 light_energy = 0.35
 light_indirect_energy = 0.0
-light_angular_distance = 1.0
-light_specular = 7.3
+light_angular_distance = 0.5
+light_specular = 7.5
 shadow_enabled = true
-shadow_opacity = 0.94
+shadow_opacity = 0.93
 
 [node name="Moon" type="Node3D" parent="Sun" unique_id=1677101483]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 177.5424, 90.564285, 0)
