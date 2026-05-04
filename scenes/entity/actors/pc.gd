@@ -144,8 +144,10 @@ func _physics_process(delta: float) -> void:
 	elif was_airborne:
 		was_airborne = false
 		just_landed = true
-		# ^ enable bhop later in movement handling?
-		jump_and_land_sound() 
+		# ^ enables bhop logic later in movement handling?
+		jump_and_land_sound()
+	elif just_landed:
+		just_landed = false
 
 	# checking UI state
 	if just_exited_menu:
@@ -163,6 +165,9 @@ func _physics_process(delta: float) -> void:
 	# jumping
 	if Input.is_action_just_pressed("jump") and is_on_floor():
 		# bhop velocity add here
+		if just_landed:
+			velocity.x += 5
+			velocity.z += 5
 		jump_and_land_sound()
 		velocity.y = jump_velocity_value
 

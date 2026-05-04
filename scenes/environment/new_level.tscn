@@ -2,7 +2,6 @@
 
 [ext_resource type="Script" uid="uid://d2kkck1rwvq4r" path="res://scenes/environment/new_level.gd" id="1_66kid"]
 [ext_resource type="PackedScene" uid="uid://b7a13xqqyw8ii" path="res://scenes/entity/actors/pc.tscn" id="1_ya45n"]
-[ext_resource type="Texture2D" uid="uid://bsashndrh5sgy" path="res://textures/checker_white_512x512.svg" id="2_w505c"]
 [ext_resource type="Shader" uid="uid://drltjs85u6aje" path="res://shaders/skybox.gdshader" id="3_ras1c"]
 [ext_resource type="Script" uid="uid://cuwkybx07itvj" path="res://scenes/environment/world_environment.gd" id="4_w505c"]
 [ext_resource type="PackedScene" uid="uid://cjc6uh560gbue" path="res://assets/Stylarts/Stylized_Windmill_Valley/Art/Prefabs/SM_LittleHouse.prefab.scn" id="6_gr0d1"]
@@ -10,9 +9,15 @@
 
 [sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_66kid"]
 
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_gr0d1"]
+load_path = "res://.godot/imported/texture_08.png-5883ddd047173c8b118ead887054e6fc.s3tc.ctex"
+
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_f34he"]
-albedo_color = Color(0.8537777, 0.7579771, 0.6521627, 1)
-albedo_texture = ExtResource("2_w505c")
+albedo_color = Color(3.2439172, 2.9910471, 2.8262084, 0.20392157)
+albedo_texture = SubResource("CompressedTexture2D_gr0d1")
+metallic_specular = 0.58
+roughness = 0.95
+uv1_scale = Vector3(5, 5, 5)
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_ras1c"]
 material = SubResource("StandardMaterial3D_f34he")
