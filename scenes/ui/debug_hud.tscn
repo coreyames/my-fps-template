@@ -45,11 +45,9 @@ shortcut_keys_enabled = false
 layout_mode = 0
 offset_left = 369.0
 offset_top = 895.0
-offset_right = 721.0
-offset_bottom = 1023.0
+offset_right = 729.0
+offset_bottom = 1055.0
 theme_override_fonts/font = SubResource("SystemFont_b7bo0")
-placeholder_text = "Speed: 
-Top: "
 editable = false
 emoji_menu_enabled = false
 shortcut_keys_enabled = false

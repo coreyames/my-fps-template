@@ -166,6 +166,7 @@ func _physics_process(delta: float) -> void:
 	if Input.is_action_just_pressed("jump") and is_on_floor():
 		# bhop velocity add here
 		if just_landed:
+			Debug.log("BHOP")
 			velocity.x += 10
 			velocity.z += 10
 		jump_and_land_sound()
@@ -200,8 +201,8 @@ func _physics_process(delta: float) -> void:
 		if !is_on_floor():
 			velocity.x = move_toward(velocity.x, 0, air_decel_value)
 			velocity.z = move_toward(velocity.z, 0, air_decel_value)
-			if direction && !is_zero_approx(camera_motion.x): 
-				if (camera_motion.x * input_dir.x > 0):	
+			if (!is_zero_approx(camera_motion.x)):
+				if (camera_motion.x > 0 && input_dir.x > 0) || (camera_motion.x < 0 && input_dir.x < 0):
 					velocity.x += air_strafe_accel_value * direction.x
 					velocity.z += air_strafe_accel_value * direction.z
 
@@ -227,7 +228,7 @@ func _physics_process(delta: float) -> void:
 			recent_top_speed = current_speed
 			velocity_when_top = velocity
 
-		var params = [current_speed, recent_top_speed, velocity_when_top]
+		var params = [current_speed, recent_top_speed, velocity_when_top, camera_motion.x]
 		movement_info_node.text = debug_node.movement_info_template % params
 		
 	if (move_and_slide()):

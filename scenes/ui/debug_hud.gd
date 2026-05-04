@@ -1,9 +1,10 @@
 extends Control
 
 const movement_info_template: String = "
-   Speed: %.2f
-     Top: %.2f
- Vel@Top: %.2v 
+     Speed: %.2f
+       Top: %.2f
+   Vel@Top: %.2v
+    look.x: %.2f
 "
 
 const movement_settings_template: String = "

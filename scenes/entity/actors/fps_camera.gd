@@ -23,6 +23,8 @@ func _unhandled_input(event) -> void:
 	if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
 		if event is InputEventMouseMotion:
 			look(event)
+		else:
+			motion = Vector2.ZERO
 	return
 	
 # Rotates the character around the local Y axis
