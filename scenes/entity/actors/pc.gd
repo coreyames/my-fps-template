@@ -1,5 +1,7 @@
 extends CharacterBody3D
 
+signal was_hit
+
 var world_ref: Node3D
 var viewport_size_x: float
 var viewport_size_y: float
@@ -21,6 +23,9 @@ var air_strafe_accel_value: float = Settings.air_strafe_accel_value
 var player_gravity_mult_value: float = Settings.player_gravity_mult_value
 var player_max_speed_value: float = Settings.player_max_speed_value
 var player_ground_friction_value: float = Settings.player_ground_friction_value
+var player_decel_on_input_value:  float = Settings.player_decel_on_input_value
+var bhop_frames_value: int = Settings.bhop_frames_value
+
 
 #
 # AUDIO
@@ -102,34 +107,41 @@ var skills: Dictionary[int, Skill] = {}
 #
 # STATUS, METRICS
 #
-signal was_hit
 
 var current_speed: float = 0
 var recent_top_speed: float = 0
 var velocity_when_top: Vector3
+
 var just_landed: bool = false
+var bhop_frame_buffer: Array[bool]
 
 func _ready() -> void: 
 	world_ref = get_parent()
 	viewport_size_x = get_viewport().get_visible_rect().size.x
 	viewport_size_y = get_viewport().get_visible_rect().size.y
 	screen_center = Vector2(viewport_size_x/2, viewport_size_y/2)
+
 	add_to_group("settings_dependent")
 	Debug.connect("toggle_debug", _on_toggle_debug)
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	$Sound.volume_db = -15
+	floor_stop_on_slope = false
+
 	if (equip2_scene != null):
 		stored = equip2_scene.instantiate()
 	equipped = $Camera3D/Equipped
 	viewmodel = equipped.transform
 	stored.transform = viewmodel
-	$Sound.volume_db = -15
 	equipment.set("w1", equipped)
 	equipment.set("w2", stored)
 	add_stats_from_equipment()
 	for i in range(0, skill_cap):
 		skills.set(i, null)
+
 	add_child(hud_scene.instantiate())
-	floor_stop_on_slope = false
+
+	bhop_frame_buffer.resize(bhop_frames_value)
+	bhop_frame_buffer.fill(false)
 	return
 
 func _physics_process(delta: float) -> void:
@@ -144,6 +156,7 @@ func _physics_process(delta: float) -> void:
 	elif was_airborne:
 		was_airborne = false
 		just_landed = true
+		
 		# ^ enables bhop logic later in movement handling?
 		jump_and_land_sound()
 	elif just_landed:
@@ -162,15 +175,19 @@ func _physics_process(delta: float) -> void:
 		move_and_slide()
 		return
 
+
 	# jumping
-	if Input.is_action_just_pressed("jump") and is_on_floor():
-		# bhop velocity add here
-		if just_landed:
-			Debug.log("BHOP")
-			velocity.x += 10
-			velocity.z += 10
-		jump_and_land_sound()
-		velocity.y = jump_velocity_value
+	bhop_frame_buffer.pop_back()
+	if Input.is_action_just_pressed("jump"):
+		bhop_frame_buffer.push_front(true)
+		if is_on_floor():
+			if just_landed && bhop_frame_buffer.any(func(b): return b):
+				velocity.x += 10
+				velocity.z += 10
+			jump_and_land_sound()
+			velocity.y = jump_velocity_value
+	else:
+		bhop_frame_buffer.push_front(false)
 
 	# getting x, z movement (keyboard)
 	var input_dir: Vector2 = Input.get_vector("left", "right", "fwd", "bwd")
@@ -188,9 +205,9 @@ func _physics_process(delta: float) -> void:
 			velocity.z = direction.z * player_speed_value
 		else:
 			if velocity.x * direction.x < 0:
-				velocity.x = move_toward(velocity.x, 0, player_ground_friction_value*2)
+				velocity.x = move_toward(velocity.x, 0, player_decel_on_input_value)
 			if velocity.z * direction.z < 0:
-				velocity.z = move_toward(velocity.z, 0, player_ground_friction_value*2) 
+				velocity.z = move_toward(velocity.z, 0, player_decel_on_input_value) 
 
 		walking_sound(true)
 	else:
@@ -266,6 +283,7 @@ func _input(event: InputEvent) -> void:
 	elif event.is_action_pressed('reset_recorded_metrics'):
 		recent_top_speed = 0
 		velocity_when_top = Vector3()
+		Debug.log('metrics reset')
 	elif event is InputEventKey && !is_console_open:
 		if event.is_action_pressed('switch_equipped'):
 				switch_equipped()
@@ -330,10 +348,9 @@ func switch_equipped() -> void:
 	return
 	
 func handle_proj_collision(collision: KinematicCollision3D) -> void:
-	var collider: Node3D = collision.get_collider()
-	Debug.log(str(collider))
+	var proj: Node3D = collision.get_collider()
 	was_hit.emit()
-	SignalBus.projectile_hit.emit(collider.get_instance_id())
+	SignalBus.projectile_hit.emit(proj.get_instance_id())
 	return
 
 func handle_collisions() -> void:
@@ -367,4 +384,5 @@ func refresh_settings() -> void:
 	air_strafe_accel_value = Settings.air_strafe_accel_value
 	player_gravity_mult_value = Settings.player_gravity_mult_value
 	player_ground_friction_value = Settings.player_ground_friction_value
+	player_decel_on_input_value = Settings.player_decel_on_input_value
 	return

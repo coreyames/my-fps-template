@@ -57,8 +57,6 @@ func look(event: InputEventMouseMotion) -> void:
 	return
 	
 func refresh_settings() -> void:
-	sens = Settings.mouse_sensitivity_value
-	sens = clamp(sens, 1, 100)
-	fov = Settings.fov_value
-	fov = clamp(fov, 60, 120)
+	sens = clamp(Settings.mouse_sensitivity_value, 1, 100)
+	fov = clamp(Settings.fov_value, 60, 120)
 	return
