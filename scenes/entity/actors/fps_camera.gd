@@ -13,6 +13,10 @@ const ABS_PITCH_MAX: float = 89
 
 func _ready() -> void:
 	add_to_group("settings_dependent")
+	keep_aspect = Camera3D.KEEP_WIDTH
+	fov = Settings.fov_value
+	fov = clamp(fov, 60, 120)
+	sens = clamp(sens, 1, 100)
 	body = get_parent()
 	Input.set_use_accumulated_input(false)
 
@@ -54,4 +58,7 @@ func look(event: InputEventMouseMotion) -> void:
 	
 func refresh_settings() -> void:
 	sens = Settings.mouse_sensitivity_value
+	sens = clamp(sens, 1, 100)
+	fov = Settings.fov_value
+	fov = clamp(fov, 60, 120)
 	return

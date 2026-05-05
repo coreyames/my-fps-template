@@ -253,7 +253,7 @@ func _input(event: InputEvent) -> void:
 			in_menu = true
 			menu_node = menu_scene.instantiate()
 			add_child(menu_node)
-			menu_node.get_child(0).get_child(2).connect('pressed', _on_menu_ok_button_pressed)
+			menu_node.get_child(0).get_ok_button().connect('pressed', _on_menu_ok_button_pressed)
 		else:
 			Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 			in_menu = false

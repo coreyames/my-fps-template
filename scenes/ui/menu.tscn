@@ -39,6 +39,7 @@ offset_bottom = 729.0
 theme = SubResource("Theme_lti8b")
 item_count = 2
 item_0/text = "mouse sensitivity"
+item_1/text = "field of view"
 script = ExtResource("1_lti8b")
 
 [node name="MouseSlider" type="HSlider" parent="ItemList" unique_id=543079658]
@@ -52,15 +53,43 @@ value = 50.0
 tick_count = 5
 ticks_on_borders = true
 
+[node name="FovSlider" type="HSlider" parent="ItemList" unique_id=2135846771]
+layout_mode = 0
+offset_left = 174.0
+offset_top = 138.0
+offset_right = 366.0
+offset_bottom = 154.0
+min_value = 60.0
+max_value = 120.0
+step = 0.5
+value = 60.0
+tick_count = 5
+ticks_on_borders = true
+
 [node name="MousePanel" type="Panel" parent="ItemList" unique_id=1254312558]
 layout_mode = 0
-offset_left = 245.0
+offset_left = 238.0
 offset_top = 8.0
-offset_right = 288.0
+offset_right = 294.0
 offset_bottom = 43.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_lti8b")
 
 [node name="MouseValue" type="Label" parent="ItemList/MousePanel" unique_id=1122158836]
+layout_mode = 0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = 42.0
+offset_bottom = 35.0
+
+[node name="FovPanel" type="Panel" parent="ItemList" unique_id=1559183093]
+layout_mode = 0
+offset_left = 238.0
+offset_top = 98.0
+offset_right = 294.0
+offset_bottom = 133.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_lti8b")
+
+[node name="FovValue" type="Label" parent="ItemList/FovPanel" unique_id=226075139]
 layout_mode = 0
 offset_left = 5.0
 offset_top = 5.0
