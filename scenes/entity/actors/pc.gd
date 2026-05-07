@@ -26,7 +26,6 @@ var player_ground_friction_value: float = Settings.player_ground_friction_value
 var player_decel_on_input_value:  float = Settings.player_decel_on_input_value
 var bhop_frames_value: int = Settings.bhop_frames_value
 
-
 #
 # AUDIO
 #
@@ -107,7 +106,6 @@ var skills: Dictionary[int, Skill] = {}
 #
 # STATUS, METRICS
 #
-
 var current_speed: float = 0
 var recent_top_speed: float = 0
 var velocity_when_top: Vector3
@@ -157,7 +155,6 @@ func _physics_process(delta: float) -> void:
 		was_airborne = false
 		just_landed = true
 		
-		# ^ enables bhop logic later in movement handling?
 		jump_and_land_sound()
 	elif just_landed:
 		just_landed = false
@@ -197,6 +194,8 @@ func _physics_process(delta: float) -> void:
 		equipped.use(get_viewport().get_camera_3d().project_ray_normal(screen_center))
 
 	# handle movement
+	# flip flag if needed
+	# ground speed or apply "brake" input
 	if direction && is_on_floor():
 		if !is_directed_on_floor:
 			is_directed_on_floor = true
@@ -211,6 +210,8 @@ func _physics_process(delta: float) -> void:
 
 		walking_sound(true)
 	else:
+		# check flag change
+		# air? decel then air strafe accel check
 		if is_directed_on_floor:
 			is_directed_on_floor = false
 			walking_sound(false)
@@ -223,9 +224,21 @@ func _physics_process(delta: float) -> void:
 					velocity.x += air_strafe_accel_value * direction.x
 					velocity.z += air_strafe_accel_value * direction.z
 
-	if is_on_floor():
+	# apply friction if on any surface
+	if is_on_floor() || is_on_wall() || is_on_ceiling():
 		velocity.x = move_toward(velocity.x, 0, player_ground_friction_value)
 		velocity.z = move_toward(velocity.z, 0, player_ground_friction_value)
+
+	# surfing acceleration
+	# placeholder accel value use air strafe accel
+	if is_on_wall_only():
+		var wall_normal: Vector3 = get_wall_normal()
+		if direction.x * wall_normal.x < 0 || direction.z * wall_normal.z < 0:
+			print('surf')
+			velocity.x += air_strafe_accel_value * direction.x
+			velocity.z += air_strafe_accel_value * direction.z
+			velocity.y = 0
+		
 	
 	# clamp in valid range, then 0 if stop pressed	
 	velocity.x = clamp(velocity.x, -player_max_speed_value, player_max_speed_value)
@@ -385,4 +398,5 @@ func refresh_settings() -> void:
 	player_gravity_mult_value = Settings.player_gravity_mult_value
 	player_ground_friction_value = Settings.player_ground_friction_value
 	player_decel_on_input_value = Settings.player_decel_on_input_value
+	bhop_frames_value = Settings.bhop_frames_value
 	return

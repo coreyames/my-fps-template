@@ -18,7 +18,7 @@ var label_text: String
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	player_name = get_parent().NAME
+	player_name = get_parent().player_name
 	hp = get_parent().max_health
 	sp = get_parent().max_resource
 	pr = get_parent().phys_reduction
