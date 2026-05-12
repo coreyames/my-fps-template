@@ -179,8 +179,8 @@ func _physics_process(delta: float) -> void:
 		bhop_frame_buffer.push_front(true)
 		if is_on_floor():
 			if just_landed && bhop_frame_buffer.any(func(b): return b):
-				velocity.x += 10
-				velocity.z += 10
+				velocity.x += 10 * velocity.normalized().x
+				velocity.z += 10 * velocity.normalized().z
 			jump_and_land_sound()
 			velocity.y = jump_velocity_value
 	else:
@@ -227,8 +227,6 @@ func _physics_process(delta: float) -> void:
 		velocity.z = move_toward(velocity.z, 0, air_decel_value)
 		if (!is_zero_approx(camera_motion.x)):
 			if (camera_motion.x > 0 && input_dir.x > 0) || (camera_motion.x < 0 && input_dir.x < 0):
-				
-
 				velocity.x = (velocity.length() * $Camera3D.project_ray_normal(screen_center).x) + (air_strafe_accel_value * velocity.normalized().x)
 				velocity.z = (velocity.length() * $Camera3D.project_ray_normal(screen_center).z) + (air_strafe_accel_value * velocity.normalized().z)
 
@@ -237,8 +235,8 @@ func _physics_process(delta: float) -> void:
 	if is_on_wall_only():
 		var wall_normal: Vector3 = get_wall_normal()	
 		if direction.x * wall_normal.x < 0 || direction.z * wall_normal.z < 0:
-			velocity.x += air_strafe_accel_value * direction.x
-			velocity.z += air_strafe_accel_value * direction.z
+			velocity.x += air_strafe_accel_value * velocity.normalized().x
+			velocity.z += air_strafe_accel_value * velocity.normalized().z
 		
 	# clamp in valid range; zero before move_and_slide call if stop pressed	
 	velocity.x = clamp(velocity.x, -player_max_speed_value, player_max_speed_value)
