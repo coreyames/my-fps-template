@@ -210,37 +210,37 @@ func _physics_process(delta: float) -> void:
 
 		walking_sound(true)
 	else:
-		# check flag change
-		# air? decel then air strafe accel check
+		# check if state flag changed, flip sound off
 		if is_directed_on_floor:
 			is_directed_on_floor = false
 			walking_sound(false)
 
-		if !is_on_floor():
-			velocity.x = move_toward(velocity.x, 0, air_decel_value)
-			velocity.z = move_toward(velocity.z, 0, air_decel_value)
-			if (!is_zero_approx(camera_motion.x)):
-				if (camera_motion.x > 0 && input_dir.x > 0) || (camera_motion.x < 0 && input_dir.x < 0):
-					velocity.x += air_strafe_accel_value * direction.x
-					velocity.z += air_strafe_accel_value * direction.z
 
 	# apply friction if on any surface
+	# air decel + any strafe accel if not
 	if is_on_floor() || is_on_wall() || is_on_ceiling():
 		velocity.x = move_toward(velocity.x, 0, player_ground_friction_value)
 		velocity.z = move_toward(velocity.z, 0, player_ground_friction_value)
+		velocity.y = move_toward(velocity.y, 0, player_ground_friction_value)
+	else:
+		velocity.x = move_toward(velocity.x, 0, air_decel_value)
+		velocity.z = move_toward(velocity.z, 0, air_decel_value)
+		if (!is_zero_approx(camera_motion.x)):
+			if (camera_motion.x > 0 && input_dir.x > 0) || (camera_motion.x < 0 && input_dir.x < 0):
+				
+
+				velocity.x = (velocity.length() * $Camera3D.project_ray_normal(screen_center).x) + (air_strafe_accel_value * velocity.normalized().x)
+				velocity.z = (velocity.length() * $Camera3D.project_ray_normal(screen_center).z) + (air_strafe_accel_value * velocity.normalized().z)
 
 	# surfing acceleration
 	# placeholder accel value use air strafe accel
 	if is_on_wall_only():
-		var wall_normal: Vector3 = get_wall_normal()
+		var wall_normal: Vector3 = get_wall_normal()	
 		if direction.x * wall_normal.x < 0 || direction.z * wall_normal.z < 0:
-			print('surf')
 			velocity.x += air_strafe_accel_value * direction.x
 			velocity.z += air_strafe_accel_value * direction.z
-			velocity.y = 0
 		
-	
-	# clamp in valid range, then 0 if stop pressed	
+	# clamp in valid range; zero before move_and_slide call if stop pressed	
 	velocity.x = clamp(velocity.x, -player_max_speed_value, player_max_speed_value)
 	velocity.z = clamp(velocity.z, -player_max_speed_value, player_max_speed_value)
 

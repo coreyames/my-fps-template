@@ -81,7 +81,7 @@ script = ExtResource("1_66kid")
 shape = SubResource("WorldBoundaryShape3D_66kid")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Level/CollisionShape3D" unique_id=1823596091]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.18037033, -0.04171753, 0.14457321)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.20681858, -0.041718006, 0.13298988)
 mesh = SubResource("PlaneMesh_ras1c")
 
 [node name="CSGBox3D" type="CSGBox3D" parent="Level/CollisionShape3D/MeshInstance3D" unique_id=1913588094]
@@ -120,18 +120,25 @@ polygon = PackedVector2Array(-1, 0, -1.048486, 2.1205955, 1, 0)
 depth = 5.0
 
 [node name="CSGPolygon3D2" type="CSGPolygon3D" parent="." unique_id=1947634745]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.1597869, 0, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.1597869, 8.644543, 0)
 material_override = SubResource("StandardMaterial3D_lcnsh")
 use_collision = true
 polygon = PackedVector2Array(-0.9661386, 0.26256132, -3.049157, 6.3572392, 1.6121047, 0.052389145)
 depth = 20.0
 
 [node name="CSGBox3D" type="CSGBox3D" parent="." unique_id=1998312701]
-transform = Transform3D(5.7381096, 0, 0, 0, 2.7417521, 0, 0, 0, 1, 3.488, 1.0008584, 0.9758599)
+transform = Transform3D(5.7381096, 0, 0, 0, 2.7417521, 0, 0, 0, 1, 3.488, 6.2768154, 0.9758599)
 material_override = SubResource("StandardMaterial3D_rlkh4")
 use_collision = true
-size = Vector3(1, 1.3653564, 1)
+size = Vector3(1, 5.2139587, 1)
 
 [node name="Waypoint" type="Marker3D" parent="." unique_id=1583498842]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.4434893, 3.72816, 1.0300498)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.4434893, 15.759756, 1.02141)
 script = ExtResource("7_r2x4y")
+
+[node name="CSGPolygon3D3" type="CSGPolygon3D" parent="." unique_id=307491751]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 10.380339, 8.644543, -42.97706)
+material_override = SubResource("StandardMaterial3D_lcnsh")
+use_collision = true
+polygon = PackedVector2Array(-0.9661386, 0.26256132, -3.049157, 6.3572392, 1.6121047, 0.052389145)
+depth = 20.0
