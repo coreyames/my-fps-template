@@ -104,11 +104,16 @@ var skill_cap: int = base_stats.get("SC")
 var skills: Dictionary[int, Skill] = {}
 
 #
-# STATUS, METRICS
+# STATUS, METRICS, OTHER FLAGS
 #
 var current_speed: float = 0
 var recent_top_speed: float = 0
 var velocity_when_top: Vector3
+
+var in_strafe: bool = false
+var strafe_delta: float = 0
+var in_surf: bool = false
+var surf_delta: float = 0
 
 var just_landed: bool = false
 var bhop_frame_buffer: Array[bool]
@@ -154,7 +159,11 @@ func _physics_process(delta: float) -> void:
 	elif was_airborne:
 		was_airborne = false
 		just_landed = true
-		
+		in_strafe = false
+		if (strafe_delta > 0):
+			Debug.log("strafe end total speed gain:")
+			Debug.log("       " + str(strafe_delta))
+		strafe_delta = 0
 		jump_and_land_sound()
 	elif just_landed:
 		just_landed = false
@@ -172,15 +181,18 @@ func _physics_process(delta: float) -> void:
 		move_and_slide()
 		return
 
-
 	# jumping
 	bhop_frame_buffer.pop_back()
 	if Input.is_action_just_pressed("jump"):
 		bhop_frame_buffer.push_front(true)
 		if is_on_floor():
 			if just_landed && bhop_frame_buffer.any(func(b): return b):
-				velocity.x += 10 * velocity.normalized().x
-				velocity.z += 10 * velocity.normalized().z
+				velocity.x = (velocity.length() * $Camera3D.project_ray_normal(screen_center).x) + (10 * velocity.normalized().x)
+				velocity.z = (velocity.length() * $Camera3D.project_ray_normal(screen_center).z) + (10 * velocity.normalized().z)
+				Debug.log("bhop - (frame buffer state)")
+				Debug.log(str(bhop_frame_buffer))
+				bhop_frame_buffer.resize(bhop_frames_value)
+				bhop_frame_buffer.fill(false)
 			jump_and_land_sound()
 			velocity.y = jump_velocity_value
 	else:
@@ -215,7 +227,6 @@ func _physics_process(delta: float) -> void:
 			is_directed_on_floor = false
 			walking_sound(false)
 
-
 	# apply friction if on any surface
 	# air decel + any strafe accel if not
 	if is_on_floor() || is_on_wall() || is_on_ceiling():
@@ -227,16 +238,29 @@ func _physics_process(delta: float) -> void:
 		velocity.z = move_toward(velocity.z, 0, air_decel_value)
 		if (!is_zero_approx(camera_motion.x)):
 			if (camera_motion.x > 0 && input_dir.x > 0) || (camera_motion.x < 0 && input_dir.x < 0):
+				if !in_strafe:	
+					in_strafe = true
+				var speed_before_strafe: float = velocity.length()
 				velocity.x = (velocity.length() * $Camera3D.project_ray_normal(screen_center).x) + (air_strafe_accel_value * velocity.normalized().x)
 				velocity.z = (velocity.length() * $Camera3D.project_ray_normal(screen_center).z) + (air_strafe_accel_value * velocity.normalized().z)
+				strafe_delta += velocity.length() - speed_before_strafe
 
 	# surfing acceleration
 	# placeholder accel value use air strafe accel
 	if is_on_wall_only():
 		var wall_normal: Vector3 = get_wall_normal()	
 		if direction.x * wall_normal.x < 0 || direction.z * wall_normal.z < 0:
+			if !in_surf:
+				in_surf = true
+				surf_delta = velocity.length()
 			velocity.x += air_strafe_accel_value * velocity.normalized().x
 			velocity.z += air_strafe_accel_value * velocity.normalized().z
+	else:
+		if in_surf:
+			in_surf = false
+			Debug.log("surf end total speed gain:")
+			Debug.log("     " + str(velocity.length() - surf_delta))
+			surf_delta = 0
 		
 	# clamp in valid range; zero before move_and_slide call if stop pressed	
 	velocity.x = clamp(velocity.x, -player_max_speed_value, player_max_speed_value)
