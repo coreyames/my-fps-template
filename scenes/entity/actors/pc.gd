@@ -24,6 +24,7 @@ var player_gravity_mult_value: float = Settings.player_gravity_mult_value
 var player_max_speed_value: float = Settings.player_max_speed_value
 var player_ground_friction_value: float = Settings.player_ground_friction_value
 var player_decel_on_input_value:  float = Settings.player_decel_on_input_value
+var player_bhop_accel_value: float = Settings.player_bhop_accel_value
 var bhop_frames_value: int = Settings.bhop_frames_value
 
 #
@@ -184,17 +185,18 @@ func _physics_process(delta: float) -> void:
 	# jumping
 	bhop_frame_buffer.pop_back()
 	if Input.is_action_just_pressed("jump"):
-		bhop_frame_buffer.push_front(true)
 		if is_on_floor():
-			if just_landed && bhop_frame_buffer.any(func(b): return b):
-				velocity.x = (velocity.length() * $Camera3D.project_ray_normal(screen_center).x) + (10 * velocity.normalized().x)
-				velocity.z = (velocity.length() * $Camera3D.project_ray_normal(screen_center).z) + (10 * velocity.normalized().z)
-				Debug.log("bhop - (frame buffer state)")
+			if just_landed || bhop_frame_buffer.any(func(b): return b):
+				velocity.x = (velocity.length() * $Camera3D.project_ray_normal(screen_center).x) + (player_bhop_accel_value * velocity.normalized().x)
+				velocity.z = (velocity.length() * $Camera3D.project_ray_normal(screen_center).z) + (player_bhop_accel_value * velocity.normalized().z)
+				Debug.log("bhop - (frame buffer state recent->oldest)")
 				Debug.log(str(bhop_frame_buffer))
 				bhop_frame_buffer.resize(bhop_frames_value)
 				bhop_frame_buffer.fill(false)
 			jump_and_land_sound()
 			velocity.y = jump_velocity_value
+		else:
+			bhop_frame_buffer.push_front(true)
 	else:
 		bhop_frame_buffer.push_front(false)
 
@@ -240,6 +242,7 @@ func _physics_process(delta: float) -> void:
 			if (camera_motion.x > 0 && input_dir.x > 0) || (camera_motion.x < 0 && input_dir.x < 0):
 				if !in_strafe:	
 					in_strafe = true
+					Debug.log("strafe started")
 				var speed_before_strafe: float = velocity.length()
 				velocity.x = (velocity.length() * $Camera3D.project_ray_normal(screen_center).x) + (air_strafe_accel_value * velocity.normalized().x)
 				velocity.z = (velocity.length() * $Camera3D.project_ray_normal(screen_center).z) + (air_strafe_accel_value * velocity.normalized().z)
@@ -252,6 +255,7 @@ func _physics_process(delta: float) -> void:
 		if direction.x * wall_normal.x < 0 || direction.z * wall_normal.z < 0:
 			if !in_surf:
 				in_surf = true
+				Debug.log("surf started")
 				surf_delta = velocity.length()
 			velocity.x += air_strafe_accel_value * velocity.normalized().x
 			velocity.z += air_strafe_accel_value * velocity.normalized().z
@@ -420,5 +424,6 @@ func refresh_settings() -> void:
 	player_gravity_mult_value = Settings.player_gravity_mult_value
 	player_ground_friction_value = Settings.player_ground_friction_value
 	player_decel_on_input_value = Settings.player_decel_on_input_value
+	player_bhop_accel_value = Settings.player_bhop_accel_value
 	bhop_frames_value = Settings.bhop_frames_value
 	return
