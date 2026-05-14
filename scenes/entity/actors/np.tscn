@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://bkg6ndqo0xw51"]
 
-[ext_resource type="Script" uid="uid://o6mcb1xks1hy" path="res://scenes/entity/actors/npc.gd" id="1_mdoju"]
+[ext_resource type="Script" uid="uid://o6mcb1xks1hy" path="res://scenes/entity/actors/np.gd" id="1_mdoju"]
 [ext_resource type="PackedScene" uid="uid://cf8owl4xccf4s" path="res://scenes/entity/objects/equippable/gun_ar.tscn" id="3_ecus7"]
 [ext_resource type="AudioStream" uid="uid://b2gwe17ttt7ra" path="res://audio/jump.mp3" id="5_mr23n"]
 [ext_resource type="Script" uid="uid://xu7srjpqgcxk" path="res://classes/GameAudioStream.gd" id="6_qihvj"]
