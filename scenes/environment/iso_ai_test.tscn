@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://d2kkck1rwvq4r" path="res://scenes/environment/new_level.gd" id="1_00txx"]
 [ext_resource type="Shader" uid="uid://drltjs85u6aje" path="res://shaders/skybox.gdshader" id="3_pn4sd"]
 [ext_resource type="Script" uid="uid://cuwkybx07itvj" path="res://scenes/environment/world_environment.gd" id="4_8ui5a"]
-[ext_resource type="PackedScene" uid="uid://dxr5w4y54qni7" path="res://scenes/entity/actors/np_mob.tscn" id="5_d3u76"]
+[ext_resource type="PackedScene" uid="uid://dxr5w4y54qni7" path="res://scenes/entity/actors/test_mob.tscn" id="5_d3u76"]
 [ext_resource type="PackedScene" uid="uid://cjc6uh560gbue" path="res://assets/Stylarts/Stylized_Windmill_Valley/Art/Prefabs/SM_LittleHouse.prefab.scn" id="5_tflo7"]
 
 [sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_66kid"]
@@ -63,7 +63,7 @@ background_mode = 2
 background_energy_multiplier = 0.74
 sky = SubResource("Sky_r2x4y")
 
-[node name="Node3D" type="Node3D" unique_id=1461239752]
+[node name="World" type="Node3D" unique_id=1461239752]
 script = ExtResource("1_00txx")
 
 [node name="Camera3D" type="Camera3D" parent="." unique_id=132561701]

@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://dxr5w4y54qni7"]
 
-[ext_resource type="Script" uid="uid://duppf4ia8y0ik" path="res://scenes/entity/actors/np_mob.gd" id="1_wl1ao"]
+[ext_resource type="Script" uid="uid://duppf4ia8y0ik" path="res://scenes/entity/actors/test_mob.gd" id="1_wl1ao"]
 [ext_resource type="AudioStream" uid="uid://b2gwe17ttt7ra" path="res://audio/jump.mp3" id="3_c76ju"]
 [ext_resource type="Script" uid="uid://xu7srjpqgcxk" path="res://classes/GameAudioStream.gd" id="4_lc2h4"]
 
