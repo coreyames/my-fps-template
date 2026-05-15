@@ -1,0 +1,142 @@
+extends CharacterBody3D
+
+#
+# REQUIRED NODE REFS
+#
+var world: Node3D
+var player_location: Vector3
+var player_node: CharacterBody3D
+
+#
+# MOVEMENT, DECISION VARS
+#
+const SPEED: float = 5.0
+const JUMP_VELOCITY: float = 4.5
+const dir_actions: Array[StringName] =  ["ui_left", "ui_right", "ui_up", "ui_down"]
+		
+var current_action: StringName = "ui_up"
+var input_dir: Vector2 = Vector2(0.0, 0.0)
+var stand_still: bool = false
+var chance_to_change_dir: float = .5
+var dir_entropy: float = 0
+var direction: Vector3
+
+var to_jump: bool = false
+var chance_to_jump: float = .3
+var jump_entropy: float = 0
+
+var pacifist: bool = false
+var maintain_pc_los: bool = true
+var follow_player: bool = true
+var shoot_entropy: float = 0
+
+#
+# STATS AND STATUS
+#
+const max_health: int = 100
+var health: int = 100
+
+func _ready() -> void:
+	world = get_parent()
+	#player_node = world.get_node('Player')
+	player_location = get_parent().get_node("SM_LittleHouse").global_position
+	current_action = dir_actions.pick_random()
+	SignalBus.apply_effects.connect(_on_apply_effects)
+	return
+
+# generate semirandom char input 
+# added entropy guarantees eventual shoot, jump, dir change
+func generate_input() -> void:
+	var dir_chance = chance_to_change_dir * dir_entropy
+	var dir_roll = randf()
+	if dir_roll > 1 - dir_chance:
+		current_action = dir_actions.pick_random()
+		dir_entropy = 0
+	else:
+		dir_entropy += .001
+		
+	var jump_chance = chance_to_jump * jump_entropy
+	var jump_roll = randf()
+	if jump_roll > 1 - jump_chance:
+		to_jump = true
+		jump_entropy = 0
+	else:
+		jump_entropy += .001
+			
+	match current_action:
+		"ui_left":
+			input_dir = Vector2(-1,0)
+		"ui_right":
+			input_dir = Vector2(1,0)
+		"ui_up":
+			input_dir = Vector2(0,1)
+		"down":
+			input_dir = Vector2(0,-1)
+	return
+
+func _physics_process(delta: float) -> void:
+	#player_location = player_node.global_position
+	
+	if maintain_pc_los:
+		look_at(player_location)
+
+	$HealthBar.look_at(player_location)
+	
+	if follow_player:
+		move_towards_player()
+	else:
+		generate_input()
+		direction = (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
+	
+	if stand_still:
+		to_jump = false
+	
+	# Add the gravity.
+	if not is_on_floor():
+		velocity += get_gravity() * delta
+
+	# Handle jump.
+	if to_jump and is_on_floor():
+		velocity.y = JUMP_VELOCITY
+		to_jump = false
+		
+	# Get the input direction and handle the movement/deceleration.
+	if direction && !stand_still:
+		velocity.x = direction.x * SPEED
+		velocity.z = direction.z * SPEED
+	else:
+		velocity.x = move_toward(velocity.x, 0, SPEED)
+		velocity.z = move_toward(velocity.z, 0, SPEED)
+		
+	if (move_and_slide()):
+		handle_collisions()
+	return
+	
+func handle_proj_collision(collision: KinematicCollision3D) -> void:
+	var collided_proj: Node3D = collision.get_collider()
+	#Debug.log(str(collider))
+	SignalBus.projectile_hit.emit(collided_proj.get_instance_id(), get_instance_id())
+	return
+
+func handle_collisions() -> void:
+	for i in range(get_slide_collision_count()):
+		var collision: KinematicCollision3D = get_slide_collision(i)
+		var collider: Node3D = collision.get_collider()
+		if collider.get_instance_id() != world.level_collision_id:
+			if collider is Projectile:
+				handle_proj_collision(collision)
+	return
+		
+func _on_apply_effects(target_id: int, effects: Array[Effect]) -> void:
+	if target_id == get_instance_id():
+		for effect: Effect in effects:
+			if effect.type == Effect.Type.DAMAGE:
+				var dmg: int = randi_range(effect.min_dmg, effect.max_dmg)
+				health -= dmg
+				if health < 0: health = 0
+				$HealthBar.texture.gradient.set_offset(1, (100.004-health)/100.0)
+	return
+
+func move_towards_player() -> void:
+	direction = global_position.direction_to(player_location)
+	return

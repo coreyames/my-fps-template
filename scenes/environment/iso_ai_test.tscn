@@ -1,0 +1,105 @@
+[gd_scene format=3 uid="uid://cnywty365wgsj"]
+
+[ext_resource type="Script" uid="uid://d2kkck1rwvq4r" path="res://scenes/environment/new_level.gd" id="1_00txx"]
+[ext_resource type="Shader" uid="uid://drltjs85u6aje" path="res://shaders/skybox.gdshader" id="3_pn4sd"]
+[ext_resource type="Script" uid="uid://cuwkybx07itvj" path="res://scenes/environment/world_environment.gd" id="4_8ui5a"]
+[ext_resource type="PackedScene" uid="uid://dxr5w4y54qni7" path="res://scenes/entity/actors/np_mob.tscn" id="5_d3u76"]
+[ext_resource type="PackedScene" uid="uid://cjc6uh560gbue" path="res://assets/Stylarts/Stylized_Windmill_Valley/Art/Prefabs/SM_LittleHouse.prefab.scn" id="5_tflo7"]
+
+[sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_66kid"]
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_gr0d1"]
+load_path = "res://.godot/imported/texture_08.png-5883ddd047173c8b118ead887054e6fc.s3tc.ctex"
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_f34he"]
+albedo_color = Color(2.723107, 2.6078448, 2.3427417, 0.9137255)
+albedo_texture = SubResource("CompressedTexture2D_gr0d1")
+metallic_specular = 0.58
+roughness = 0.9
+uv1_scale = Vector3(10, 10, 10)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_ras1c"]
+material = SubResource("StandardMaterial3D_f34he")
+size = Vector2(200, 200)
+subdivide_width = 20
+subdivide_depth = 20
+
+[sub_resource type="Gradient" id="Gradient_dwbse"]
+offsets = PackedFloat32Array(0.11594203, 0.5652174, 0.8115942)
+colors = PackedColorArray(0, 0, 0, 1, 0.78926736, 0.6938302, 0.2857528, 1, 0.24975574, 0.48954242, 0.35882246, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_ras1c"]
+gradient = SubResource("Gradient_dwbse")
+
+[sub_resource type="Gradient" id="Gradient_aqk2v"]
+offsets = PackedFloat32Array(0, 0.7173913)
+colors = PackedColorArray(0.1355308, 0.2952538, 0.53140974, 1, 0.6922344, 0.8001499, 0.96122354, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_w505c"]
+gradient = SubResource("Gradient_aqk2v")
+
+[sub_resource type="Gradient" id="Gradient_036b0"]
+offsets = PackedFloat32Array(0, 0.1741573, 0.3, 0.4, 0.5, 0.6, 0.8, 1)
+colors = PackedColorArray(0.11035278, 0.11355854, 0.37167674, 1, 0.6284519, 0.5231118, 0.57354474, 1, 0.7145701, 0.48850393, 0.4884637, 1, 0.8458565, 0.44603604, 0.3743652, 1, 0.8648561, 0.5891552, 0.500742, 1, 0.2605366, 0.5085177, 0.4035969, 1, 0.040412817, 0.18806538, 0.30946937, 1, 0.59538805, 0.709071, 0.9302457, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_gr0d1"]
+gradient = SubResource("Gradient_036b0")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_gr0d1"]
+shader = ExtResource("3_pn4sd")
+shader_parameter/sun_dir = Vector3(0, 0.79271543, 0.60959196)
+shader_parameter/moon_dir = Vector3(0, 0.79271543, 0.60959196)
+shader_parameter/sun_zenith_gradient = SubResource("GradientTexture1D_w505c")
+shader_parameter/view_zenith_gradient = SubResource("GradientTexture1D_gr0d1")
+shader_parameter/sun_view_gradient = SubResource("GradientTexture1D_ras1c")
+shader_parameter/sun_radius = 0.05
+shader_parameter/sun_color = Color(1, 1, 1, 1)
+
+[sub_resource type="Sky" id="Sky_r2x4y"]
+sky_material = SubResource("ShaderMaterial_gr0d1")
+
+[sub_resource type="Environment" id="Environment_aagw4"]
+background_mode = 2
+background_energy_multiplier = 0.74
+sky = SubResource("Sky_r2x4y")
+
+[node name="Node3D" type="Node3D" unique_id=1461239752]
+script = ExtResource("1_00txx")
+
+[node name="Level" type="StaticBody3D" parent="." unique_id=1063866791]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Level" unique_id=89963541]
+shape = SubResource("WorldBoundaryShape3D_66kid")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Level/CollisionShape3D" unique_id=1823596091]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.20681858, -0.041718006, 0.13298988)
+mesh = SubResource("PlaneMesh_ras1c")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=221399594 node_paths=PackedStringArray("sun", "moon")]
+environment = SubResource("Environment_aagw4")
+script = ExtResource("4_8ui5a")
+sun = NodePath("../Sun")
+moon = NodePath("../Sun/Moon")
+
+[node name="Sun" type="DirectionalLight3D" parent="." unique_id=1823644198]
+transform = Transform3D(1, 0, 0, 0, 0.60959196, 0.79271543, 0, -0.79271543, 0.60959196, 0, 118.94938, 0)
+light_color = Color(0.9005678, 0.8435143, 0.8637141, 1)
+light_energy = 0.376
+light_indirect_energy = 0.0
+light_angular_distance = 0.5
+light_specular = 7.5
+shadow_enabled = true
+shadow_opacity = 0.93
+
+[node name="Moon" type="Node3D" parent="Sun" unique_id=1677101483]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 177.5424, 90.564285, 0)
+
+[node name="SM_LittleHouse" parent="." unique_id=1494025279 instance=ExtResource("5_tflo7")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 35.986404, 0, 13.408783)
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=132561701]
+transform = Transform3D(1, 0, 0, 0, 0.5288532, 0.84871334, 0, -0.84871334, 0.5288532, 0, 56.89351, 69.71976)
+keep_aspect = 0
+fov = 90.9
+
+[node name="Mob" parent="." unique_id=644000164 instance=ExtResource("5_d3u76")]
