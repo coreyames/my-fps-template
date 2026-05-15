@@ -66,6 +66,11 @@ sky = SubResource("Sky_r2x4y")
 [node name="Node3D" type="Node3D" unique_id=1461239752]
 script = ExtResource("1_00txx")
 
+[node name="Camera3D" type="Camera3D" parent="." unique_id=132561701]
+transform = Transform3D(1, 0, 0, 0, 0.561217, 0.8276687, 0, -0.8276687, 0.561217, 22.209404, 22.59422, 23.128487)
+keep_aspect = 0
+fov = 90.9
+
 [node name="Level" type="StaticBody3D" parent="." unique_id=1063866791]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Level" unique_id=89963541]
@@ -96,10 +101,5 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 177.5424, 90.564285, 0)
 
 [node name="SM_LittleHouse" parent="." unique_id=1494025279 instance=ExtResource("5_tflo7")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 35.986404, 0, 13.408783)
-
-[node name="Camera3D" type="Camera3D" parent="." unique_id=132561701]
-transform = Transform3D(1, 0, 0, 0, 0.5288532, 0.84871334, 0, -0.84871334, 0.5288532, 0, 56.89351, 69.71976)
-keep_aspect = 0
-fov = 90.9
 
 [node name="Mob" parent="." unique_id=644000164 instance=ExtResource("5_d3u76")]
