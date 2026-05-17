@@ -53,5 +53,10 @@ func fire(_direction: Vector3) -> void:
 func _on_projectile_hit(proj_id: int, collider_id: int) -> void:
 	if proj_id == get_instance_id():  
 		status = Status.DONE
-		SignalBus.apply_effects.emit(collider_id, effects)
+		# global static ref to player node?
+		if collider_id == SignalBus.player_instance_id:
+			print('here')
+			SignalBus.affect_player.emit(effects)
+		else:
+			SignalBus.apply_effects.emit(collider_id, effects)
 	return

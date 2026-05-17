@@ -11,6 +11,7 @@ var type: Type
 # damage effect vars
 var min_dmg: int
 var max_dmg: int
+var dmg_dealt: int
 
 # stun
 var duration: int

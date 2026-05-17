@@ -5,6 +5,7 @@
 [ext_resource type="Script" uid="uid://cuwkybx07itvj" path="res://scenes/environment/world_environment.gd" id="4_8ui5a"]
 [ext_resource type="PackedScene" uid="uid://dxr5w4y54qni7" path="res://scenes/entity/actors/test_mob.tscn" id="5_d3u76"]
 [ext_resource type="PackedScene" uid="uid://cjc6uh560gbue" path="res://assets/Stylarts/Stylized_Windmill_Valley/Art/Prefabs/SM_LittleHouse.prefab.scn" id="5_tflo7"]
+[ext_resource type="PackedScene" uid="uid://b7a13xqqyw8ii" path="res://scenes/entity/actors/pc.tscn" id="6_es8sc"]
 
 [sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_66kid"]
 
@@ -103,3 +104,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 177.5424, 90.564285, 0)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 35.986404, 0, 13.408783)
 
 [node name="Mob" parent="." unique_id=644000164 instance=ExtResource("5_d3u76")]
+
+[node name="Player" parent="." unique_id=792890350 instance=ExtResource("6_es8sc")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 11.726135)

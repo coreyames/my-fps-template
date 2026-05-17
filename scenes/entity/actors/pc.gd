@@ -1,6 +1,6 @@
 extends CharacterBody3D
 
-signal was_hit
+signal was_hit(effects: Array[Effect])
 
 var world_ref: Node3D
 var viewport_size_x: float
@@ -91,10 +91,10 @@ var base_stats: Dictionary[String, int] = {
 	"SC": 2    # skill cap, determines skill slot count
 }
 
-var max_health: int = base_stats.get("HP")
+var max_hp: int = base_stats.get("HP")
 var max_resource: int = base_stats.get("SP")
-var cur_health: int = max_health
-var cur_resource: int = max_resource
+var hp: int = max_hp
+var resource: int = max_resource
 var phys_reduction: int = base_stats.get("PR")
 var magic_reduction: int = base_stats.get("MR")
 var skill_cap: int = base_stats.get("SC")
@@ -121,12 +121,15 @@ var bhop_frame_buffer: Array[bool]
 
 func _ready() -> void: 
 	world_ref = get_parent()
+	SignalBus.player_instance_id = get_instance_id()
+
 	viewport_size_x = get_viewport().get_visible_rect().size.x
 	viewport_size_y = get_viewport().get_visible_rect().size.y
 	screen_center = Vector2(viewport_size_x/2, viewport_size_y/2)
 
 	add_to_group("settings_dependent")
 	Debug.connect("toggle_debug", _on_toggle_debug)
+	SignalBus.connect("affect_player", _on_affect_player)
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	$Sound.volume_db = -15
 	floor_stop_on_slope = false
@@ -361,6 +364,16 @@ func _on_toggle_debug(on: bool):
 		recent_top_speed = 0
 	return
 	
+func _on_affect_player(effects: Array[Effect]):
+	for effect: Effect in effects:
+		if effect.type == Effect.Type.DAMAGE:
+			var dmg: int = randi_range(effect.min_dmg, effect.max_dmg)
+			hp -= dmg
+			effect.dmg_dealt = dmg
+			if hp < 0: hp = 0
+	was_hit.emit(effects)
+	return
+
 func jump_and_land_sound() -> void:
 	if is_scene_start_jump_sound:
 		is_scene_start_jump_sound = false
@@ -388,8 +401,7 @@ func switch_equipped() -> void:
 	
 func handle_proj_collision(collision: KinematicCollision3D) -> void:
 	var proj: Node3D = collision.get_collider()
-	was_hit.emit()
-	SignalBus.projectile_hit.emit(proj.get_instance_id())
+	SignalBus.projectile_hit.emit(proj.get_instance_id(), get_instance_id())
 	return
 
 func handle_collisions() -> void:
@@ -406,13 +418,13 @@ func add_stats_from_equipment() -> void:
 	var chest: Chest = equipment.get('chest')
 	var pack: Pack = equipment.get('pack')
 	if helm:
-		max_health += helm.HP
+		max_hp += helm.HP
 		magic_reduction += helm.MR
 	if chest:
-		max_health += chest.HP
+		max_hp += chest.HP
 		phys_reduction += chest.PR
 	if pack:
-		max_health += pack.HP
+		max_hp += pack.HP
 		skill_cap += pack.SC
 	return
 	

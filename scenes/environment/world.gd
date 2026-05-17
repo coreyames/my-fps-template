@@ -5,4 +5,5 @@ var level_collision_id: int
 func _ready() -> void:
 	Debug.toggle()
 	level_collision_id = $Level.get_instance_id()
+	$NPC.pacifist = false
 	return

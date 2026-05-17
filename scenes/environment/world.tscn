@@ -5,7 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://b7a13xqqyw8ii" path="res://scenes/entity/actors/pc.tscn" id="2_tmq7g"]
 [ext_resource type="Shader" uid="uid://drltjs85u6aje" path="res://shaders/skybox.gdshader" id="3_43fak"]
 [ext_resource type="Script" uid="uid://cuwkybx07itvj" path="res://scenes/environment/world_environment.gd" id="4_scdbs"]
-[ext_resource type="PackedScene" uid="uid://dxr5w4y54qni7" path="res://scenes/entity/actors/test_mob.tscn" id="6_tmq7g"]
+[ext_resource type="PackedScene" uid="uid://bkg6ndqo0xw51" path="res://scenes/entity/actors/np.tscn" id="6_tmq7g"]
 
 [sub_resource type="Gradient" id="Gradient_dwbse"]
 offsets = PackedFloat32Array(0.11594203, 0.5652174, 0.8115942)
@@ -61,9 +61,6 @@ script = ExtResource("1_43fak")
 
 [node name="Level" parent="." unique_id=1335998995 instance=ExtResource("1_wcnsb")]
 
-[node name="Player" parent="." unique_id=2121428152 instance=ExtResource("2_tmq7g")]
-transform = Transform3D(-0.6481864, 0, -0.7614817, 0, 1, 0, 0.7614817, 0, -0.6481864, 0, 0, 0)
-
 [node name="Sun" type="DirectionalLight3D" parent="." unique_id=178360773]
 transform = Transform3D(0.5316124, -0.38471743, -0.7545733, 0.049793534, -0.8751539, 0.48127586, -0.845523, -0.29342505, -0.44608623, -5.4968576, 17.952604, 16.24462)
 light_color = Color(1.0445384, 0.97014046, 0.7717463, 1)
@@ -91,5 +88,8 @@ shape = SubResource("BoxShape3D_fj7yv")
 [node name="MeshInstance3D" type="MeshInstance3D" parent="TestCube/CollisionShape3D" unique_id=2139024415]
 mesh = SubResource("BoxMesh_tlwt5")
 
-[node name="Mob" parent="." unique_id=644000164 instance=ExtResource("6_tmq7g")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 11.127483)
+[node name="Player" parent="." unique_id=2121428152 instance=ExtResource("2_tmq7g")]
+transform = Transform3D(-0.6481864, 0, -0.7614817, 0, 1, 0, 0.7614817, 0, -0.6481864, 0, 0, 0)
+
+[node name="NPC" parent="." unique_id=644000164 instance=ExtResource("6_tmq7g")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 8.077451)

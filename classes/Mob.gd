@@ -13,6 +13,7 @@ var tier: int = NORMAL
 var mob_name: String = "default"
 var max_hp: int = 100
 var speed: float = 4
+var effects: Array[Effect]
 
 # mob status
 var hp: int = max_hp
@@ -35,10 +36,13 @@ func _ready() -> void:
 	return
 
 func _physics_process(delta: float) -> void:
+	
 	if player_node:
 		player_location = player_node.global_position
 		if maintain_pc_los:
 			look_at(player_location)
+	
+
 
 	if follow_player && player_location:
 		direction = global_position.direction_to(player_location)
@@ -61,6 +65,12 @@ func handle_proj_collision(collision: KinematicCollision3D) -> void:
 	SignalBus.projectile_hit.emit(collided_proj.get_instance_id(), get_instance_id())
 	return
 
+func handle_other_collisions(collision: KinematicCollision3D) -> void:
+	var collided_with: Node3D = collision.get_collider()
+	if player_node && collided_with.get_instance_id() == SignalBus.player_instance_id:
+		SignalBus.affect_player.emit(effects)
+	return
+
 func handle_collisions() -> void:
 	for i in range(get_slide_collision_count()):
 		var collision: KinematicCollision3D = get_slide_collision(i)
@@ -68,17 +78,19 @@ func handle_collisions() -> void:
 		if collider.get_instance_id() != world.level_collision_id:
 			if collider is Projectile:
 				handle_proj_collision(collision)
+			else:
+				handle_other_collisions(collision)
 	return
 		
-func _on_apply_effects(target_id: int, effects: Array[Effect]) -> void:
+func _on_apply_effects(target_id: int, _effects: Array[Effect]) -> void:
 	if target_id == get_instance_id():
-		for effect: Effect in effects:
+		for effect: Effect in _effects:
 			if effect.type == Effect.Type.DAMAGE:
 				var dmg: int = randi_range(effect.min_dmg, effect.max_dmg)
 				hp -= dmg
+				effect.dmg_dealt = dmg
 				if hp < 0: hp = 0
 				hp_bar.texture.gradient.set_offset(1, ((max_hp+.004) - hp)/max_hp)
 	return
-
 
 
