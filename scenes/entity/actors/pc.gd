@@ -72,37 +72,15 @@ var equipped: Equippable
 var stored: Equippable
 var viewmodel: Transform3D
 
-var equipment: Dictionary[String, Equippable] = {
-	"w1": null,
-	"w2": null,
-	"helm": null,
-	"chest": null,
-	"pack": null
-}
-
 #
 # STATS
 #
 var base_stats: Dictionary[String, int] = {
 	"HP": 100, # max health
-	"SP": 20,  # max skill pts, tmp 'resource'
-	"PR": 50,  # phys reduction
-	"MR": 50,  # and magic reduction for tmp defense stats
-	"SC": 2    # skill cap, determines skill slot count
 }
 
 var max_hp: int = base_stats.get("HP")
-var max_resource: int = base_stats.get("SP")
 var hp: int = max_hp
-var resource: int = max_resource
-var phys_reduction: int = base_stats.get("PR")
-var magic_reduction: int = base_stats.get("MR")
-var skill_cap: int = base_stats.get("SC")
-
-#
-# ABILITIES
-#
-var skills: Dictionary[int, Skill] = {}
 
 #
 # STATUS, METRICS, OTHER FLAGS
@@ -122,7 +100,6 @@ var bhop_frame_buffer: Array[bool]
 func _ready() -> void: 
 	world_ref = get_parent()
 	SignalBus.player_instance_id = get_instance_id()
-
 	viewport_size_x = get_viewport().get_visible_rect().size.x
 	viewport_size_y = get_viewport().get_visible_rect().size.y
 	screen_center = Vector2(viewport_size_x/2, viewport_size_y/2)
@@ -130,6 +107,7 @@ func _ready() -> void:
 	add_to_group("settings_dependent")
 	Debug.connect("toggle_debug", _on_toggle_debug)
 	SignalBus.connect("affect_player", _on_affect_player)
+	
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	$Sound.volume_db = -15
 	floor_stop_on_slope = false
@@ -139,13 +117,8 @@ func _ready() -> void:
 	equipped = $Camera3D/Equipped
 	viewmodel = equipped.transform
 	stored.transform = viewmodel
-	equipment.set("w1", equipped)
-	equipment.set("w2", stored)
-	add_stats_from_equipment()
-	for i in range(0, skill_cap):
-		skills.set(i, null)
 
-	add_child(hud_scene.instantiate())
+	#add_child(hud_scene.instantiate())
 
 	bhop_frame_buffer.resize(bhop_frames_value)
 	bhop_frame_buffer.fill(false)
@@ -411,21 +384,6 @@ func handle_collisions() -> void:
 		if collider.get_instance_id() != world_ref.level_collision_id:
 			if collider is Projectile:
 				handle_proj_collision(collision)
-	return
-
-func add_stats_from_equipment() -> void:
-	var helm: Helm = equipment.get('helm')
-	var chest: Chest = equipment.get('chest')
-	var pack: Pack = equipment.get('pack')
-	if helm:
-		max_hp += helm.HP
-		magic_reduction += helm.MR
-	if chest:
-		max_hp += chest.HP
-		phys_reduction += chest.PR
-	if pack:
-		max_hp += pack.HP
-		skill_cap += pack.SC
 	return
 	
 func refresh_settings() -> void:

@@ -104,6 +104,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 177.5424, 90.564285, 0)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 35.986404, 0, 13.408783)
 
 [node name="Mob" parent="." unique_id=644000164 instance=ExtResource("5_d3u76")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 7.6446447)
 
 [node name="Player" parent="." unique_id=792890350 instance=ExtResource("6_es8sc")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 11.726135)
