@@ -6,6 +6,7 @@
 [ext_resource type="Shader" uid="uid://drltjs85u6aje" path="res://shaders/skybox.gdshader" id="3_43fak"]
 [ext_resource type="Script" uid="uid://cuwkybx07itvj" path="res://scenes/environment/world_environment.gd" id="4_scdbs"]
 [ext_resource type="PackedScene" uid="uid://bkg6ndqo0xw51" path="res://scenes/entity/actors/np.tscn" id="6_tmq7g"]
+[ext_resource type="PackedScene" uid="uid://dxr5w4y54qni7" path="res://scenes/entity/actors/test_mob.tscn" id="7_43fak"]
 
 [sub_resource type="Gradient" id="Gradient_dwbse"]
 offsets = PackedFloat32Array(0.11594203, 0.5652174, 0.8115942)
@@ -93,3 +94,6 @@ transform = Transform3D(-0.6481864, 0, -0.7614817, 0, 1, 0, 0.7614817, 0, -0.648
 
 [node name="NPC" parent="." unique_id=644000164 instance=ExtResource("6_tmq7g")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 8.077451)
+
+[node name="Mob" parent="." unique_id=1556727467 instance=ExtResource("7_43fak")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.888471, 0, 4.6925077)

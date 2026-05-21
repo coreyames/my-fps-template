@@ -11,6 +11,7 @@ var player_node: CharacterBody3D
 # mob info, stats
 var tier: int = NORMAL
 var mob_name: String = "default"
+var xp_reward: int = 10
 var max_hp: int = 100
 var speed: float = 4
 var reaccel: float = .1
@@ -57,8 +58,6 @@ func _physics_process(delta: float) -> void:
 
 	if knock_back && !recovery:
 		velocity = speed * -direction * 2
-		print('knockback')
-		print(velocity)
 		recovery = true
 	elif knock_back && recovery:
 		if velocity.length() == 0:
@@ -88,7 +87,6 @@ func handle_other_collision(collision: KinematicCollision3D) -> void:
 	if player_node && collided_with.get_instance_id() == SignalBus.player_instance_id:
 		SignalBus.affect_player.emit(effects)
 		knock_back = true
-
 	return
 
 func handle_collisions() -> void:
@@ -112,6 +110,10 @@ func _on_apply_effects(target_id: int, _effects: Array[Effect]) -> void:
 				var dmg: int = randi_range(effect.min_dmg, effect.max_dmg)
 				hp -= dmg
 				effect.dmg_dealt = dmg
-				if hp < 0: hp = 0
-				hp_bar.texture.gradient.set_offset(1, ((max_hp+.004) - hp)/max_hp)
+				if hp < 0:
+					if player_node:
+						SignalBus.award_xp.emit(player_node.get_instance_id(), xp_reward)
+					queue_free()
+				else:
+					hp_bar.texture.gradient.set_offset(1, ((max_hp+.004) - hp)/max_hp)
 	return

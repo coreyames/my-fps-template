@@ -12,6 +12,7 @@ var screen_center: Vector2
 #
 const NAME_DEFAULT = "PLAYER"
 var player_name: String = NAME_DEFAULT
+var xp: int
 
 #
 # SETTINGS
@@ -41,6 +42,7 @@ const jump_clip: AudioStreamMP3 = preload("res://audio/jump.mp3")
 # UI
 #
 const hud_scene: Resource = preload("res://scenes/ui/hud.tscn")
+var hud_node: Control
 
 const console_scene: Resource = preload("res://scenes/ui/dev_console.tscn")
 var console_node: Control = null
@@ -107,6 +109,7 @@ func _ready() -> void:
 	add_to_group("settings_dependent")
 	Debug.connect("toggle_debug", _on_toggle_debug)
 	SignalBus.connect("affect_player", _on_affect_player)
+	SignalBus.connect("award_xp", _on_award_xp)
 	
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	$Sound.volume_db = -15
@@ -118,7 +121,8 @@ func _ready() -> void:
 	viewmodel = equipped.transform
 	stored.transform = viewmodel
 
-	#add_child(hud_scene.instantiate())
+	hud_node = hud_scene.instantiate()
+	add_child(hud_scene.instantiate())
 
 	bhop_frame_buffer.resize(bhop_frames_value)
 	bhop_frame_buffer.fill(false)
@@ -320,14 +324,14 @@ func _input(event: InputEvent) -> void:
 				is_inventory_open = false
 	return
 
-func _on_menu_ok_button_pressed():
+func _on_menu_ok_button_pressed() -> void:
 	if in_menu && menu_node != null:
 		remove_child(menu_node)
 		in_menu = false
 		Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	return
 
-func _on_toggle_debug(on: bool):
+func _on_toggle_debug(on: bool) -> void:
 	if on:
 		debug_node = Debug.debug_scene.instantiate()
 		add_child(debug_node)
@@ -345,6 +349,12 @@ func _on_affect_player(effects: Array[Effect]):
 			effect.dmg_dealt = dmg
 			if hp < 0: hp = 0
 	was_hit.emit(effects)
+	return
+
+func _on_award_xp(amount: int) -> void:
+	xp += amount
+	var xp_status = hud_node.get_node_or_null("Status/XP")
+	xp_status.text = str(xp)
 	return
 
 func jump_and_land_sound() -> void:

@@ -8,6 +8,7 @@ var reserve: int
 
 func _ready() -> void:
 	$Status/HP.text = str(get_parent().max_hp)
+	$Status/XP.text = str(get_parent().xp)
 	hp = get_parent().max_hp
 	get_parent().connect('was_hit', _on_was_hit)
 	equipped = get_parent().equipped

@@ -54,10 +54,18 @@ offset_bottom = 1023.0
 [node name="HP" type="Label" parent="Status" unique_id=257652705]
 layout_mode = 0
 offset_left = 32.0
-offset_top = 40.0
+offset_top = 24.0
 offset_right = 224.0
-offset_bottom = 80.0
+offset_bottom = 64.0
 text = "<hp>"
+
+[node name="XP" type="Label" parent="Status" unique_id=1480317309]
+layout_mode = 0
+offset_left = 32.0
+offset_top = 80.0
+offset_right = 224.0
+offset_bottom = 120.0
+text = "<xp>"
 
 [node name="EquippedInfo" type="TextureRect" parent="." unique_id=1748340587]
 layout_mode = 0
