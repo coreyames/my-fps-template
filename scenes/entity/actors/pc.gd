@@ -99,6 +99,8 @@ var surf_delta: float = 0
 var just_landed: bool = false
 var bhop_frame_buffer: Array[bool]
 
+var is_reloading: bool = false
+
 func _ready() -> void: 
 	world_ref = get_parent()
 	SignalBus.player_instance_id = get_instance_id()
@@ -107,9 +109,9 @@ func _ready() -> void:
 	screen_center = Vector2(viewport_size_x/2, viewport_size_y/2)
 
 	add_to_group("settings_dependent")
-	Debug.connect("toggle_debug", _on_toggle_debug)
-	SignalBus.connect("affect_player", _on_affect_player)
-	SignalBus.connect("award_xp", _on_award_xp)
+	Debug.toggle_debug.connect( _on_toggle_debug)
+	SignalBus.affect_player.connect(_on_affect_player)
+	SignalBus.award_xp.connect(_on_award_xp)
 	
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	$Sound.volume_db = -15
@@ -122,7 +124,9 @@ func _ready() -> void:
 	stored.transform = viewmodel
 
 	hud_node = hud_scene.instantiate()
-	add_child(hud_scene.instantiate())
+	add_child(hud_node)
+
+	equipped.animation_player_node.animation_finished.connect(_on_reload_anim_finished)
 
 	bhop_frame_buffer.resize(bhop_frames_value)
 	bhop_frame_buffer.fill(false)
@@ -184,7 +188,7 @@ func _physics_process(delta: float) -> void:
 	var input_dir: Vector2 = Input.get_vector("left", "right", "fwd", "bwd")
 	var direction: Vector3 = (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
 	
-	if Input.is_action_just_pressed("use") && equipped != null:
+	if Input.is_action_just_pressed("use") && equipped != null && !is_reloading && hud_node.loaded > 0:
 		equipped.use(get_viewport().get_camera_3d().project_ray_normal(screen_center))
 
 	# handle movement
@@ -322,6 +326,12 @@ func _input(event: InputEvent) -> void:
 			else:
 				remove_child(inventory_node)
 				is_inventory_open = false
+		if event.is_action_pressed('reload'):
+			if !is_char_info_open && !is_inventory_open && !is_reloading:
+				if hud_node.loaded < equipped.max_loaded && hud_node.reserve > 0:
+					is_reloading = true
+					equipped.reload_anim()
+
 	return
 
 func _on_menu_ok_button_pressed() -> void:
@@ -353,8 +363,10 @@ func _on_affect_player(effects: Array[Effect]):
 
 func _on_award_xp(amount: int) -> void:
 	xp += amount
-	var xp_status = hud_node.get_node_or_null("Status/XP")
+	var xp_status: Label = hud_node.get_node_or_null("Status/XP")
+	print(xp_status)
 	xp_status.text = str(xp)
+	print (xp_status.text)
 	return
 
 func jump_and_land_sound() -> void:
@@ -394,6 +406,14 @@ func handle_collisions() -> void:
 		if collider.get_instance_id() != world_ref.level_collision_id:
 			if collider is Projectile:
 				handle_proj_collision(collision)
+	return
+
+func _on_reload_anim_finished(anim_name: StringName) -> void:
+	if anim_name == "reload":
+		var used: int = equipped.max_loaded - hud_node.loaded
+		var to_loaded_val: int = equipped.max_loaded if hud_node.reserve >= used else hud_node.reserve + hud_node.loaded
+		hud_node.update_ammo_count(to_loaded_val, hud_node.reserve - (to_loaded_val - hud_node.loaded))
+		is_reloading = false
 	return
 	
 func refresh_settings() -> void:

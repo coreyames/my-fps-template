@@ -27,7 +27,7 @@ var recovery: bool = false
 # mob action or behvaior 
 var pacifist: bool = false
 var maintain_pc_los: bool = true
-var follow_player: bool = true
+var follow_player: bool = false
 var frozen: bool = false
 var direction: Vector3
 var screen_center: Vector2
@@ -112,7 +112,7 @@ func _on_apply_effects(target_id: int, _effects: Array[Effect]) -> void:
 				effect.dmg_dealt = dmg
 				if hp < 0:
 					if player_node:
-						SignalBus.award_xp.emit(player_node.get_instance_id(), xp_reward)
+						SignalBus.award_xp.emit(xp_reward)
 					queue_free()
 				else:
 					hp_bar.texture.gradient.set_offset(1, ((max_hp+.004) - hp)/max_hp)

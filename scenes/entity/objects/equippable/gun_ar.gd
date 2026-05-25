@@ -6,11 +6,14 @@ const PROJ_SPAWN_Y_OFFSET = 0.077
 const AR_DEFAULT_MAX_LOADED: int = 30
 const AR_DEFAULT_MAX_RESERVE: int = 90
 
+var animation_player_node: AnimationPlayer
+
 func _ready() -> void:
 	max_loaded = AR_DEFAULT_MAX_LOADED
 	max_reserve = AR_DEFAULT_MAX_RESERVE
 	sound_clip = DEFAULT_SHOOT_SOUND
 	$Sound.stream = sound_clip
+	animation_player_node = $AnimationPlayer
 	return
 
 func shoot(direction: Vector3) -> void:
@@ -23,4 +26,8 @@ func shoot(direction: Vector3) -> void:
 	$Sound.play()
 	used.emit()
 	projectile.fire(direction)
+	return
+	
+func reload_anim() -> void:
+	$AnimationPlayer.play("reload")
 	return

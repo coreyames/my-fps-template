@@ -33,10 +33,9 @@ func _on_equipped_used():
 	return					
 
 func update_ammo_count(_loaded: int, _reserve: int):
-	# 'infinite ammo + auto reaload' effective for now
 	loaded = _loaded
-	if loaded == 0:
-		loaded = equipped.max_loaded
+	if loaded < 0:
+		loaded = 0
 	reserve = _reserve
 	$EquippedInfo/Ammo.text = str(loaded) + ' / ' + str(reserve)
 	return
