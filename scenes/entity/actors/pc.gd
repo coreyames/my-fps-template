@@ -172,8 +172,8 @@ func _physics_process(delta: float) -> void:
 	if Input.is_action_just_pressed("jump"):
 		if is_on_floor():
 			if just_landed || bhop_frame_buffer.any(func(b: bool) -> bool: return b):
-				velocity.x = (velocity.length() * $Camera3D.project_ray_normal(screen_center).x) + (player_bhop_accel_value * velocity.normalized().x)
-				velocity.z = (velocity.length() * $Camera3D.project_ray_normal(screen_center).z) + (player_bhop_accel_value * velocity.normalized().z)
+				velocity.x = player_bhop_accel_value * velocity.normalized().x
+				velocity.z = player_bhop_accel_value * velocity.normalized().z
 				Debug.log("bhop - (frame buffer state recent->oldest)")
 				Debug.log(str(bhop_frame_buffer))
 				bhop_frame_buffer.resize(bhop_frames_value)
@@ -246,11 +246,10 @@ func _physics_process(delta: float) -> void:
 					in_strafe = true
 					Debug.log("strafe started")
 				var start: float = velocity.length()
-				var post: float = move_toward(start, 0, -air_strafe_accel_value)
-
-				velocity.x += air_strafe_accel_value * velocity.normalized().x				
-				velocity.z += air_strafe_accel_value * velocity.normalized().z
-				strafe_delta += post - start
+				var cam_normal: Vector3 = get_camera_normal()
+				velocity.x += air_strafe_accel_value * cam_normal.x				
+				velocity.z += air_strafe_accel_value * cam_normal.z
+				strafe_delta += velocity.length() - start
 
 	# surfing acceleration
 	# placeholder accel value use air strafe accel
@@ -446,3 +445,7 @@ func refresh_settings() -> void:
 	player_bhop_accel_value = Settings.player_bhop_accel_value
 	bhop_frames_value = Settings.bhop_frames_value
 	return
+
+func get_camera_normal() -> Vector3:
+	return $Camera3D.project_ray_normal(screen_center)
+	
