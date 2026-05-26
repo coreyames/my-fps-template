@@ -10,7 +10,7 @@ func _ready() -> void:
 	
 	# try to sub house if player not present on current test map
 	if !player_node:
-		var house_node = world.get_node_or_null("SM_LittleHouse")
+		var house_node: Node3D = world.get_node_or_null("SM_LittleHouse")
 		if house_node:
 			player_location = house_node.global_position
 	return

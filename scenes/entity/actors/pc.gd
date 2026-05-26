@@ -10,7 +10,7 @@ var screen_center: Vector2
 #
 # PLAYER INFORMATION
 #
-const NAME_DEFAULT = "PLAYER"
+const NAME_DEFAULT: String = "PLAYER"
 var player_name: String = NAME_DEFAULT
 var xp: int
 
@@ -85,7 +85,7 @@ var max_hp: int = base_stats.get("HP")
 var hp: int = max_hp
 
 #
-# STATUS, METRICS, OTHER FLAGS
+# STATUS, FLAGS, METRICS 
 #
 var current_speed: float = 0
 var recent_top_speed: float = 0
@@ -98,6 +98,7 @@ var surf_delta: float = 0
 
 var just_landed: bool = false
 var bhop_frame_buffer: Array[bool]
+var is_air_strafe_valid: bool = false
 
 var is_reloading: bool = false
 
@@ -170,7 +171,7 @@ func _physics_process(delta: float) -> void:
 	bhop_frame_buffer.pop_back()
 	if Input.is_action_just_pressed("jump"):
 		if is_on_floor():
-			if just_landed || bhop_frame_buffer.any(func(b): return b):
+			if just_landed || bhop_frame_buffer.any(func(b: bool) -> bool: return b):
 				velocity.x = (velocity.length() * $Camera3D.project_ray_normal(screen_center).x) + (player_bhop_accel_value * velocity.normalized().x)
 				velocity.z = (velocity.length() * $Camera3D.project_ray_normal(screen_center).z) + (player_bhop_accel_value * velocity.normalized().z)
 				Debug.log("bhop - (frame buffer state recent->oldest)")
@@ -213,24 +214,43 @@ func _physics_process(delta: float) -> void:
 			is_directed_on_floor = false
 			walking_sound(false)
 
+	var xz_velocity: Vector2 = Vector2(velocity.x, velocity.z).normalized()
+	var xz_camera: Vector2 = Vector2($Camera3D.project_ray_normal(screen_center).x, $Camera3D.project_ray_normal(screen_center).z)
+	var xz_dot: float = xz_velocity.dot(xz_camera)
+
+	if debug_node:
+			debug_node.get_node('Temp').text = "vel %.2v\ncam %.2v\n dot %.2f\n %s" % [xz_velocity, xz_camera, xz_velocity.dot(xz_camera), str(is_air_strafe_valid)]
+
 	# apply friction if on any surface
 	# air decel + any strafe accel if not
+	# flip flag for air strafing if on ground camera has no forward movement
+	# idk if this not being IFF isonfloor but i guess we will see
 	if is_on_floor() || is_on_wall() || is_on_ceiling():
 		velocity.x = move_toward(velocity.x, 0, player_ground_friction_value)
 		velocity.z = move_toward(velocity.z, 0, player_ground_friction_value)
 		velocity.y = move_toward(velocity.y, 0, player_ground_friction_value)
+
+		if !is_zero_approx(xz_dot):
+			is_air_strafe_valid = true
+		else:
+			is_air_strafe_valid = false
+
 	else:
 		velocity.x = move_toward(velocity.x, 0, air_decel_value)
 		velocity.z = move_toward(velocity.z, 0, air_decel_value)
-		if (!is_zero_approx(camera_motion.x)):
+		velocity.y = move_toward(velocity.y, 0, air_decel_value)
+		
+		if abs(camera_motion.x) > 0.03 && is_air_strafe_valid: 
 			if (camera_motion.x > 0 && input_dir.x > 0) || (camera_motion.x < 0 && input_dir.x < 0):
-				if !in_strafe:	
+				if !in_strafe:
 					in_strafe = true
 					Debug.log("strafe started")
-				var speed_before_strafe: float = velocity.length()
-				velocity.x = (velocity.length() * $Camera3D.project_ray_normal(screen_center).x) + (air_strafe_accel_value * velocity.normalized().x)
-				velocity.z = (velocity.length() * $Camera3D.project_ray_normal(screen_center).z) + (air_strafe_accel_value * velocity.normalized().z)
-				strafe_delta += velocity.length() - speed_before_strafe
+				var start: float = velocity.length()
+				var post: float = move_toward(start, 0, -air_strafe_accel_value)
+
+				velocity.x = post * velocity.normalized().x				
+				velocity.z = post * velocity.normalized().z
+				strafe_delta += post - start
 
 	# surfing acceleration
 	# placeholder accel value use air strafe accel
@@ -268,7 +288,7 @@ func _physics_process(delta: float) -> void:
 			recent_top_speed = current_speed
 			velocity_when_top = velocity
 
-		var params = [current_speed, recent_top_speed, velocity_when_top, camera_motion.x]
+		var params: Array = [current_speed, recent_top_speed, velocity_when_top, camera_motion.x]
 		movement_info_node.text = debug_node.movement_info_template % params
 		
 	if (move_and_slide()):
@@ -331,7 +351,6 @@ func _input(event: InputEvent) -> void:
 				if hud_node.loaded < equipped.max_loaded && hud_node.reserve > 0:
 					is_reloading = true
 					equipped.reload_anim()
-
 	return
 
 func _on_menu_ok_button_pressed() -> void:
@@ -351,7 +370,7 @@ func _on_toggle_debug(on: bool) -> void:
 		recent_top_speed = 0
 	return
 	
-func _on_affect_player(effects: Array[Effect]):
+func _on_affect_player(effects: Array[Effect]) -> void:
 	for effect: Effect in effects:
 		if effect.type == Effect.Type.DAMAGE:
 			var dmg: int = randi_range(effect.min_dmg, effect.max_dmg)
@@ -400,7 +419,7 @@ func handle_proj_collision(collision: KinematicCollision3D) -> void:
 	return
 
 func handle_collisions() -> void:
-	for i in range(get_slide_collision_count()):
+	for i: int in range(get_slide_collision_count()):
 		var collision: KinematicCollision3D = get_slide_collision(i)
 		var collider: Node3D = collision.get_collider()
 		if collider.get_instance_id() != world_ref.level_collision_id:

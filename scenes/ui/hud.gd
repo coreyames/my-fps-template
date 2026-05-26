@@ -1,6 +1,5 @@
 extends Control
 
-# TODO placeholder for hit connection testing, will get from character later
 var hp: int
 var loaded: int
 var reserve: int
@@ -28,11 +27,11 @@ func _on_was_hit(effects: Array[Effect]) -> void:
 			$Status/HP.text = str(hp)
 	return
 							
-func _on_equipped_used():
+func _on_equipped_used() -> void:
 	update_ammo_count(loaded-1,reserve)
 	return					
 
-func update_ammo_count(_loaded: int, _reserve: int):
+func update_ammo_count(_loaded: int, _reserve: int) -> void:
 	loaded = _loaded
 	if loaded < 0:
 		loaded = 0

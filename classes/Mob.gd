@@ -34,8 +34,8 @@ var screen_center: Vector2
 
 func _ready() -> void:
 	world = get_tree().current_scene
-	var viewport_size_x = get_viewport().get_visible_rect().size.x
-	var viewport_size_y = get_viewport().get_visible_rect().size.y
+	var viewport_size_x: float = get_viewport().get_visible_rect().size.x
+	var viewport_size_y: float = get_viewport().get_visible_rect().size.y
 	screen_center = Vector2(viewport_size_x/2, viewport_size_y/2)
 	player_node = world.get_node_or_null("Player")
 	if player_node:
@@ -91,7 +91,7 @@ func handle_other_collision(collision: KinematicCollision3D) -> void:
 
 func handle_collisions() -> void:
 	var has_collided_with: Array[int] = []
-	for i in range(get_slide_collision_count()):
+	for i: int in range(get_slide_collision_count()):
 		var collision: KinematicCollision3D = get_slide_collision(i)
 		var collider: Node3D = collision.get_collider()
 		if collider.get_instance_id() != world.level_collision_id:

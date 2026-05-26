@@ -2,6 +2,9 @@
 
 [ext_resource type="Script" uid="uid://dpyhyy1oy660m" path="res://scenes/ui/debug_hud.gd" id="1_jwuoe"]
 
+[sub_resource type="SystemFont" id="SystemFont_r00s7"]
+font_names = PackedStringArray("Monospace")
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_b7bo0"]
 content_margin_top = 447.0
 
@@ -35,6 +38,7 @@ offset_right = 1897.0
 offset_bottom = 255.0
 focus_mode = 0
 theme_override_colors/font_color = Color(0.875, 0.875, 0.875, 1)
+theme_override_fonts/font = SubResource("SystemFont_r00s7")
 theme_override_styles/normal = SubResource("StyleBoxFlat_b7bo0")
 placeholder_text = "DEBUG LOG"
 editable = false
@@ -49,6 +53,7 @@ offset_right = 729.0
 offset_bottom = 1055.0
 theme_override_colors/font_readonly_color = Color(0.8745098, 0.8745098, 0.8745098, 1)
 theme_override_fonts/font = SubResource("SystemFont_b7bo0")
+placeholder_text = "METRICS"
 editable = false
 emoji_menu_enabled = false
 shortcut_keys_enabled = false
@@ -64,6 +69,21 @@ theme_override_colors/font_readonly_color = Color(0.8745098, 0.8745098, 0.874509
 theme_override_constants/line_spacing = 0
 theme_override_fonts/font = SubResource("SystemFont_j6o1s")
 placeholder_text = "SETTINGS"
+editable = false
+emoji_menu_enabled = false
+shortcut_keys_enabled = false
+selecting_enabled = false
+
+[node name="Temp" type="TextEdit" parent="." unique_id=1229388075]
+layout_mode = 0
+offset_left = 417.0
+offset_top = 783.0
+offset_right = 641.0
+offset_bottom = 879.0
+theme_override_colors/font_readonly_color = Color(0.8745098, 0.8745098, 0.8745098, 0.9647059)
+theme_override_constants/line_spacing = 0
+theme_override_fonts/font = SubResource("SystemFont_j6o1s")
+placeholder_text = "TEMP. DEBUG METRIC"
 editable = false
 emoji_menu_enabled = false
 shortcut_keys_enabled = false

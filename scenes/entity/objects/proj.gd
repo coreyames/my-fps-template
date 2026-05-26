@@ -4,7 +4,7 @@ extends AnimatableBody3D
 #
 # PHYSICS
 #
-const SPEED = 60
+const SPEED: float = 60
 
 var direction: Vector3
 var motion: Vector3
