@@ -248,8 +248,8 @@ func _physics_process(delta: float) -> void:
 				var start: float = velocity.length()
 				var post: float = move_toward(start, 0, -air_strafe_accel_value)
 
-				velocity.x = post * velocity.normalized().x				
-				velocity.z = post * velocity.normalized().z
+				velocity.x += air_strafe_accel_value * velocity.normalized().x				
+				velocity.z += air_strafe_accel_value * velocity.normalized().z
 				strafe_delta += post - start
 
 	# surfing acceleration

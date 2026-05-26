@@ -4,6 +4,7 @@
 
 [sub_resource type="SystemFont" id="SystemFont_r00s7"]
 font_names = PackedStringArray("Monospace")
+subpixel_positioning = 0
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_b7bo0"]
 content_margin_top = 447.0
