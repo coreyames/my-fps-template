@@ -85,13 +85,15 @@ var max_hp: int = base_stats.get("HP")
 var hp: int = max_hp
 
 #
-# STATUS, FLAGS, METRICS 
+# FLAGS, NODE STATUS, METRICS, DEBUG 
 #
 var current_speed: float = 0
 var recent_top_speed: float = 0
 var velocity_when_top: Vector3
 
 var in_strafe: bool = false
+var in_strafe_left: bool = false
+var in_strafe_right: bool = false
 var strafe_delta: float = 0
 var in_surf: bool = false
 var surf_delta: float = 0
@@ -145,11 +147,6 @@ func _physics_process(delta: float) -> void:
 	elif was_airborne:
 		was_airborne = false
 		just_landed = true
-		in_strafe = false
-		if (strafe_delta > 0):
-			Debug.log("strafe end total speed gain:")
-			Debug.log("       " + str(strafe_delta))
-		strafe_delta = 0
 		jump_and_land_sound()
 	elif just_landed:
 		just_landed = false
@@ -172,8 +169,8 @@ func _physics_process(delta: float) -> void:
 	if Input.is_action_just_pressed("jump"):
 		if is_on_floor():
 			if just_landed || bhop_frame_buffer.any(func(b: bool) -> bool: return b):
-				velocity.x = player_bhop_accel_value * velocity.normalized().x
-				velocity.z = player_bhop_accel_value * velocity.normalized().z
+				velocity.x += player_bhop_accel_value * velocity.normalized().x
+				velocity.z += player_bhop_accel_value * velocity.normalized().z
 				Debug.log("bhop - (frame buffer state recent->oldest)")
 				Debug.log(str(bhop_frame_buffer))
 				bhop_frame_buffer.resize(bhop_frames_value)
@@ -219,7 +216,8 @@ func _physics_process(delta: float) -> void:
 	var xz_dot: float = xz_velocity.dot(xz_camera)
 
 	if debug_node:
-			debug_node.get_node('Temp').text = "vel %.2v\ncam %.2v\n dot %.2f\n %s" % [xz_velocity, xz_camera, xz_velocity.dot(xz_camera), str(is_air_strafe_valid)]
+			var params: Array = [xz_velocity, xz_camera, xz_velocity.dot(xz_camera), str(is_air_strafe_valid)]
+			debug_node.get_node('Temp').text = "vel %.2v\ncam %.2v\n dot %.2f\n %s" % params
 
 	# apply friction if on any surface
 	# air decel + any strafe accel if not
@@ -228,8 +226,17 @@ func _physics_process(delta: float) -> void:
 	if is_on_floor() || is_on_wall() || is_on_ceiling():
 		velocity.x = move_toward(velocity.x, 0, player_ground_friction_value)
 		velocity.z = move_toward(velocity.z, 0, player_ground_friction_value)
-		velocity.y = move_toward(velocity.y, 0, player_ground_friction_value)
 
+		if in_strafe_right:
+			print('STRAFE RIGHT: +%.3f' % [strafe_delta])
+			in_strafe_right = false
+		
+		if in_strafe_left:
+			print('STRAFE LEFT: +%.3f' % [strafe_delta])
+			in_strafe_left = false
+		
+		strafe_delta = 0
+			
 		if !is_zero_approx(xz_dot):
 			is_air_strafe_valid = true
 		else:
@@ -240,16 +247,35 @@ func _physics_process(delta: float) -> void:
 		velocity.z = move_toward(velocity.z, 0, air_decel_value)
 		velocity.y = move_toward(velocity.y, 0, air_decel_value)
 		
-		if abs(camera_motion.x) > 0.03 && is_air_strafe_valid: 
-			if (camera_motion.x > 0 && input_dir.x > 0) || (camera_motion.x < 0 && input_dir.x < 0):
-				if !in_strafe:
-					in_strafe = true
-					Debug.log("strafe started")
-				var start: float = velocity.length()
-				var cam_normal: Vector3 = get_camera_normal()
-				velocity.x += air_strafe_accel_value * cam_normal.x				
-				velocity.z += air_strafe_accel_value * cam_normal.z
-				strafe_delta += velocity.length() - start
+		var strafe_look_match: bool = (camera_motion.x > 0 && input_dir.x > 0) || (camera_motion.x < 0 && input_dir.x < 0)
+		if abs(camera_motion.x) > 0.03 && is_air_strafe_valid && strafe_look_match: 
+			if input_dir.x > 0:
+				if in_strafe_left:
+					print('STRAFE LEFT: +%.3f' % [strafe_delta])
+					strafe_delta = 0
+
+				if !in_strafe_right: 
+					in_strafe_right = true
+					strafe_delta = 0
+					print("air strafe right started")
+				in_strafe_left = false
+
+			else:
+				if in_strafe_right:
+					print('STRAFE RIGHT: +%.3f' % [strafe_delta])
+					strafe_delta = 0
+
+				if !in_strafe_left: 
+					in_strafe_left = true
+					strafe_delta = 0
+					print("air strafe left started")
+				in_strafe_right = false
+		
+			var start: float = velocity.length()
+			var cam_normal: Vector3 = get_camera_normal()
+			velocity.x += air_strafe_accel_value * cam_normal.x				
+			velocity.z += air_strafe_accel_value * cam_normal.z
+			strafe_delta += velocity.length() - start
 
 	# surfing acceleration
 	# placeholder accel value use air strafe accel
