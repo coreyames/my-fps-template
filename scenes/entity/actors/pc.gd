@@ -95,6 +95,7 @@ var in_strafe: bool = false
 var in_strafe_left: bool = false
 var in_strafe_right: bool = false
 var strafe_delta: float = 0
+var strafe_delta_total: float = 0
 var in_surf: bool = false
 var surf_delta: float = 0
 
@@ -230,12 +231,14 @@ func _physics_process(delta: float) -> void:
 		if in_strafe_right:
 			print('STRAFE RIGHT: +%.3f' % [strafe_delta])
 			in_strafe_right = false
-		
+			print('STRAFE NET SPEED GAINED: +%.3f\n' % [strafe_delta_total])
 		if in_strafe_left:
 			print('STRAFE LEFT: +%.3f' % [strafe_delta])
 			in_strafe_left = false
+			print('STRAFE NET SPEED GAINED +%.3f\n' % [strafe_delta_total])
 		
 		strafe_delta = 0
+		strafe_delta_total = 0
 			
 		if !is_zero_approx(xz_dot):
 			is_air_strafe_valid = true
@@ -251,24 +254,28 @@ func _physics_process(delta: float) -> void:
 		if abs(camera_motion.x) > 0.03 && is_air_strafe_valid && strafe_look_match: 
 			if input_dir.x > 0:
 				if in_strafe_left:
-					print('STRAFE LEFT: +%.3f' % [strafe_delta])
+					print('STRAFE LEFT: +%.3f\n' % [strafe_delta])
+					strafe_delta_total += strafe_delta
 					strafe_delta = 0
 
 				if !in_strafe_right: 
 					in_strafe_right = true
 					strafe_delta = 0
 					print("air strafe right started")
+
 				in_strafe_left = false
 
 			else:
 				if in_strafe_right:
-					print('STRAFE RIGHT: +%.3f' % [strafe_delta])
+					print('STRAFE RIGHT: +%.3f\n' % [strafe_delta])
+					strafe_delta_total += strafe_delta
 					strafe_delta = 0
 
 				if !in_strafe_left: 
 					in_strafe_left = true
 					strafe_delta = 0
 					print("air strafe left started")
+
 				in_strafe_right = false
 		
 			var start: float = velocity.length()
@@ -292,7 +299,7 @@ func _physics_process(delta: float) -> void:
 		if in_surf:
 			in_surf = false
 			Debug.log("surf end total speed gain:")
-			Debug.log("     " + str(velocity.length() - surf_delta))
+			Debug.log("     " + str(velocity.length() - surf_delta) + "\n")
 			surf_delta = 0
 		
 	# clamp in valid range; zero before move_and_slide call if stop pressed	
