@@ -6,6 +6,7 @@ const default_item_name: String = '<unset>'
 var id: int = default_id
 var item_name: String = default_item_name
 
+@warning_ignore("untyped_declaration")
 func use(params) -> void:
 	print('override me')
 	return

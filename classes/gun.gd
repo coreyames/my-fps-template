@@ -12,6 +12,7 @@ func _ready() -> void:
 	max_reserve = DEFAULT_MAX_RESERVE
 	sound_clip = DEFAULT_SHOOT_SOUND
 
+@warning_ignore_start("untyped_declaration")
 func attack(params) -> void:
 	if typeof(params) == TYPE_VECTOR3:
 		shoot(params)
