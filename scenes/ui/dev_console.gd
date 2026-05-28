@@ -49,10 +49,10 @@ func clear() -> void:
 # console.text will be on a newline
 func process_input(input_line: String) -> void:
 	Debug.console_history.append(input_line)
-	var line_split_array = input_line.split(" ", true, 1)
+	var line_split_array: Array[String] = input_line.split(" ", true, 1)
 	if line_split_array.size() < 1:
 		return
-	var cmd = line_split_array.get(0)
+	var cmd: String = line_split_array.get(0)
 	match cmd:
 		"echo":
 			if (line_split_array.size() == 2):

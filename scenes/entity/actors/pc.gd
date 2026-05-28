@@ -215,7 +215,7 @@ func _physics_process(delta: float) -> void:
 	var xz_camera: Vector2 = Vector2($Camera3D.project_ray_normal(screen_center).x, $Camera3D.project_ray_normal(screen_center).z)
 	var xz_dot: float = xz_velocity.dot(xz_camera)
 
-	if debug_node:
+	if debug_node && debug_node.is_inside_tree():
 			var params: Array = [xz_velocity, xz_camera, xz_velocity.dot(xz_camera), str(is_air_strafe_valid)]
 			debug_node.get_node('Temp').text = "vel %.2v\ncam %.2v\n dot %.2f\n %s" % params
 
@@ -306,7 +306,7 @@ func _physics_process(delta: float) -> void:
 	current_speed = velocity.length()
 
 	# set debug info
-	if debug_node:
+	if debug_node && debug_node.is_inside_tree():
 		var movement_info_node: TextEdit = debug_node.get_node("MovementInfo")
 		
 		if current_speed > recent_top_speed:

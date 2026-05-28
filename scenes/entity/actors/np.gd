@@ -25,7 +25,7 @@ var chance_to_jump: float = .3
 var jump_entropy: float = 0
 
 var to_shoot: bool = false
-var pacifist: bool = false
+var pacifist: bool = true
 var maintain_pc_los: bool = true
 var chance_to_shoot: float = .2
 var shoot_entropy: float = 0
@@ -47,24 +47,24 @@ func _ready() -> void:
 # generate semirandom char input 
 # added entropy guarantees eventual shoot, jump, dir change
 func generate_input() -> void:
-	var dir_chance = chance_to_change_dir * dir_entropy
-	var dir_roll = randf()
+	var dir_chance: float = chance_to_change_dir * dir_entropy
+	var dir_roll: float = randf()
 	if dir_roll > 1 - dir_chance:
 		current_action = dir_actions.pick_random()
 		dir_entropy = 0
 	else:
 		dir_entropy += .001
 		
-	var jump_chance = chance_to_jump * jump_entropy
-	var jump_roll = randf()
+	var jump_chance: float = chance_to_jump * jump_entropy
+	var jump_roll: float = randf()
 	if jump_roll > 1 - jump_chance:
 		to_jump = true
 		jump_entropy = 0
 	else:
 		jump_entropy += .001
 		
-	var shoot_chance = chance_to_shoot * shoot_entropy
-	var shoot_roll = randf()
+	var shoot_chance: float = chance_to_shoot * shoot_entropy
+	var shoot_roll: float = randf()
 	if shoot_roll > 1 - shoot_chance:
 		to_shoot = true
 		shoot_entropy = 0
@@ -107,7 +107,7 @@ func _physics_process(delta: float) -> void:
 		shoot_at_player()
 
 	# Get the input direction and handle the movement/deceleration.
-	var direction := (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
+	var direction: Vector3 = (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
 	if direction && !stand_still:
 		velocity.x = direction.x * SPEED
 		velocity.z = direction.z * SPEED
@@ -126,7 +126,7 @@ func handle_proj_collision(collision: KinematicCollision3D) -> void:
 	return
 
 func handle_collisions() -> void:
-	for i in range(get_slide_collision_count()):
+	for i: int in range(get_slide_collision_count()):
 		var collision: KinematicCollision3D = get_slide_collision(i)
 		var collider: Node3D = collision.get_collider()
 		if collider.get_instance_id() != world.level_collision_id:

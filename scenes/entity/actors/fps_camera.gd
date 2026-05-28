@@ -20,7 +20,7 @@ func _ready() -> void:
 	body = get_parent()
 	Input.set_use_accumulated_input(false)
 
-func _unhandled_input(event) -> void:
+func _unhandled_input(event: InputEvent) -> void:
 	if $"..".is_console_open:
 		return
 	
@@ -32,7 +32,7 @@ func _unhandled_input(event) -> void:
 	return
 	
 # Rotates the character around the local Y axis
-func yaw(amount) -> void:
+func yaw(amount: float) -> void:
 	if is_zero_approx(amount):
 		return
 	body.rotate_object_local(Vector3.DOWN, deg_to_rad(amount))
@@ -40,7 +40,7 @@ func yaw(amount) -> void:
 	return
 
 # Rotates the cam around the local x axis 
-func pitch_with_clamp(amount) -> void:
+func pitch_with_clamp(amount: float) -> void:
 	if is_zero_approx(amount):
 		return
 	rotate_object_local(Vector3.LEFT, deg_to_rad(amount))

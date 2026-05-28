@@ -21,7 +21,7 @@ func shoot(direction: Vector3) -> void:
 	projectile.position = global_position
 	projectile.rotation = global_rotation
 	projectile.translate_object_local(Vector3(0, PROJ_SPAWN_Y_OFFSET, PROJ_SPAWN_Z_OFFSET))
-	get_node("/root").add_child(projectile)
+	if is_inside_tree(): get_node("/root").add_child(projectile)
 	$AnimationPlayer.play("use")
 	$Sound.play()
 	used.emit()
