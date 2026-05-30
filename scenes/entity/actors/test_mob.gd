@@ -7,6 +7,8 @@ func _ready() -> void:
 	effect.min_dmg = 5
 	effect.max_dmg = 10
 	effects.append(effect)
+
+	#follow_player = true
 	
 	# try to sub house if player not present on current test map
 	if !player_node:

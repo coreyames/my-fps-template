@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://dkp6wssv2hjqt"]
+
+[sub_resource type="TubeTrailMesh" id="TubeTrailMesh_qngj2"]
+radius = 0.1
+section_length = 0.01
+
+[node name="TubeTrail" type="MeshInstance3D" unique_id=695498438]
+transform = Transform3D(0.99999994, 0, 0, 0, -4.3711385e-08, -1, 0, 0.99999994, -4.371139e-08, 0, 0, 0)
+mesh = SubResource("TubeTrailMesh_qngj2")

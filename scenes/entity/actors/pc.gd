@@ -62,6 +62,8 @@ const inventory_scene: Resource = preload('res://scenes/ui/inventory.tscn')
 var inventory_node: Control = null
 var is_inventory_open: bool = false
 
+const trail_scene: Resource = preload('res://scenes/ui/tubetrail.tscn')
+
 #
 # EQUIPMENT AND ITEMS
 #
@@ -102,6 +104,7 @@ var surf_delta: float = 0
 var just_landed: bool = false
 var bhop_frame_buffer: Array[bool]
 var is_air_strafe_valid: bool = false
+var draw_trail: bool = true
 
 var is_reloading: bool = false
 
@@ -126,14 +129,18 @@ func _ready() -> void:
 	equipped = $Camera3D/Equipped
 	viewmodel = equipped.transform
 	stored.transform = viewmodel
-
+	
 	hud_node = hud_scene.instantiate()
 	add_child(hud_node)
-
+	if !$Camera3D.current:
+		hud_node.visible = false
+		
 	equipped.animation_player_node.animation_finished.connect(_on_reload_anim_finished)
 
 	bhop_frame_buffer.resize(bhop_frames_value)
 	bhop_frame_buffer.fill(false)
+
+	print(position)
 	return
 
 func _physics_process(delta: float) -> void:
@@ -149,6 +156,7 @@ func _physics_process(delta: float) -> void:
 		was_airborne = false
 		just_landed = true
 		jump_and_land_sound()
+		
 	elif just_landed:
 		just_landed = false
 
@@ -178,6 +186,7 @@ func _physics_process(delta: float) -> void:
 				bhop_frame_buffer.fill(false)
 			jump_and_land_sound()
 			velocity.y = jump_velocity_value
+			print(position)
 		else:
 			bhop_frame_buffer.push_front(true)
 	else:
@@ -229,13 +238,19 @@ func _physics_process(delta: float) -> void:
 		velocity.z = move_toward(velocity.z, 0, player_ground_friction_value)
 
 		if in_strafe_right:
+			strafe_delta_total += strafe_delta
 			print('STRAFE RIGHT: +%.3f' % [strafe_delta])
 			in_strafe_right = false
-			print('STRAFE NET SPEED GAINED: +%.3f\n' % [strafe_delta_total])
+			print('STRAFE NET SPEED GAINED: +%.3f' % [strafe_delta_total])
+			print(position)
+			print('--------------------------------\n')
 		if in_strafe_left:
+			strafe_delta_total += strafe_delta
 			print('STRAFE LEFT: +%.3f' % [strafe_delta])
 			in_strafe_left = false
 			print('STRAFE NET SPEED GAINED +%.3f\n' % [strafe_delta_total])
+			print(position)
+			print('--------------------------------\n')
 		
 		strafe_delta = 0
 		strafe_delta_total = 0
@@ -246,6 +261,12 @@ func _physics_process(delta: float) -> void:
 			is_air_strafe_valid = false
 
 	else:
+		if draw_trail:
+			var trail_node: MeshInstance3D = trail_scene.instantiate()
+			world_ref.add_child(trail_node)
+			trail_node.position = position + Vector3(0, 1, 0)
+			trail_node.rotation.y = rotation.y
+		
 		velocity.x = move_toward(velocity.x, 0, air_decel_value)
 		velocity.z = move_toward(velocity.z, 0, air_decel_value)
 		velocity.y = move_toward(velocity.y, 0, air_decel_value)
@@ -280,8 +301,9 @@ func _physics_process(delta: float) -> void:
 		
 			var start: float = velocity.length()
 			var cam_normal: Vector3 = get_camera_normal()
-			velocity.x += air_strafe_accel_value * cam_normal.x				
-			velocity.z += air_strafe_accel_value * cam_normal.z
+
+			velocity.x = (start + air_strafe_accel_value) * cam_normal.x				
+			velocity.z = (start + air_strafe_accel_value) * cam_normal.z
 			strafe_delta += velocity.length() - start
 
 	# surfing acceleration
@@ -415,7 +437,6 @@ func _on_affect_player(effects: Array[Effect]) -> void:
 func _on_award_xp(amount: int) -> void:
 	xp += amount
 	var xp_status: Label = hud_node.get_node_or_null("Status/XP")
-	print(xp_status)
 	xp_status.text = str(xp)
 	print (xp_status.text)
 	return

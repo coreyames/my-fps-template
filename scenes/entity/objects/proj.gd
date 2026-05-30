@@ -55,7 +55,6 @@ func _on_projectile_hit(proj_id: int, collider_id: int) -> void:
 		status = Status.DONE
 		# global static ref to player node?
 		if collider_id == SignalBus.player_instance_id:
-			print('here')
 			SignalBus.affect_player.emit(effects)
 		else:
 			SignalBus.apply_effects.emit(collider_id, effects)
