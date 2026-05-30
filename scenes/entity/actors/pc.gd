@@ -104,7 +104,7 @@ var surf_delta: float = 0
 var just_landed: bool = false
 var bhop_frame_buffer: Array[bool]
 var is_air_strafe_valid: bool = false
-var draw_trail: bool = true
+var draw_trail: bool = Debug.draw_trail
 
 var is_reloading: bool = false
 
@@ -117,6 +117,7 @@ func _ready() -> void:
 
 	add_to_group("settings_dependent")
 	Debug.toggle_debug.connect( _on_toggle_debug)
+	Debug.toggle_debug_draw_trail.connect(_on_toggle_draw_trail)
 	SignalBus.affect_player.connect(_on_affect_player)
 	SignalBus.award_xp.connect(_on_award_xp)
 	
@@ -186,7 +187,6 @@ func _physics_process(delta: float) -> void:
 				bhop_frame_buffer.fill(false)
 			jump_and_land_sound()
 			velocity.y = jump_velocity_value
-			print(position)
 		else:
 			bhop_frame_buffer.push_front(true)
 	else:
@@ -242,14 +242,12 @@ func _physics_process(delta: float) -> void:
 			print('STRAFE RIGHT: +%.3f' % [strafe_delta])
 			in_strafe_right = false
 			print('STRAFE NET SPEED GAINED: +%.3f' % [strafe_delta_total])
-			print(position)
 			print('--------------------------------\n')
 		if in_strafe_left:
 			strafe_delta_total += strafe_delta
 			print('STRAFE LEFT: +%.3f' % [strafe_delta])
 			in_strafe_left = false
 			print('STRAFE NET SPEED GAINED +%.3f\n' % [strafe_delta_total])
-			print(position)
 			print('--------------------------------\n')
 		
 		strafe_delta = 0
@@ -264,6 +262,7 @@ func _physics_process(delta: float) -> void:
 		if draw_trail:
 			var trail_node: MeshInstance3D = trail_scene.instantiate()
 			world_ref.add_child(trail_node)
+			trail_node.add_to_group("trail")
 			trail_node.position = position + Vector3(0, 1, 0)
 			trail_node.rotation.y = rotation.y
 		
@@ -302,7 +301,7 @@ func _physics_process(delta: float) -> void:
 			var start: float = velocity.length()
 			var cam_normal: Vector3 = get_camera_normal()
 
-			velocity.x = (start + air_strafe_accel_value) * cam_normal.x				
+			velocity.x = (start + air_strafe_accel_value) * cam_normal.x	
 			velocity.z = (start + air_strafe_accel_value) * cam_normal.z
 			strafe_delta += velocity.length() - start
 
@@ -380,6 +379,7 @@ func _input(event: InputEvent) -> void:
 	elif event.is_action_pressed('reset_recorded_metrics'):
 		recent_top_speed = 0
 		velocity_when_top = Vector3()
+		get_tree().call_group("trail", "queue_free")
 		Debug.log('metrics reset')
 	elif event is InputEventKey && !is_console_open:
 		if event.is_action_pressed('switch_equipped'):
@@ -486,6 +486,10 @@ func _on_reload_anim_finished(anim_name: StringName) -> void:
 		var to_loaded_val: int = equipped.max_loaded if hud_node.reserve >= used else hud_node.reserve + hud_node.loaded
 		hud_node.update_ammo_count(to_loaded_val, hud_node.reserve - (to_loaded_val - hud_node.loaded))
 		is_reloading = false
+	return
+
+func _on_toggle_draw_trail(_draw_trail: bool) -> void:
+	draw_trail = _draw_trail
 	return
 	
 func refresh_settings() -> void:

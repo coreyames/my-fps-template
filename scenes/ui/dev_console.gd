@@ -49,7 +49,7 @@ func clear() -> void:
 # console.text will be on a newline
 func process_input(input_line: String) -> void:
 	Debug.console_history.append(input_line)
-	var line_split_array: Array[String] = input_line.split(" ", true, 1)
+	var line_split_array: PackedStringArray = input_line.split(" ", true, 1)
 	if line_split_array.size() < 1:
 		return
 	var cmd: String = line_split_array.get(0)
@@ -63,6 +63,8 @@ func process_input(input_line: String) -> void:
 			Debug.toggle_log()
 		"debug_movement":
 			Debug.toggle_movement()
+		"debug_trail":
+			Debug.toggle_draw_trail()
 		"mouse_sensitivity":
 			var value: String = check_for_param(line_split_array)
 			if value.length() > 0:
