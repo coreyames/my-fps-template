@@ -149,7 +149,7 @@ polygon = PackedVector2Array(-0.9661386, 0.26256132, -3.049157, 6.3572392, 1.612
 depth = 20.0
 
 [node name="CSGBox3D" type="CSGBox3D" parent="." unique_id=1998312701]
-transform = Transform3D(5.7381096, 0, 0, 0, 2.7417521, 0, 0, 0, 1, 3.488, 6.2768154, 0.9758599)
+transform = Transform3D(5.7381096, 0, 0, 0, 2.7417521, 0, 0, 0, 7.781539, 3.488, 6.2768154, 4.7412415)
 material_override = SubResource("StandardMaterial3D_rlkh4")
 use_collision = true
 size = Vector3(1, 5.2139587, 1)

@@ -141,7 +141,6 @@ func _ready() -> void:
 	bhop_frame_buffer.resize(bhop_frames_value)
 	bhop_frame_buffer.fill(false)
 
-	print(position)
 	return
 
 func _physics_process(delta: float) -> void:
@@ -157,7 +156,6 @@ func _physics_process(delta: float) -> void:
 		was_airborne = false
 		just_landed = true
 		jump_and_land_sound()
-		
 	elif just_landed:
 		just_landed = false
 
@@ -226,8 +224,8 @@ func _physics_process(delta: float) -> void:
 	var xz_dot: float = xz_velocity.dot(xz_camera)
 
 	if debug_node && debug_node.is_inside_tree():
-			var params: Array = [xz_velocity, xz_camera, xz_velocity.dot(xz_camera), str(is_air_strafe_valid)]
-			debug_node.get_node('Temp').text = "vel %.2v\ncam %.2v\n dot %.2f\n %s" % params
+			var params: Array = [velocity]
+			debug_node.get_node('Temp').text = "vel %.2v" % params
 
 	# apply friction if on any surface
 	# air decel + any strafe accel if not
@@ -258,20 +256,14 @@ func _physics_process(delta: float) -> void:
 		else:
 			is_air_strafe_valid = false
 
-	else:
-		if draw_trail:
-			var trail_node: MeshInstance3D = trail_scene.instantiate()
-			world_ref.add_child(trail_node)
-			trail_node.add_to_group("trail")
-			trail_node.position = position + Vector3(0, 1, 0)
-			trail_node.rotation.y = rotation.y
-		
+	else:	
 		velocity.x = move_toward(velocity.x, 0, air_decel_value)
 		velocity.z = move_toward(velocity.z, 0, air_decel_value)
 		velocity.y = move_toward(velocity.y, 0, air_decel_value)
 		
 		var strafe_look_match: bool = (camera_motion.x > 0 && input_dir.x > 0) || (camera_motion.x < 0 && input_dir.x < 0)
-		if abs(camera_motion.x) > 0.03 && is_air_strafe_valid && strafe_look_match: 
+		if abs(camera_motion.x) > 0.03 && is_air_strafe_valid && strafe_look_match:
+			var cam_normal: Vector3 = get_camera_normal() 
 			if input_dir.x > 0:
 				if in_strafe_left:
 					print('STRAFE LEFT: +%.3f\n' % [strafe_delta])
@@ -282,6 +274,8 @@ func _physics_process(delta: float) -> void:
 					in_strafe_right = true
 					strafe_delta = 0
 					print("air strafe right started")
+					if velocity.z * cam_normal.z < 0:
+						cam_normal.z = -cam_normal.z
 
 				in_strafe_left = false
 
@@ -295,27 +289,33 @@ func _physics_process(delta: float) -> void:
 					in_strafe_left = true
 					strafe_delta = 0
 					print("air strafe left started")
+					if velocity.z * cam_normal.z < 0:
+						cam_normal.z = -cam_normal.z
 
 				in_strafe_right = false
 		
 			var start: float = velocity.length()
-			var cam_normal: Vector3 = get_camera_normal()
-
 			velocity.x = (start + air_strafe_accel_value) * cam_normal.x	
 			velocity.z = (start + air_strafe_accel_value) * cam_normal.z
 			strafe_delta += velocity.length() - start
+
+			draw_trail_node()
 
 	# surfing acceleration
 	# placeholder accel value use air strafe accel
 	if is_on_wall_only():
 		var wall_normal: Vector3 = get_wall_normal()	
 		if direction.x * wall_normal.x < 0 || direction.z * wall_normal.z < 0:
+			var start: float = velocity.length()
 			if !in_surf:
 				in_surf = true
 				Debug.log("surf started")
-				surf_delta = velocity.length()
-			velocity.x += air_strafe_accel_value * velocity.normalized().x
-			velocity.z += air_strafe_accel_value * velocity.normalized().z
+				surf_delta = start
+			var cam_normal: Vector3 = get_camera_normal()
+			if velocity.z * cam_normal.z < 0:
+				cam_normal.z = -cam_normal.z
+			velocity.x = (start + air_strafe_accel_value) * cam_normal.x
+			velocity.z = (start + air_strafe_accel_value) * cam_normal.z
 	else:
 		if in_surf:
 			in_surf = false
@@ -506,4 +506,12 @@ func refresh_settings() -> void:
 
 func get_camera_normal() -> Vector3:
 	return $Camera3D.project_ray_normal(screen_center)
-	
+
+func draw_trail_node() -> void:
+	if !draw_trail:
+		return
+	var trail_node: MeshInstance3D = trail_scene.instantiate()
+	world_ref.add_child(trail_node)
+	trail_node.add_to_group("trail")
+	trail_node.position = position + Vector3(0, 1, 0)
+	trail_node.rotation.y = rotation.y
