@@ -4,14 +4,14 @@ extends Node
 
 const PLAYER_SPEED_DEFAULT:           float = 6.0
 const JUMP_VELOCITY_DEFAULT:          float = 4.5
-const AIR_DECEL_DEFAULT:              float = 0.0005
-const AIR_STRAFE_ACCEL_DEFAULT:       float = 0.05
+const AIR_DECEL_DEFAULT:              float = 0.000
+const AIR_STRAFE_ACCEL_DEFAULT:       float = 0.025
 const MOUSE_SENSITITY_DEFAULT:        float = 50
 const FOV_DEFAULT:                    float = 90
 const PLAYER_GRAVITY_MULT_DEFAULT:    float = 1.0
 const PLAYER_MAX_SPEED_DEFAULT:       float = 50
-const PLAYER_GROUND_FRICTION_DEFAULT: float = 0.15
-const PLAYER_DECEL_ON_INPUT_DEFAULT:  float = 0.3
+const PLAYER_GROUND_FRICTION_DEFAULT: float = 0.3
+const PLAYER_DECEL_ON_INPUT_DEFAULT:  float = 0.5
 const PLAYER_BHOP_ACCEL_DEFAULT:      float = 5
 const BHOP_FRAMES_DEFAULT:            int   = 20
 

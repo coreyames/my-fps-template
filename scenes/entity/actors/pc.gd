@@ -96,6 +96,7 @@ var velocity_when_top: Vector3
 var in_strafe: bool = false
 var in_strafe_left: bool = false
 var in_strafe_right: bool = false
+var backwards_strafe: bool = false
 var strafe_delta: float = 0
 var strafe_delta_total: float = 0
 var in_surf: bool = false
@@ -250,6 +251,7 @@ func _physics_process(delta: float) -> void:
 		
 		strafe_delta = 0
 		strafe_delta_total = 0
+		backwards_strafe = false
 			
 		if !is_zero_approx(xz_dot):
 			is_air_strafe_valid = true
@@ -275,7 +277,7 @@ func _physics_process(delta: float) -> void:
 					strafe_delta = 0
 					print("air strafe right started")
 					if velocity.z * cam_normal.z < 0:
-						cam_normal.z = -cam_normal.z
+						backwards_strafe = true
 
 				in_strafe_left = false
 
@@ -290,13 +292,15 @@ func _physics_process(delta: float) -> void:
 					strafe_delta = 0
 					print("air strafe left started")
 					if velocity.z * cam_normal.z < 0:
-						cam_normal.z = -cam_normal.z
+						backwards_strafe = true
 
 				in_strafe_right = false
 		
 			var start: float = velocity.length()
 			velocity.x = (start + air_strafe_accel_value) * cam_normal.x	
 			velocity.z = (start + air_strafe_accel_value) * cam_normal.z
+			if backwards_strafe:
+				velocity.z *= -1
 			strafe_delta += velocity.length() - start
 
 			draw_trail_node()
