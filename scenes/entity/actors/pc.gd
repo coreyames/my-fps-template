@@ -28,6 +28,8 @@ var player_decel_on_input_value:  float = Settings.player_decel_on_input_value
 var player_bhop_accel_value: float = Settings.player_bhop_accel_value
 var bhop_frames_value: int = Settings.bhop_frames_value
 
+const crouch_height_ratio: float = 0.65
+
 #
 # AUDIO
 #
@@ -62,7 +64,6 @@ const inventory_scene: Resource = preload('res://scenes/ui/inventory.tscn')
 var inventory_node: Control = null
 var is_inventory_open: bool = false
 
-const trail_scene: Resource = preload('res://scenes/ui/tubetrail.tscn')
 
 #
 # EQUIPMENT AND ITEMS
@@ -85,29 +86,32 @@ var base_stats: Dictionary[String, int] = {
 
 var max_hp: int = base_stats.get("HP")
 var hp: int = max_hp
+var height: float
 
 #
-# FLAGS, NODE STATUS, METRICS, DEBUG 
+# FLAGS, METRICS, DEBUG 
 #
 var current_speed: float = 0
 var recent_top_speed: float = 0
 var velocity_when_top: Vector3
+var strafe_delta: float = 0
+var strafe_delta_total: float = 0
+var surf_delta: float = 0
 
 var in_strafe: bool = false
 var in_strafe_left: bool = false
 var in_strafe_right: bool = false
 var backwards_strafe: bool = false
-var strafe_delta: float = 0
-var strafe_delta_total: float = 0
+var is_air_strafe_valid: bool = false
 var in_surf: bool = false
-var surf_delta: float = 0
-
+var be_crouched: bool = false
 var just_landed: bool = false
 var bhop_frame_buffer: Array[bool]
-var is_air_strafe_valid: bool = false
+var is_reloading: bool = false
+
+const trail_scene: Resource = preload('res://scenes/ui/tubetrail.tscn')
 var draw_trail: bool = Debug.draw_trail
 
-var is_reloading: bool = false
 
 func _ready() -> void: 
 	world_ref = get_parent()
@@ -131,6 +135,7 @@ func _ready() -> void:
 	equipped = $Camera3D/Equipped
 	viewmodel = equipped.transform
 	stored.transform = viewmodel
+	height = $CollisionShape3D.shape.height
 	
 	hud_node = hud_scene.instantiate()
 	add_child(hud_node)
@@ -159,6 +164,9 @@ func _physics_process(delta: float) -> void:
 		jump_and_land_sound()
 	elif just_landed:
 		just_landed = false
+
+	if Input.is_action_just_released('crouch'):
+		crouch(false)
 
 	# checking UI state
 	if just_exited_menu:
@@ -409,6 +417,9 @@ func _input(event: InputEvent) -> void:
 				if hud_node.loaded < equipped.max_loaded && hud_node.reserve > 0:
 					is_reloading = true
 					equipped.reload_anim()
+		if event.is_action_pressed('crouch'):
+			crouch(true)
+			pass
 	return
 
 func _on_menu_ok_button_pressed() -> void:
@@ -519,3 +530,13 @@ func draw_trail_node() -> void:
 	trail_node.add_to_group("trail")
 	trail_node.position = position + Vector3(0, 1, 0)
 	trail_node.rotation.y = rotation.y
+
+func crouch(_be_crouched: bool) -> void:
+	if _be_crouched:
+		$Camera3D.position.y = height * crouch_height_ratio
+		$CollisionShape3D.scale.y = height * crouch_height_ratio
+	else:
+		$Camera3D.position.y = height 
+		$CollisionShape3D.scale.y = height
+	be_crouched = _be_crouched
+	return
